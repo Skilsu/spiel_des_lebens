@@ -13,6 +13,13 @@ class player:
         self.children = []
         self.status_symbols = []
         self.bully_cards = []
+        self.income = 0
+        
+    def change_money(self, amount):
+        self.money = self.money + amount
+        
+    def payday(self):
+        self.money = self.money + self.income
         
 class field:
     def __init__(self, following_fields, title="", text="") -> None:
