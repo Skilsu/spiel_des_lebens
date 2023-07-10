@@ -14,6 +14,8 @@ class Game:
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
         self.player = Player(SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
+        self.board_image = pygame.image.load('spiel des lebens spielbrett.jpg')
+        self.board_image = pygame.transform.scale(self.board_image, SCREEN_SIZE)
 
     def run(self):
         while True:
@@ -22,13 +24,14 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            self.screen.fill(BACKGROUND_COLOR)
-            self.player.draw(self.screen)
+            self.screen.blit(self.board_image, (0,0))
+            #self.player.draw(self.screen)
 
             pygame.display.flip()
             self.clock.tick(60)
 
-class Player:
+
+class Player(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         self.x = x
@@ -54,6 +57,7 @@ class Player:
     def payday(self):
         self.money = self.money + self.income
 
+
 class Field:
     def __init__(self, following_fields, title="", text="") -> None:
         if title == "":
@@ -64,11 +68,11 @@ class Field:
             self.text = None
         else:
             self.text = text
-        self.following_fields = following_fields  # TODO just a first idea
-
+        #self.following_fields = following_fields  # TODO just a first idea
 
     def move(self, left_moves):
         return left_moves - 1
+
 
 class yellow_field(Field):
     def __init__(self) -> None:
@@ -81,6 +85,7 @@ class yellow_field(Field):
         else:
             # TODO do something
             pass
+
 
 class orange_field(Field):
     def __init__(self, amount_of_money) -> None:
@@ -96,6 +101,7 @@ class orange_field(Field):
             # TODO wähle einen anderen spieler
             # TODO ziehe diesem Spieler self.amount_of_money ab und addiere es bei dir
 
+
 class white_field(Field):
     def __init__(self) -> None:
         super().__init__()
@@ -108,6 +114,7 @@ class white_field(Field):
         else:
             return
 
+
 class red_field(Field):
     def __init__(self) -> None:
         super().__init__()
@@ -117,6 +124,7 @@ class red_field(Field):
         # TODO do what has to be done
         return left_moves
 
+
 class stop_field(Field):
     def __init__(self) -> None:
         super().__init__()
@@ -125,6 +133,7 @@ class stop_field(Field):
         left_moves = super().move(self, left_moves)
         # TODO do what has to be done
         return 0
+
 
 class customs_field(Field):
     def __init__(self) -> None:
@@ -139,6 +148,7 @@ class customs_field(Field):
         else:
             # TODO: Add code for the other players' move
             pass
+
 
 if __name__ == "__main__":
     Game().run()
