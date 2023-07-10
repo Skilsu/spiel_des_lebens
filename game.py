@@ -1,27 +1,64 @@
+import pygame
+import sys
 
-class game:
+# Spiel-Parameter
+SCREEN_SIZE = (800, 600)
+BACKGROUND_COLOR = (0, 0, 0)
+PLAYER_COLOR = (0, 0, 255)
 
-    def __init__(self) -> None:
-        self.players = []
-        self.board = []
-    
-class player:
-    
-    def __init__(self) -> None:
+
+class Game:
+
+    def __init__(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode(SCREEN_SIZE)
+        self.clock = pygame.time.Clock()
+        self.player = Player(SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
+        self.board_image = pygame.image.load('spiel des lebens spielbrett.jpg')
+        self.board_image = pygame.transform.scale(self.board_image, SCREEN_SIZE)
+
+    def run(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self.screen.blit(self.board_image, (0,0))
+            #self.player.draw(self.screen)
+
+            pygame.display.flip()
+            self.clock.tick(60)
+
+
+class Player(pygame.sprite.Sprite):
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
         self.money = 10000
         self.position = 0
         self.children = []
         self.status_symbols = []
         self.bully_cards = []
         self.income = 0
-        
+
+    # that can be changed
+    def draw(self, screen):
+        pygame.draw.circle(screen, PLAYER_COLOR, (self.x, self.y), 50)
+
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+
     def change_money(self, amount):
         self.money = self.money + amount
-        
+
     def payday(self):
         self.money = self.money + self.income
-        
-class field:
+
+
+class Field:
     def __init__(self, following_fields, title="", text="") -> None:
         if title == "":
             self.title = None
@@ -31,29 +68,30 @@ class field:
             self.text = None
         else:
             self.text = text
-        self.following_fields = following_fields  # TODO just a first idea
-        
-            
+        #self.following_fields = following_fields  # TODO just a first idea
+
     def move(self, left_moves):
         return left_moves - 1
 
-class yellow_field(field):
+
+class yellow_field(Field):
     def __init__(self) -> None:
         super().__init__()
-    
+
     def move(self, left_moves):
         left_moves = super().move(self, left_moves)
         if left_moves > 0:
             return
         else:
             # TODO do something
-            pass  
-        
-class orange_field(field):
+            pass
+
+
+class orange_field(Field):
     def __init__(self, amount_of_money) -> None:
         super().__init__()
         self.amount_of_money = amount_of_money
-    
+
     def move(self, left_moves):
         left_moves = super().move(self, left_moves)
         if left_moves > 0:
@@ -62,11 +100,12 @@ class orange_field(field):
             self.text = "Klage auf Schadenersatz. Dir werden " + self.amount_of_money + " zugesprochen."
             # TODO wähle einen anderen spieler
             # TODO ziehe diesem Spieler self.amount_of_money ab und addiere es bei dir
-        
-class white_field(field):
+
+
+class white_field(Field):
     def __init__(self) -> None:
         super().__init__()
-    
+
     def move(self, left_moves, wants_to_act):
         left_moves = super().move(self, left_moves)
         if wants_to_act:
@@ -74,30 +113,33 @@ class white_field(field):
             pass
         else:
             return
-        
-class red_field(field):
+
+
+class red_field(Field):
     def __init__(self) -> None:
         super().__init__()
-    
+
     def move(self, left_moves):
         left_moves = super().move(self, left_moves)
         # TODO do what has to be done
         return left_moves
-        
-class stop_field(field):
+
+
+class stop_field(Field):
     def __init__(self) -> None:
         super().__init__()
-        
+
     def move(self, left_moves):
         left_moves = super().move(self, left_moves)
         # TODO do what has to be done
         return 0
 
-class customs_field(field):
+
+class customs_field(Field):
     def __init__(self) -> None:
         super().__init__()
         self.first_player = False
-        
+
     def move(self, left_moves):
         left_moves = super().move(self, left_moves)
         if self.first_player:
@@ -106,3 +148,7 @@ class customs_field(field):
         else:
             # TODO: Add code for the other players' move
             pass
+
+
+if __name__ == "__main__":
+    Game().run()
