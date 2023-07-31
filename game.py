@@ -5,10 +5,12 @@ import math
 # Spiel-Parameter
 SCREEN_SIZE = (1400, 800)
 BACKGROUND_COLOR = (0, 0, 0)
-PLAYER_COLOR = (0, 0, 255)
 WHEEL_RADIUS = 100 #Größe des Rades
 WHEEL_POSITION = (1030,380)
 WHEEL_ROTATION_SPEED = 5
+
+PLAYER_SIZE = (25,25)
+START_POSITION_PLAYER1 = (1170, 350)
 
 
 class Game:
@@ -17,7 +19,7 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
-        self.player = Player(SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2)
+        self.player = Player(200,200)
         self.board_image = pygame.image.load('spiel des lebens spielbrett.jpg')
         self.board_image = pygame.transform.scale(self.board_image, (1100,800))
 
@@ -26,7 +28,6 @@ class Game:
         self.selected_number = 0
 
     def get_color(self, number):
-        # Definieren Sie Ihre Farben hier
         colors = [
             (168, 0, 185),  # Lila
             (255, 0, 255),  # pink
@@ -38,8 +39,6 @@ class Game:
             (255, 219, 0),  # gelb-orange
             (255, 255, 0),  # gelb
             (200, 255, 0)  # gelb-grün
-
-            # usw., fügen Sie mehr Farben hinzu, wenn Sie mehr als 6 Abschnitte haben
         ]
         return colors[number % len(colors)]
 
@@ -85,7 +84,7 @@ class Game:
 
             self.screen.blit(self.board_image, (300,0))
             self.draw_wheel()
-            #self.player.draw(self.screen)
+            self.player.draw(self.screen)
 
             pygame.display.flip()
             self.clock.tick(60)
@@ -105,7 +104,10 @@ class Player(pygame.sprite.Sprite):
 
     # that can be changed
     def draw(self, screen):
-        pygame.draw.circle(screen, PLAYER_COLOR, (self.x, self.y), 50)
+        #pygame.draw.circle(screen, PLAYER_COLOR, (self.x, self.y), 50)
+
+        player = pygame.transform.scale(pygame.image.load("car_pink.png"), PLAYER_SIZE)
+        screen.blit(player, START_POSITION_PLAYER1)
 
     def move(self, dx, dy):
         self.x += dx
