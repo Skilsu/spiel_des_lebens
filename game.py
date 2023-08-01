@@ -106,7 +106,7 @@ class Player(pygame.sprite.Sprite):
     def draw(self, screen):
         #pygame.draw.circle(screen, PLAYER_COLOR, (self.x, self.y), 50)
 
-        player = pygame.transform.scale(pygame.image.load("car_pink.png"), PLAYER_SIZE)
+        player = pygame.transform.scale(pygame.image.load("car.png"), PLAYER_SIZE)
         screen.blit(player, START_POSITION_PLAYER1)
 
     def move(self, dx, dy):
@@ -130,7 +130,7 @@ class Field:
             self.text = None
         else:
             self.text = text
-        #self.following_fields = following_fields  # TODO just a first idea
+        # self.following_fields = following_fields  # TODO just a first idea
 
     def move(self, left_moves):
         return left_moves - 1
