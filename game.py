@@ -5,12 +5,32 @@ import math
 # Spiel-Parameter
 SCREEN_SIZE = (1400, 800)
 BACKGROUND_COLOR = (0, 0, 0)
-WHEEL_RADIUS = 100 #Größe des Rades
-WHEEL_POSITION = (1030,380)
+WHEEL_RADIUS = 100  # Größe des Rades
+WHEEL_POSITION = (1030, 380)
 WHEEL_ROTATION_SPEED = 5
 
-PLAYER_SIZE = (25,25)
+PLAYER_SIZE = (25, 40)
 START_POSITION_PLAYER1 = (1170, 350)
+WAYPOINTS = [(1160, 372, 270)]
+"""WAYPOINTS = [(1160, 372, 270),  # Done
+             (1237, 257, 0),  # Done
+             (1237, 205, 0),  # Done
+             (1250, 145, 300),
+             (1310, 130, 0),  # Done
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0),
+             (1237, 257, 0)]"""
 
 
 class Game:
@@ -19,9 +39,23 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
-        self.player = Player(200,200)
+        self.player = []
+        self.player.append(Player(1170, 360, (0, 212, 28)))
+        self.player.append(Player(1185, 360, (255, 0, 0)))
+        self.player.append(Player(1200, 360, (0, 212, 28)))
+        self.player.append(Player(1215, 360, (255, 255, 0)))
+        self.player.append(Player(1230, 360, (0, 212, 28)))
+        """self.player.append(Player(1245, 360, (255, 255, 0)))
+        self.player.append(Player(1245, 411, (0, 68, 220)))
+        self.player.append(Player(1230, 411, (255, 0, 0)))
+        self.player.append(Player(1215, 411, (0, 68, 220)))
+        self.player.append(Player(1200, 411, (255, 0, 0)))
+        self.player.append(Player(1170, 411, (255, 255, 0)))
+        self.player.append(Player(1185, 411, (0, 68, 220)))"""
+        for point in WAYPOINTS:
+            self.player.append(Player(point[0], point[1], (255, 0, 255), rotation=point[2], active=True))
         self.board_image = pygame.image.load('spiel des lebens spielbrett.jpg')
-        self.board_image = pygame.transform.scale(self.board_image, (1100,800))
+        self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
         self.font = pygame.font.Font(None, 30)
         self.wheel_angle = 0
@@ -68,50 +102,64 @@ class Game:
                 WHEEL_POSITION[1] + WHEEL_RADIUS * 0.8 * math.sin(angle)
             )
             self.screen.blit(number_surface, number_pos)
-        #selected_number_surface = self.font.render(str(self.selected_number), True, (0, 0, 0))
-        #self.screen.blit(selected_number_surface, WHEEL_POSITION)
+        # selected_number_surface = self.font.render(str(self.selected_number), True, (0, 0, 0))
+        # self.screen.blit(selected_number_surface, WHEEL_POSITION)
 
     def run(self):
         running = True
+        rate = 15
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                    #pygame.quit()
-                    #sys.exit()
-
-
-
-            self.screen.blit(self.board_image, (300,0))
+                    # pygame.quit()
+                    # sys.exit()
+            self.player[5].y_new = 257
+            self.player[5].x_new = 1237
+            self.player[5].rotation_new = 360
+            if rate > 1:
+                rate -= 1
+                self.player[5].move(rate)
+            self.screen.blit(self.board_image, (300, 0))
             self.draw_wheel()
-            self.player.draw(self.screen)
-
+            for player in self.player:
+                player.draw(self.screen)
+            print("Hallo")
             pygame.display.flip()
-            self.clock.tick(60)
+            # self.clock.tick(60)
 
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, color, rotation=270, active=False):
         self.x = x
         self.y = y
+        self.x_new = x
+        self.y_new = x
+        self.rotation = rotation
+        self.rotation_new = rotation
+        self.color = color
         self.money = 10000
-        self.position = 0
         self.children = []
         self.status_symbols = []
         self.bully_cards = []
         self.income = 0
+        self.active = active
 
     # that can be changed
     def draw(self, screen):
-        #pygame.draw.circle(screen, PLAYER_COLOR, (self.x, self.y), 50)
+        # pygame.draw.circle(screen, PLAYER_COLOR, (self.x, self.y), 50)
+        if self.active:
+            player = pygame.transform.scale(pygame.image.load("car.png"), PLAYER_SIZE)
+            player = pygame.transform.rotate(player, self.rotation)
+            screen.blit(player, (self.x, self.y))
+        else:
+            player = pygame.draw.circle(surface=screen, center=(self.x, self.y), radius=5, color=self.color)
 
-        player = pygame.transform.scale(pygame.image.load("car.png"), PLAYER_SIZE)
-        screen.blit(player, START_POSITION_PLAYER1)
-
-    def move(self, dx, dy):
-        self.x += dx
-        self.y += dy
+    def move(self, rate):
+        self.x += (self.x_new - self.x)/rate
+        self.y += (self.y_new - self.y)/rate
+        self.rotation += (self.rotation_new - self.rotation)/rate
 
     def change_money(self, amount):
         self.money = self.money + amount
@@ -121,7 +169,7 @@ class Player(pygame.sprite.Sprite):
 
 
 class Field:
-    def __init__(self, following_fields, title="", text="") -> None:
+    def __init__(self, following_fields, x, y, title="", text="") -> None:
         if title == "":
             self.title = None
         else:
