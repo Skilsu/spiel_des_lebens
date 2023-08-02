@@ -1,7 +1,9 @@
 import pygame
 import sys
 import math
+import random
 from player import Player
+
 # from field import ... Import hier Felder
 
 # Spiel-Parameter
@@ -69,6 +71,9 @@ class Game:
             (200, 255, 0)  # gelb-grün
         ]
         return colors[number % len(colors)]
+
+    def spin_wheel(self):
+        return random.randint(1, 10)
 
     def draw_wheel(self):
         for i in range(10):
