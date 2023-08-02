@@ -11,26 +11,42 @@ WHEEL_ROTATION_SPEED = 5
 
 PLAYER_SIZE = (25, 40)
 START_POSITION_PLAYER1 = (1170, 350)
-WAYPOINTS = [(1160, 372, 270)]
-"""WAYPOINTS = [(1160, 372, 270),  # Done
-             (1237, 257, 0),  # Done
-             (1237, 205, 0),  # Done
-             (1250, 145, 300),
-             (1310, 130, 0),  # Done
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0),
-             (1237, 257, 0)]"""
+WAYPOINTS_2 = [(1160, 372, 270),
+               (1237, 257, 0),
+               (1237, 205, 0),
+               (1250, 145, 300),
+               (1312, 127, 0),
+               (1310, 73, 10),
+               (1268, 40, 70),
+               (1215, 40, 97),
+               (1162, 57, 90),
+               (1117, 43, 65),
+               (1077, 33, 98),
+               (1058, 55, 195),
+               (1087, 86, 238),
+               (1128, 112, 238),
+               (1178, 157, 185),
+               (1128, 217, 98),
+               (1060, 191, 61),
+               (1018, 166, 61),
+               (980, 132, 35),
+               (973, 93, 5),
+               (948, 48, 42),
+               (903, 38, 93),
+               (860, 52, 142),
+               (860, 100, 180),
+               (860, 147, 180),
+               (860, 193, 180),
+               (860, 255, 180),
+               (860, 302, 180),
+               (860, 349, 180),
+               (860, 395, 180),
+               (859, 442, 178),
+               (840, 484, 156),
+               (833, 531, 178),
+               (832, 578, 180),
+               (830, 624, 176)]
+WAYPOINTS = [(830, 624, 176)]
 
 
 class Game:
@@ -40,12 +56,12 @@ class Game:
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
         self.player = []
-        self.player.append(Player(1170, 360, (0, 212, 28)))
+        """self.player.append(Player(1170, 360, (0, 212, 28)))
         self.player.append(Player(1185, 360, (255, 0, 0)))
         self.player.append(Player(1200, 360, (0, 212, 28)))
         self.player.append(Player(1215, 360, (255, 255, 0)))
         self.player.append(Player(1230, 360, (0, 212, 28)))
-        """self.player.append(Player(1245, 360, (255, 255, 0)))
+        self.player.append(Player(1245, 360, (255, 255, 0)))
         self.player.append(Player(1245, 411, (0, 68, 220)))
         self.player.append(Player(1230, 411, (255, 0, 0)))
         self.player.append(Player(1215, 411, (0, 68, 220)))
@@ -114,17 +130,17 @@ class Game:
                     running = False
                     # pygame.quit()
                     # sys.exit()
-            self.player[5].y_new = 257
-            self.player[5].x_new = 1237
-            self.player[5].rotation_new = 360
+            """self.player[0].y_new = 257
+            self.player[0].x_new = 1237
+            self.player[0].rotation_new = 360
             if rate > 1:
                 rate -= 1
-                self.player[5].move(rate)
+                self.player[0].move(rate)"""
             self.screen.blit(self.board_image, (300, 0))
             self.draw_wheel()
             for player in self.player:
                 player.draw(self.screen)
-            print("Hallo")
+            # print("Hallo")
             pygame.display.flip()
             # self.clock.tick(60)
 
@@ -157,9 +173,9 @@ class Player(pygame.sprite.Sprite):
             player = pygame.draw.circle(surface=screen, center=(self.x, self.y), radius=5, color=self.color)
 
     def move(self, rate):
-        self.x += (self.x_new - self.x)/rate
-        self.y += (self.y_new - self.y)/rate
-        self.rotation += (self.rotation_new - self.rotation)/rate
+        self.x += (self.x_new - self.x) / rate
+        self.y += (self.y_new - self.y) / rate
+        self.rotation += (self.rotation_new - self.rotation) / rate
 
     def change_money(self, amount):
         self.money = self.money + amount
