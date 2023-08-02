@@ -26,7 +26,6 @@ WAYPOINTS = [(1160, 372, 270),  # I divide
                (660, 652, 26)]
 
 
-
 class Game:
 
     def __init__(self, screen):
@@ -35,12 +34,12 @@ class Game:
         #self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
         self.player = []
-        self.player.append(Player(1170, 360, (0, 212, 28)))
+        """self.player.append(Player(1170, 360, (0, 212, 28)))
         self.player.append(Player(1185, 360, (255, 0, 0)))
         self.player.append(Player(1200, 360, (0, 212, 28)))
         self.player.append(Player(1215, 360, (255, 255, 0)))
         self.player.append(Player(1230, 360, (0, 212, 28)))
-        """self.player.append(Player(1245, 360, (255, 255, 0)))
+        self.player.append(Player(1245, 360, (255, 255, 0)))
         self.player.append(Player(1245, 411, (0, 68, 220)))
         self.player.append(Player(1230, 411, (255, 0, 0)))
         self.player.append(Player(1215, 411, (0, 68, 220)))
@@ -113,17 +112,18 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         return 'game_pausing'
 
-            self.player[5].y_new = 257
-            self.player[5].x_new = 1237
-            self.player[5].rotation_new = 360
+            self.player[0].y_new = 257
+            self.player[0].x_new = 1237
+            self.player[0].rotation_new = 360
+            
             if rate > 1:
                 rate -= 1
-                self.player[5].move(rate)
+                self.player[0].move(rate)
             self.screen.blit(self.board_image, (300, 0))
             self.draw_wheel()
+            
             for player in self.player:
                 player.draw(self.screen)
-            #print("Hallo")
             pygame.display.update()
             self.clock.tick(60)
 
