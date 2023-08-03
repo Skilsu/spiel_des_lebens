@@ -1,3 +1,5 @@
+import json
+
 import pygame
 import sys
 import math
@@ -12,20 +14,56 @@ WHEEL_RADIUS = 100  # Größe des Rades
 WHEEL_POSITION = (1030, 380)
 WHEEL_ROTATION_SPEED = 5
 
-
 START_POSITION_PLAYER1 = (1170, 350)
 WAYPOINTS = [(1160, 372, 270),  # I divide
-               (1237, 257, 0), (1237, 205, 0), (1250, 145, 300),  # I first path end
-               (1237, 471, 180), (1242, 515, 228), (1296, 511, 316), (1318, 470, 0), (1318, 430, 0), (1318, 389, 0),
-               (1318, 347, 0), (1318, 306, 0), (1318, 265, 0), (1318, 224, 0), (1318, 185, 0),  # I second path end
-               (1312, 127, 0),  # I reunion
-               (1310, 73, 10), (1268, 40, 70), (1215, 40, 97), (1162, 57, 90), (1117, 43, 65), (1077, 33, 98),
-               (1058, 55, 195), (1087, 86, 238), (1128, 112, 238), (1178, 157, 185), (1128, 217, 98), (1060, 191, 61),
-               (1018, 166, 61), (980, 132, 35), (973, 93, 5), (948, 48, 42), (903, 38, 93), (860, 52, 142),
-               (860, 100, 180), (860, 147, 180), (860, 193, 180), (860, 255, 180), (860, 302, 180), (860, 349, 180),
-               (860, 395, 180), (859, 442, 178), (840, 484, 156), (833, 531, 178), (832, 578, 180), (830, 624, 176),
-               (806, 665, 142), (762, 699, 105), (708, 704, 81),  # II divide
-               (660, 652, 26)]
+             (1237, 257, 0), (1237, 205, 0), (1250, 145, 300),  # I first path end
+             (1237, 471, 180), (1242, 515, 228), (1296, 511, 316), (1318, 470, 0), (1318, 430, 0), (1318, 389, 0),
+             (1318, 347, 0), (1318, 306, 0), (1318, 265, 0), (1318, 224, 0), (1318, 185, 0),  # I second path end
+             (1312, 127, 0),  # I reunion
+             (1310, 73, 10), (1268, 40, 70), (1215, 40, 97), (1162, 57, 90), (1117, 43, 65), (1077, 33, 98),
+             (1058, 55, 195), (1087, 86, 238), (1128, 112, 238), (1178, 157, 185), (1128, 217, 98), (1060, 191, 61),
+             (1018, 166, 61), (980, 132, 35), (973, 93, 5), (948, 48, 42), (903, 38, 93), (860, 52, 142),
+             (860, 100, 180), (860, 147, 180), (860, 193, 180), (860, 255, 180), (860, 302, 180), (860, 349, 180),
+             (860, 395, 180), (859, 442, 178), (840, 484, 156), (833, 531, 178), (832, 578, 180), (830, 624, 176),
+             (806, 665, 142), (762, 699, 105), (708, 704, 81),  # II divide
+             (660, 652, 26)]
+
+FIELDS = [{"title": "",
+           "text": "",
+           "following_field": [1, 4],
+           "x": 1160,
+           "y": 372,
+           "rotation": 270,
+           "color": None,
+           "action": 0}]
+ACTIONS = [{"add_money": 0}]
+BULLYCARDS = [{}]
+STATUSSYMBOLS = [{}]
+
+
+def copy_data():
+    fields = []
+    for idx, waypoint in enumerate(WAYPOINTS):
+        fields.append({"title": "",
+                       "text": "",
+                       "following_field": [idx + 1],
+                       "x": waypoint[0],
+                       "y": waypoint[1],
+                       "rotation": waypoint[2],
+                       "color": None,
+                       "action": None})
+    data_dict = {"fields": fields, "actions": ACTIONS, "bully_cards": BULLYCARDS, "status_symbols": STATUSSYMBOLS}
+    save_json("fields", data_dict)
+
+
+def read_json(filename):
+    with open(f"{filename}.json", "r") as infile:
+        return json.load(infile)
+
+
+def save_json(filename, json_dict):
+    with open(f"{filename}.json", "w") as outfile:
+        json.dump(json_dict, outfile)
 
 
 class Game:
@@ -33,7 +71,7 @@ class Game:
     def __init__(self, screen):
         pygame.init()
         self.screen = screen
-        #self.screen = pygame.display.set_mode(SCREEN_SIZE)
+        # self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
         self.player = []
         """self.player.append(Player(1170, 360, (0, 212, 28)))
@@ -120,13 +158,12 @@ class Game:
             self.player[0].y_new = 257
             self.player[0].x_new = 1237
             self.player[0].rotation_new = 360
-            
             if rate > 1:
                 rate -= 1
                 self.player[0].move(rate)
             self.screen.blit(self.board_image, (300, 0))
             self.draw_wheel()
-            
+
             for player in self.player:
                 player.draw(self.screen)
             pygame.display.update()
@@ -134,4 +171,5 @@ class Game:
 
 
 if __name__ == "__main__":
-    Game(pygame.display.set_mode((1400, 800))).run()
+    # Game(pygame.display.set_mode((1400, 800))).run()
+    copy_data()

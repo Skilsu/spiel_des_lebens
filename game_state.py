@@ -6,6 +6,7 @@ from pause_menu import PauseMenu
 
 SCREEN_SIZE = (1400, 800)
 
+
 class GameState:
     def __init__(self):
         self.state = 'main_menu'

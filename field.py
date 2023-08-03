@@ -16,26 +16,27 @@ class Field:
         return left_moves - 1
 
 
-class yellow_field(Field):
-    def __init__(self) -> None:
-        super().__init__()
+class YellowField(Field):
+    def __init__(self, following_fields, x, y) -> None:
+        super().__init__(following_fields, x, y)
 
     def move(self, left_moves):
-        left_moves = super().move(self, left_moves)
+        left_moves = super().move(left_moves)
         if left_moves > 0:
-            return
+            return left_moves
         else:
             # TODO do something
+            return 0
             pass
 
 
-class orange_field(Field):
-    def __init__(self, amount_of_money) -> None:
-        super().__init__()
+class OrangeField(Field):
+    def __init__(self, following_fields, x, y, amount_of_money) -> None:
+        super().__init__(following_fields, x, y)
         self.amount_of_money = amount_of_money
 
     def move(self, left_moves):
-        left_moves = super().move(self, left_moves)
+        left_moves = super().move(left_moves)
         if left_moves > 0:
             return
         else:
@@ -44,12 +45,12 @@ class orange_field(Field):
             # TODO ziehe diesem Spieler self.amount_of_money ab und addiere es bei dir
 
 
-class white_field(Field):
-    def __init__(self) -> None:
-        super().__init__()
+class WhiteField(Field):
+    def __init__(self, following_fields, x, y) -> None:
+        super().__init__(following_fields, x, y)
 
     def move(self, left_moves, wants_to_act):
-        left_moves = super().move(self, left_moves)
+        left_moves = super().move(left_moves)
         if wants_to_act:
             # TODO do what to do
             pass
@@ -57,33 +58,33 @@ class white_field(Field):
             return
 
 
-class red_field(Field):
-    def __init__(self) -> None:
-        super().__init__()
+class RedField(Field):
+    def __init__(self, following_fields, x, y) -> None:
+        super().__init__(following_fields, x, y)
 
     def move(self, left_moves):
-        left_moves = super().move(self, left_moves)
+        left_moves = super().move(left_moves)
         # TODO do what has to be done
         return left_moves
 
 
-class stop_field(Field):
-    def __init__(self) -> None:
-        super().__init__()
+class StopField(Field):
+    def __init__(self, following_fields, x, y) -> None:
+        super().__init__(following_fields, x, y)
 
     def move(self, left_moves):
-        left_moves = super().move(self, left_moves)
+        left_moves = super().move(left_moves)
         # TODO do what has to be done
         return 0
 
 
-class customs_field(Field):
-    def __init__(self) -> None:
-        super().__init__()
+class CustomsField(Field):
+    def __init__(self, following_fields, x, y) -> None:
+        super().__init__(following_fields, x, y)
         self.first_player = False
 
     def move(self, left_moves):
-        left_moves = super().move(self, left_moves)
+        left_moves = super().move(left_moves)
         if self.first_player:
             # TODO: Add code for the first player's move
             pass
