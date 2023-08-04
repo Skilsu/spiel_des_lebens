@@ -53,7 +53,7 @@ class MainMenu:
 
     def redraw_window(self):
         # Hintergrundfarbe
-        self.screen.fill((self.WHITE))
+        self.screen.fill((self.BLACK))
 
         # Zeichne die Buttons
         self.start_button.draw(self.screen, self.BLACK)

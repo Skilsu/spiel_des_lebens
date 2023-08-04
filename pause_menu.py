@@ -47,14 +47,14 @@ class PauseMenu:
         self.BUTTON_SIZE_WIDTH = 600
 
         # Buttons erstellen
-        self.start_button = Button(self.GREY, 350, 200, self.BUTTON_SIZE_WIDTH, 100, 'Weiter Spielen')
-        self.restart_button = Button(self.GREY, 350, 350, self.BUTTON_SIZE_WIDTH, 100, 'Neues Spiel starten')
-        self.instructions_button = Button(self.GREY, 500, 350, self.BUTTON_SIZE_WIDTH, 100, 'Anleitung')
-        self.quit_button = Button(self.GREY, 350, 750, self.BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
+        self.start_button = Button(self.GREY, 350, 150, self.BUTTON_SIZE_WIDTH, 100, 'Weiter Spielen')
+        self.restart_button = Button(self.GREY, 350, 300, self.BUTTON_SIZE_WIDTH, 100, 'Neues Spiel starten')
+        self.instructions_button = Button(self.GREY, 350, 450, self.BUTTON_SIZE_WIDTH, 100, 'Anleitung')
+        self.quit_button = Button(self.GREY, 350, 600, self.BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
 
     def redraw_window(self):
         # Hintergrundfarbe
-        self.screen.fill((self.WHITE))
+        self.screen.fill((self.BLACK))
 
         # Zeichne die Buttons
         self.start_button.draw(self.screen, self.BLACK)
@@ -83,6 +83,8 @@ class PauseMenu:
                     if self.instructions_button.is_over(pos):
                         print('Anleitung geklickt')
                         # Hier können Sie die Logik zum Anzeigen der Anleitung hinzufügen
+                    if self.restart_button.is_over(pos):
+                        print("Spiel neustarten geklickt")
                     if self.quit_button.is_over(pos):
                         print('Spiel beenden geklickt')
                         run = False
@@ -94,6 +96,10 @@ class PauseMenu:
                         self.start_button.color = (0, 255, 0)
                     else:
                         self.start_button.color = self.GREY
+                    if self.restart_button.is_over(pos):
+                        self.restart_button.color = (0, 255, 0)
+                    else:
+                        self.restart_button.color = self.GREY
                     if self.instructions_button.is_over(pos):
                         self.instructions_button.color = (255, 255, 0)
                     else:
