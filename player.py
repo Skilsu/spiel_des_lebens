@@ -39,6 +39,8 @@ class Player(pygame.sprite.Sprite):
         self.children = []
         self.status_symbols = []
         self.bully_cards = []
+        self.insurance = []
+        self.depth = 0
         self.income = 0
 
     """def update(self, pressed_keys):
@@ -72,8 +74,10 @@ class Player(pygame.sprite.Sprite):
             self.x += (self.x_new - self.x) / self.rate
             self.y += (self.y_new - self.y) / self.rate
             self.rotation += (self.rotation_new - self.rotation) / self.rate
+            return self.x, self.y, self.rotation
         else:
             self.rate = 15
+            return self.x, self.y, self.rotation
 
     def change_money(self, amount):
         self.money = self.money + amount

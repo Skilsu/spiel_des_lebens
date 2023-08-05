@@ -10,8 +10,26 @@ from wheel import Wheel
 BACKGROUND_COLOR = (0, 0, 0)
 WHEEL_RADIUS = 110  # Größe des Rades
 WHEEL_POSITION = (1030, 380)
-#WHEEL_ROTATION_SPEED = 5
+# WHEEL_ROTATION_SPEED = 5
 
+# Colors
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+MAGENTA = (255, 0, 255)
+CYAN = (0, 255, 255)
+
+# Define the colors and text for each rectangle
+rectangles = [
+    {"color": RED, "text": "Spieler 1"},
+    {"color": GREEN, "text": "Spieler 2"},
+    {"color": BLUE, "text": "Spieler 3"},
+    {"color": YELLOW, "text": "Spieler 4"},
+    {"color": MAGENTA, "text": "Spieler 5"},
+    {"color": CYAN, "text": "Spieler 6"},
+]
 START_POSITION_PLAYER1 = (1160, 354, 270)
 WAYPOINTS = [(1160, 372, 270),  # I divide
              (1237, 257, 0), (1237, 205, 0), (1250, 145, 300),  # I first path end
@@ -64,9 +82,7 @@ bullycards = [["Verpflichtungs-Karte", "Der Inhaber dieser Karte kann von einem 
                                      "Hälfte eines Gewinnes zu verlangen, sofern dieser Gewinn über 10.000 beträgt.",
                10000]]
 
-
-fieldinfo = [["title", "text", "color"]]
-
+fieldinfo = [["title", "text", "color", []]]
 
 FIELDS = [{"title": "",
            "text": "",
@@ -75,7 +91,34 @@ FIELDS = [{"title": "",
            "y": 372,
            "rotation": 270,
            "color": None,
-           "action": 0}]
+           "action": []}]
+
+actions = [[False, -1000, False, 0, -1, None, None, False, False, False, 0],  # - 1.000
+           [False, 1000, False, 0, -1, None, None, False, False, False, 0],  # + 1.000
+           [False, 0, True, 0, -1, None, None, False, False, False, 0],  # Pause
+           [True, -2000, False, 0, -1, None, None, False, False, False, 0],  # - 2.000 immer
+           [False, 0, False, 10000, 6, None, None, False, False, False, 0],  # Einkommen 10.000 und 6 Felder vor
+           [False, 0, False, 20000, 5, None, None, False, False, False, 0],  # Einkommen 20.000 und 5 Felder vor
+           [False, 0, False, 15000, 4, None, None, False, False, False, 0],  # Einkommen 15.000 und 4 Felder vor
+           [False, 0, False, 8000, 3, None, None, False, False, False, 0],  # Einkommen 8.000 und 3 Felder vor
+           [False, 0, False, 10000, 2, None, None, False, False, False, 0],  # Einkommen 10.000 und 2 Felder vor
+           [True, 0, False, 0, 1, None, None, False, False, False, 6000],
+           # Einkommen 6.000 und 1 Feld vor wenn Einkommen vorher 0
+           [False, 5000, False, 0, -1, None, None, False, False, False, 0],  # + 5.000
+           [True, 0, False, 5000, 1, None, None, False, False, False, 0],  # Einkommen 5.000 und 1 Feld vor immer
+           [False, 50000, False, 0, -1, None, None, False, False, False, 0],  # + 50.000
+           [False, -10000, False, 0, -1, None, None, False, False, False, 0],  # -10.000
+           [False, -5000, False, 0, -1, "live", None, False, False, False, 0],
+           # Lebensversicherung abgeschlossen und 5.000 gezahlt
+           [False, 0, False, 0, -1, None, None, True, False, False, 0],  # Payday
+           [False, 0, False, 0, -1, None, None, False, True, False, 0],  # Marriage
+           [False, 0, False, 0, -1, None, "car", False, False, False, 0],  # Autoversicherung verloren
+           [False, -4000, False, 0, -1, None, None, False, False, False, 0],  # - 4.000 TODO Versicherung prüfen!
+           [False, -10000, False, 0, -1, None, None, False, False, True, 0],  # Buy Statussymbol for 10.000
+           [False, 0, False, 0, -1, None, None, False, False, False, 0],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0]]
 
 ACTIONS = [{"act with more steps": False,
             "add_money": 0,
@@ -87,6 +130,7 @@ ACTIONS = [{"act with more steps": False,
             "payday": False,
             "marriage": False,
             "buy statussymbol": False,
+            "income if 0": 0
             }]
 
 BULLYCARDS = []
@@ -103,6 +147,7 @@ STATUSSYMBOLS = []
         self.player.append(Player(1200, 411, (255, 0, 0)))
         self.player.append(Player(1170, 411, (255, 255, 0)))
         self.player.append(Player(1185, 411, (0, 68, 220)))"""
+
 
 def copy_data():
     fields = []
@@ -136,7 +181,7 @@ def save_json(filename, json_dict):
 class Game:
 
     def __init__(self, screen, player_number=1):
-        self.player_number = 4 # DEBUG Zwecke
+        self.player_number = 4  # DEBUG Zwecke
 
         pygame.init()
         self.screen = screen
@@ -171,17 +216,38 @@ class Game:
 
         self.players = pygame.sprite.Group()
         spacing = 1
+
         for i in range(self.player_number):
-            player = Player(START_POSITION_PLAYER1[0], START_POSITION_PLAYER1[1] + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)), START_POSITION_PLAYER1[2], self.colors[i])
+            player = Player(START_POSITION_PLAYER1[0],
+                            START_POSITION_PLAYER1[1] + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)),
+                            START_POSITION_PLAYER1[2], self.colors[i])
+
             self.players.add(player)
         print(len(self.players.sprites()))
+
+    def draw_rectangles(self):
+        y = 5
+
+        for i, rect_data in enumerate(rectangles):
+            color = rect_data["color"]
+            text = rect_data["text"]
+
+            # Draw the rectangle
+            pygame.draw.rect(self.screen, color, (5, 5 + 790 * i / len(rectangles), 290, 120))
+
+            # Render the text
+            text_surface = self.font.render(text, True, WHITE)
+            self.screen.blit(text_surface, (10, 10 + 790 * i / len(rectangles)))
+
+            # Move to the next position
+            y += 125
 
     def run(self):
         running = True
         while running:
 
             current_player = self.players.sprites()[self.player_turn_index]
-            #print(current_player.color)
+            # print(current_player.color)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -195,12 +261,11 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         current_player.active = True
                         self.wheel.spin()
-                        #self.player_turn_index = (self.player_turn_index + 1) % self.player_number
+                        # self.player_turn_index = (self.player_turn_index + 1) % self.player_number
                         if not current_player.moving:
                             current_player.update()
 
                         self.spinned_wheel = True
-
 
             self.wheel.update()
 
@@ -214,13 +279,20 @@ class Game:
                 print(self.selected_number)
 
             if self.state == 'player_moving':
-                #print("state player_moving")
-                print(WAYPOINTS[current_player.current_waypoint][0], WAYPOINTS[current_player.current_waypoint][1], WAYPOINTS[current_player.current_waypoint][2])
-                current_player.update(WAYPOINTS[current_player.current_waypoint][0], WAYPOINTS[current_player.current_waypoint][1], WAYPOINTS[current_player.current_waypoint][2])
+                # print("state player_moving")
+                current_player.move()
+
+                print(WAYPOINTS[current_player.current_waypoint][0], WAYPOINTS[current_player.current_waypoint][1],
+                      WAYPOINTS[current_player.current_waypoint][2])
+                current_player.update(WAYPOINTS[current_player.current_waypoint][0],
+                                      WAYPOINTS[current_player.current_waypoint][1],
+                                      WAYPOINTS[current_player.current_waypoint][2])
                 self.player_turn_index = (self.player_turn_index + 1) % self.player_number
                 self.state = ''
                 current_player.active = False
 
+            self.screen.fill((0, 0, 0))
+            self.draw_rectangles()
             self.screen.blit(self.board_image, (300, 0))
 
             self.wheel.draw(self.screen)
@@ -231,19 +303,22 @@ class Game:
 
             """
             myFont = pygame.font.SysFont("Times New Roman", 18)
-            randNumLabel = myFont.render("Player 1:", 1, (255, 255, 255))
-            diceDisplay = myFont.render(str(self.spin_wheel()), 1, (255, 255, 255))
+            randNumLabel = self.font.render("Player 1:", 1, (255, 255, 255))
+            diceDisplay = self.font.render(str(random.randint(1, 10)), 1, (255, 255, 255))
 
             self.screen.blit(randNumLabel, (20, 20))
-            self.screen.blit(diceDisplay, (20, 40))
+            self.screen.blit(diceDisplay, (20, 45))
             
             self.players[0].x_new = 1237
             self.players[0].y_new = 257
             self.players[0].rotation_new = 360
             self.screen.blit(self.board_image, (300, 0))
 
-            if self.players[0].x != self.players[0].x_new or self.players[0].y != self.players[0].y_new or self.players[0].rotation != self.players[0].rotation:
+            if self.players[0].x != self.players[0].x_new or \
+                    self.players[0].y != self.players[0].y_new \
+                    or self.players[0].rotation != self.players[0].rotation:
                 self.players[0].move()
+
             self.players[0].draw(self.screen)
             """
 
