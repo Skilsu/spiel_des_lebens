@@ -1,9 +1,8 @@
 import pygame
-import sys
-from player import Player
-from wheel import Wheel
 
-# from field import ... Import hier Felder
+import sys
+from player import Player, PLAYER_SIZE_INACTIVE
+from wheel import Wheel
 
 # Spiel-Parameter
 BACKGROUND_COLOR = (0, 0, 0)
@@ -12,10 +11,8 @@ WHEEL_POSITION = (1030, 380)
 #WHEEL_ROTATION_SPEED = 5
 
 
-START_POSITION_PLAYER1 = (1160, 372, 270)
-WAYPOINTS = [(1160, 372, 270),  # I divide
-               (1237, 257, 0), (1237, 205, 0), (1250, 145, 300),  # I first path end
-               (1237, 471, 180), (1242, 515, 228), (1296, 511, 316), (1318, 470, 0), (1318, 430, 0), (1318, 389, 0),
+START_POSITION_PLAYER1 = (1160, 354, 270)
+WAYPOINTS = [(1160, 372, 270), (1237, 257, 0), (1237, 205, 0), (1250, 145, 300), (1237, 471, 180), (1242, 515, 228), (1296, 511, 316), (1318, 470, 0), (1318, 430, 0), (1318, 389, 0),
                (1318, 347, 0), (1318, 306, 0), (1318, 265, 0), (1318, 224, 0), (1318, 185, 0),  # I second path end
                (1312, 127, 0),  # I reunion
                (1310, 73, 10), (1268, 40, 70), (1215, 40, 97), (1162, 57, 90), (1117, 43, 65), (1077, 33, 98),
@@ -47,31 +44,17 @@ WAYPOINTS = [(1160, 372, 270),  # I divide
 class Game:
 
     def __init__(self, screen, player_number=1):
-        player_number = 3 # DEBUG Zwecke
+        self.player_number = 4 # DEBUG Zwecke
+
         pygame.init()
         self.screen = screen
-        #self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
+        self.state = ''
+        self.player_turn_index = 0
 
-        #self.players = [Player(WAYPOINTS[0][0], WAYPOINTS[0][1], (255, 0, 255), rotation=WAYPOINTS[0][2], active=True) for number in range(player_number)]
+        self.spinned_wheel = False
+        self.selected_number = 0
 
-        self.players = [Player(WAYPOINTS, (255, 0, 255), active=True) for _ in range(player_number)]
-        """self.player.append(Player(1170, 360, (0, 212, 28)))
-        self.player.append(Player(1185, 360, (255, 0, 0)))
-        self.player.append(Player(1200, 360, (0, 212, 28)))
-        self.player.append(Player(1215, 360, (255, 255, 0)))
-        self.player.append(Player(1230, 360, (0, 212, 28)))
-        self.player.append(Player(1245, 360, (255, 255, 0)))
-        self.player.append(Player(1245, 411, (0, 68, 220)))
-        self.player.append(Player(1230, 411, (255, 0, 0)))
-        self.player.append(Player(1215, 411, (0, 68, 220)))
-        self.player.append(Player(1200, 411, (255, 0, 0)))
-        self.player.append(Player(1170, 411, (255, 255, 0)))
-        self.player.append(Player(1185, 411, (0, 68, 220)))
-        for point in WAYPOINTS:
-            self.players.append(Player(point[0], point[1], (255, 0, 255), rotation=point[2], active=True))"""
-
-        #self.players.append(Player(START_POSITION_PLAYER1[0], START_POSITION_PLAYER1[1], (255, 0, 255), rotation=START_POSITION_PLAYER1[2], active=True))
         self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett.jpg').convert()
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
@@ -93,13 +76,20 @@ class Game:
         self.font_large = pygame.font.Font(None, 70)
         self.wheel = Wheel(WHEEL_POSITION, WHEEL_RADIUS, self.colors, self.font, self.font_large)
 
-    def spin_wheel(self):
-        self.wheel.spin()
+        self.players = pygame.sprite.Group()
+        spacing = 1
+        for i in range(self.player_number):
+            player = Player(START_POSITION_PLAYER1[0], START_POSITION_PLAYER1[1] + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)), START_POSITION_PLAYER1[2], self.colors[i])
+            self.players.add(player)
+        print(len(self.players.sprites()))
 
     def run(self):
         running = True
-        rate = 15
         while running:
+
+            current_player = self.players.sprites()[self.player_turn_index]
+            #print(current_player.color)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -108,29 +98,65 @@ class Game:
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_ESCAPE:
                         return 'game_pausing'
+
+
                     if event.key == pygame.K_SPACE:
-                        self.spin_wheel()
+                        current_player.active = True
+                        self.wheel.spin()
+                        #self.player_turn_index = (self.player_turn_index + 1) % self.player_number
+                        if not current_player.moving:
+                            current_player.update()
+
+                        self.spinned_wheel = True
+
 
             self.wheel.update()
 
-            if self.wheel.has_stopped() and self.wheel.has_spun:
-                print(self.wheel.get_selected_number())
+            if self.spinned_wheel and self.wheel.has_stopped():
+                self.spinned_wheel = False
+                self.state = 'player_moving'
+                current_player.moving = True
+                self.selected_number = self.wheel.get_selected_number()
+
+                current_player.current_waypoint += self.selected_number
+                print(self.selected_number)
+
+            if self.state == 'player_moving':
+                #print("state player_moving")
+                print(WAYPOINTS[current_player.current_waypoint][0], WAYPOINTS[current_player.current_waypoint][1], WAYPOINTS[current_player.current_waypoint][2])
+                current_player.update(WAYPOINTS[current_player.current_waypoint][0], WAYPOINTS[current_player.current_waypoint][1], WAYPOINTS[current_player.current_waypoint][2])
+                self.player_turn_index = (self.player_turn_index + 1) % self.player_number
+                self.state = ''
+                current_player.active = False
 
 
             self.screen.blit(self.board_image, (300, 0))
-
             self.wheel.draw(self.screen)
 
-            """self.player[0].y_new = 257
-            self.player[0].x_new = 1237
-            self.player[0].rotation_new = 360
-            
-            if rate > 1:
-                rate -= 1
-                self.player[0].move(rate)"""
+            #pressed_keys = pygame.key.get_pressed()
 
-            for player in self.players:
-                player.draw(self.screen)
+            #current_player.update(pressed_keys)
+
+            for entity in self.players:
+                entity.draw()
+                self.screen.blit(entity.image, entity.rect)
+            #self.players.draw(self.screen)
+
+            """if self.player_turn_index == 0:
+                self.players.sprites()[self.player_turn_index].update(WAYPOINTS[3][0], WAYPOINTS[3][1], WAYPOINTS[3][2])
+                self.player_turn_index = 1
+
+            if self.player_turn_index == 1:
+                self.players.sprites()[self.player_turn_index].update(WAYPOINTS[4][0], WAYPOINTS[4][1], WAYPOINTS[4][2])
+                self.player_turn_index = 2"""
+
+            """if self.player_turn_index == 1:
+                self.players.sprites()[self.player_turn_index].update(WAYPOINTS[5][0], WAYPOINTS[5][1], WAYPOINTS[5][2])
+                self.player_turn_index = 2"""
+            #self.players.sprites()[0].update(WAYPOINTS[][0], WAYPOINTS[2][1], WAYPOINTS[2][2])
+            #self.players.sprites()[1].update(WAYPOINTS[6][0], WAYPOINTS[6][1], WAYPOINTS[6][2])
+            #self.players.sprites()[2].update(WAYPOINTS[3][0], WAYPOINTS[3][1], WAYPOINTS[3][2])
+            #self.players.update()
 
             pygame.display.update()
             self.clock.tick(60)
