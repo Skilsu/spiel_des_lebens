@@ -1,22 +1,36 @@
 import pygame
 
-PLAYER_SIZE = (25, 40)
+PLAYER_SIZE_ACTIVE = (25, 40)
+PLAYER_SIZE_INACTIVE = (15, 15)
 
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, color, rotation=270, active=False):
+    def __init__(self, x, y, rotation, color, active=False):
+        super(Player, self).__init__()
 
-        # general attributes
+        self.x = x
+        self.y = y
+        self.rotation = rotation
         self.active = active
         self.color = color
 
-        # pygame attributes
-        self.x = x
-        self.y = y
+        image = pygame.image.load("graphics/car.png").convert_alpha()
+        self.image_without_rotation = pygame.transform.scale(image, PLAYER_SIZE_ACTIVE).convert_alpha()
+
+        """if self.active:
+            self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
+        else:"""
+        self.image = pygame.Surface(PLAYER_SIZE_INACTIVE, pygame.SRCALPHA)
+        pygame.draw.circle(self.image, self.color, (7.5, 7.5), 5)
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+
+        self.moving = False
+
+        self.current_waypoint = 0
+
         self.x_new = x
         self.y_new = y
-        self.rotation = rotation
         self.rotation_new = rotation
         self.rate = 15
 
@@ -27,15 +41,30 @@ class Player(pygame.sprite.Sprite):
         self.bully_cards = []
         self.income = 0
 
-    # that can be changed
-    def draw(self, screen):
-        # pygame.draw.circle(screen, PLAYER_COLOR, (self.x, self.y), 50)
-        if self.active:
-            player = pygame.transform.scale(pygame.image.load("graphics/car.png"), PLAYER_SIZE).convert_alpha()
-            player = pygame.transform.rotate(player, self.rotation)
-            screen.blit(player, (self.x, self.y))
+    """def update(self, pressed_keys):
+            if pressed_keys[pygame.K_SPACE]:
+                self.active = True
+                self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
+                print("pressd")"""
+
+    def update(self, x=0, y=0, rotation=0):
+        if not self.moving:
+            self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
         else:
-            player = pygame.draw.circle(surface=screen, center=(self.x, self.y), radius=5, color=self.color)
+            self.x = x
+            self.y = y
+            self.rotation = rotation
+            # self.image = pygame.transform.rotate(self.image_without_rotation, rotation)
+            # self.rect = self.image.get_rect(topleft=(x, y))
+
+    # that can be changed
+    def draw(self):
+        if self.active:
+            self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
+        else:
+            self.image = pygame.Surface(PLAYER_SIZE_INACTIVE, pygame.SRCALPHA)
+            pygame.draw.circle(self.image, self.color, (7.5, 7.5), 5)
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
 
     def move(self):
         if self.rate > 1:
