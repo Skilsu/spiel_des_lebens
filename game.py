@@ -2,15 +2,14 @@ import json
 
 import pygame
 import sys
-import math
-import random
 from player import Player
+from wheel import Wheel
 
 # from field import ... Import hier Felder
 
 # Spiel-Parameter
 BACKGROUND_COLOR = (0, 0, 0)
-WHEEL_RADIUS = 100  # Größe des Rades
+WHEEL_RADIUS = 110  # Größe des Rades
 WHEEL_POSITION = (1030, 380)
 WHEEL_ROTATION_SPEED = 5
 
@@ -26,34 +25,92 @@ WAYPOINTS = [(1160, 372, 270),  # I divide
              (860, 100, 180), (860, 147, 180), (860, 193, 180), (860, 255, 180), (860, 302, 180), (860, 349, 180),
              (860, 395, 180), (859, 442, 178), (840, 484, 156), (833, 531, 178), (832, 578, 180), (830, 624, 176),
              (806, 665, 142), (762, 699, 105), (708, 704, 81),  # II divide
-             (660, 652, 26)]
+             (660, 652, 26), (647, 608, 16), (615, 580, 90), (507, 578, 90), (453, 578, 90),
+             (395, 564, 75),  # II first path end
+             (632, 710, 90), (568, 720, 90), (495, 710, 75), (430, 678, 60), (370, 645, 60), (353, 602, 0),
+             # II second path end
+             (355, 545, 0),  # II reunion
+             (425, 474, 275), (525, 425, 0), (525, 378, 0), (525, 332, 1), (513, 280, 15), (486, 236, 37),
+             (447, 205, 55), (407, 93, 335), (443, 55, 300), (502, 38, 285), (564, 41, 271), (615, 41, 271),
+             (670, 41, 271), (722, 41, 271), (773, 38, 240), (801, 75, 180), (801, 117, 180), (801, 161, 180),
+             (801, 195, 180),  # III divide
+             (801, 248, 180), (801, 291, 180), (801, 335, 180), (801, 379, 180), (801, 424, 180), (782, 463, 130),
+             (744, 463, 40),  # III first path end
+             (747, 220, 120), (744, 266, 180), (744, 309, 180), (744, 352, 180),  # III first path end
+             (730, 415, 90),  # III reunion
+             (682, 400, 50), (685, 362, 0), (685, 320, 0), (685, 278, 0), (685, 236, 0), (663, 197, 70), (612, 197, 90),
+             (560, 182, 45), (558, 143, 305), (605, 145, 270), (642, 125, 325), (636, 92, 55), (595, 95, 90),
+             (537, 93, 105), (500, 130, 133), (463, 160, 133), (413, 243, 133), (352, 267, 145), (353, 322, 180),
+             (353, 365, 180), (355, 410, 180), (352, 450, 205), (417, 515, 257), (480, 526, 270), (545, 526, 270),
+             (607, 525, 265), (670, 540, 230), (703, 590, 195), (717, 640, 230), (763, 630, 340), (758, 580, 15),
+             (760, 527, 285), (870, 525, 260), (923, 550, 210), (940, 600, 170), (930, 645, 160), (918, 693, 215),
+             (947, 731, 250), (1001, 743, 270), (1056, 743, 270), (1107, 743, 270), (1156, 743, 270), (1209, 743, 270),
+             (1258, 740, 275), (1303, 710, 325), (1317, 670, 0), (1287, 625, 60), (1238, 630, 150), (1215, 672, 130),
+             (1170, 675, 60), (1167, 615, 0)  # last field
+             ]
+
+statussymbols = [["Rolls Royce", "Millionärs-Einkommen aus Vermietung ", 1000],
+                 ["Villa in Südfrankreich", "Millionärs-Einkommen aus Vermietung ", 2000],
+                 ["Kunstsammlung", "Millionärs-Einkommen aus Ausstellungen ", 3000],
+                 ["Rennpferde", "Millionärs-Einkommen aus Geldpreisen ", 3000],
+                 ["Luxus-Yacht", "Millionärs-Einkommen aus Charteraufträgen ", 4000],
+                 ["Privat-Jet", "Millionärs-Einkommen aus Charterflügen ", 4000]]
+
+bullycards = [["Verpflichtungs-Karte", "Der Inhaber dieser Karte kann von einem Mitspieler seiner Wahl verlangen, "
+                                       "die Hälfte des Betrages, den er bezahlen muss, mitzutragen, sofern dieser "
+                                       "über 6.000 liegt.", 6000],
+              ["Befreiungs-Karte", "Der Inhaber dieser Karte ist berechtigt, Zahlungen aufgrund der "
+                                   "Berechtigungskarte oder Verpflichtungskarte eines Mitspielers zu verweigern.", 0],
+              ["Berechtigungskarte", "Der Inhaber dieser Karte ist berechtigt, von einem Mitspieler seiner Wahl die "
+                                     "Hälfte eines Gewinnes zu verlangen, sofern dieser Gewinn über 10.000 beträgt.",
+               10000]]
+
+
+fieldinfo = [["title", "text", "color"]]
+
 
 FIELDS = [{"title": "",
            "text": "",
-           "following_field": [1, 4],
+           "following_field": [4],
            "x": 1160,
            "y": 372,
            "rotation": 270,
            "color": None,
            "action": 0}]
-ACTIONS = [{"add_money": 0}]
-BULLYCARDS = [{}]
-STATUSSYMBOLS = [{}]
+
+ACTIONS = [{"act with more steps": False,
+            "add_money": 0,
+            "pause": False,
+            "set income": 0,
+            "go more steps": 0,  # -1 = planned, 0 = stay, number = go directed
+            "add insurance": None,
+            "lose insurance": None,
+            "payday": False,
+            "marriage": False,
+            "buy statussymbol": False,
+            }]
+
+BULLYCARDS = []
+STATUSSYMBOLS = []
 
 
 def copy_data():
     fields = []
     for idx, waypoint in enumerate(WAYPOINTS):
-        fields.append({"title": "",
-                       "text": "",
+        fields.append({"title": fieldinfo[0],
+                       "text": fieldinfo[1],
                        "following_field": [idx + 1],
                        "x": waypoint[0],
                        "y": waypoint[1],
                        "rotation": waypoint[2],
-                       "color": None,
+                       "color": fieldinfo[2],
                        "action": None})
+    for symbol in statussymbols:
+        STATUSSYMBOLS.append({"name": symbol[0], "description": symbol[1], "value": symbol[2]})
+    for card in bullycards:
+        BULLYCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
     data_dict = {"fields": fields, "actions": ACTIONS, "bully_cards": BULLYCARDS, "status_symbols": STATUSSYMBOLS}
-    save_json("fields", data_dict)
+    save_json("data", data_dict)
 
 
 def read_json(filename):
@@ -68,12 +125,16 @@ def save_json(filename, json_dict):
 
 class Game:
 
-    def __init__(self, screen):
+    def __init__(self, screen, player_number=1):
+        player_number = 3 # DEBUG Zwecke
         pygame.init()
         self.screen = screen
         # self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
-        self.player = []
+
+        self.players = [Player(WAYPOINTS[0][0], WAYPOINTS[0][1], (255, 0, 255), rotation=WAYPOINTS[0][2], active=True) for _ in range(player_number)]
+
+        # self.players = [Player(WAYPOINTS, (255, 0, 255), active=True) for _ in range(player_number)]
         """self.player.append(Player(1170, 360, (0, 212, 28)))
         self.player.append(Player(1185, 360, (255, 0, 0)))
         self.player.append(Player(1200, 360, (0, 212, 28)))
@@ -86,17 +147,18 @@ class Game:
         self.player.append(Player(1200, 411, (255, 0, 0)))
         self.player.append(Player(1170, 411, (255, 255, 0)))
         self.player.append(Player(1185, 411, (0, 68, 220)))"""
-        for point in WAYPOINTS:
-            self.player.append(Player(point[0], point[1], (255, 0, 255), rotation=point[2], active=True))
+        for point in WAYPOINTS[:1]:
+            self.players.append(Player(point[0], point[1], (255, 0, 255), rotation=point[2], active=True))
         self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett.jpg').convert()
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
         self.font = pygame.font.Font(None, 30)
         self.wheel_angle = 0
         self.selected_number = 0
+        self.current_player = 0
 
-    def get_color(self, number):
-        colors = [
+        # Für Wheel
+        self.colors = [
             (168, 0, 185),  # Lila
             (255, 0, 255),  # pink
             (255, 0, 0),  # rot
@@ -108,43 +170,18 @@ class Game:
             (255, 255, 0),  # gelb
             (200, 255, 0)  # gelb-grün
         ]
-        return colors[number % len(colors)]
+        # Schriftart für die Zahlen in Wheel
+        self.font = pygame.font.Font(None, 35)
+        self.font_large = pygame.font.Font(None, 70)
+        self.wheel = Wheel(WHEEL_POSITION, WHEEL_RADIUS, self.colors, self.font, self.font_large)
 
     def spin_wheel(self):
-        return random.randint(1, 10)
-
-    def draw_wheel(self):
-        for i in range(10):
-            angle_start = math.radians(self.wheel_angle + i * 360 / 10)
-            angle_end = math.radians(self.wheel_angle + (i + 1) * 360 / 10)
-            color = self.get_color(i)
-            pygame.draw.arc(self.screen, color,
-                            pygame.Rect(WHEEL_POSITION[0] - WHEEL_RADIUS, WHEEL_POSITION[1] - WHEEL_RADIUS,
-                                        2 * WHEEL_RADIUS, 2 * WHEEL_RADIUS), angle_start, angle_end, WHEEL_RADIUS)
-
-        for i in range(10):
-            angle = math.radians(self.wheel_angle + i * 360 / 10)
-            start_pos = (
-                WHEEL_POSITION[0] + WHEEL_RADIUS * math.cos(angle),
-                WHEEL_POSITION[1] + WHEEL_RADIUS * math.sin(angle)
-            )
-            end_pos = (
-                WHEEL_POSITION[0] + WHEEL_RADIUS * 0.9 * math.cos(angle),
-                WHEEL_POSITION[1] + WHEEL_RADIUS * 0.9 * math.sin(angle)
-            )
-            pygame.draw.line(self.screen, (255, 255, 255), start_pos, end_pos, 2)
-            number_surface = self.font.render(str(i + 1), True, (0, 0, 0))
-            number_pos = (
-                WHEEL_POSITION[0] + WHEEL_RADIUS * 0.8 * math.cos(angle),
-                WHEEL_POSITION[1] + WHEEL_RADIUS * 0.8 * math.sin(angle)
-            )
-            self.screen.blit(number_surface, number_pos)
-        # selected_number_surface = self.font.render(str(self.selected_number), True, (0, 0, 0))
-        # self.screen.blit(selected_number_surface, WHEEL_POSITION)
+        self.wheel.spin()
 
     def run(self):
         running = True
-        rate = 15
+
+        self.screen.blit(self.board_image, (300, 0))
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -154,22 +191,34 @@ class Game:
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_ESCAPE:
                         return 'game_pausing'
+                    if event.key == pygame.K_SPACE:
+                        self.spin_wheel()
 
-            self.player[0].y_new = 257
-            self.player[0].x_new = 1237
-            self.player[0].rotation_new = 360
-            if rate > 1:
-                rate -= 1
-                self.player[0].move(rate)
+            self.wheel.update()
+
             self.screen.blit(self.board_image, (300, 0))
-            self.draw_wheel()
 
-            for player in self.player:
-                player.draw(self.screen)
+            self.wheel.draw(self.screen)
+            """
+            myFont = pygame.font.SysFont("Times New Roman", 18)
+            randNumLabel = myFont.render("Player 1:", 1, (255, 255, 255))
+            diceDisplay = myFont.render(str(self.spin_wheel()), 1, (255, 255, 255))
+
+            self.screen.blit(randNumLabel, (20, 20))
+            self.screen.blit(diceDisplay, (20, 40))
+            """
+            self.players[0].x_new = 1237
+            self.players[0].y_new = 257
+            self.players[0].rotation_new = 360
+            self.screen.blit(self.board_image, (300, 0))
+
+            if self.players[0].x != self.players[0].x_new or self.players[0].y != self.players[0].y_new or self.players[0].rotation != self.players[0].rotation:
+                self.players[0].move()
+            self.players[0].draw(self.screen)
+
             pygame.display.update()
             self.clock.tick(60)
 
 
 if __name__ == "__main__":
-    # Game(pygame.display.set_mode((1400, 800))).run()
-    copy_data()
+    Game(pygame.display.set_mode((1400, 800))).run()
