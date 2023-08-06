@@ -253,7 +253,7 @@ class Game:
         self.spinned_wheel = False
         self.selected_number = 0
 
-        self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 1.png.jpg').convert()
+        self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 1.png').convert()
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
         # Für Wheel
