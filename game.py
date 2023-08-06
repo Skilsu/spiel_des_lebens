@@ -253,7 +253,7 @@ class Game:
         self.spinned_wheel = False
         self.selected_number = 0
 
-        self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett.jpg').convert()
+        self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 1.png.jpg').convert()
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
         # Für Wheel
@@ -451,6 +451,8 @@ class Game:
                             self.player_turn_index = (self.player_turn_index + 1) % self.player_number
                             current_player = self.players.sprites()[self.player_turn_index]
                             current_player.active = True
+                        elif self.state == 'player_moving':
+                            pass
                         else:
                             current_player.active = True
                             self.wheel.spin()
