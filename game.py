@@ -82,18 +82,39 @@ bullycards = [["Verpflichtungs-Karte", "Der Inhaber dieser Karte kann von einem 
                                      "Hälfte eines Gewinnes zu verlangen, sofern dieser Gewinn über 10.000 beträgt.",
                10000]]
 
-fieldinfo = [["title", "text", "color", []]]
+FIELDS_Vorlage = [{"title": "",
+                   "text": "",
+                   "following_field": [4],
+                   "x": 1160,
+                   "y": 372,
+                   "rotation": 270,
+                   "color": None,
+                   "action": []}]
 
-FIELDS = [{"title": "",
-           "text": "",
-           "following_field": [4],
-           "x": 1160,
-           "y": 372,
-           "rotation": 270,
-           "color": None,
-           "action": []}]
+fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", RED, [4], [0]],
+             # TODO implementieren von 2 Wegen
+             ["", "Du hast dein Bankkonto überzogen. Zahle 1.000.", YELLOW, [2], [1]],
+             ["", "Du gewinnst ein Preisausschreiben und erhältst 5.000.", YELLOW, [3], [11]],
+             ["", "Du wirst angestellt. Gehalt 5.000. Du rückst 1 Feld vor.", RED, [15], [12]],
+             ["", "Du machst die Aufnahmeprüfung. Einmal aussetzen.", YELLOW, [5], [3]],
+             ["", "Studiengebühren sind fällig. Zahle 2.000.", RED, [6], [4]],
+             ["", "Du fällst durch eine Prüfung. Einmal aussetzen.", YELLOW, [7], [3]],
+             ["", "Du bekommst 1.000 für deine Dissertation.", YELLOW, [8], [2]],
+             ["", "Du gewinnst beim Pferderennen und erhältst 1.000.", YELLOW, [9], [2]],
+             ["", "Artzt! Einkommen 10.000. Du rückst 6 Felder vor.", YELLOW, [10], [5]],
+             ["", "Journalist! Einkommen 20.000. Du rückst 5 Felder vor.", YELLOW, [11], [6]],
+             ["", "Anwalt! Einkommen 15.000. Du rückst 4 Felder vor.", YELLOW, [12], [7]],
+             ["", "Lehrer! Einkommen 8.000. Du rückst 3 Felder vor.", YELLOW, [13], [8]],
+             ["", "Physiker! Einkommen 10.000. Du rückst 2 Felder vor.", YELLOW, [14], [9]],
+             ["", "Bachelor! Einkommen 6.000.", RED, [15], [10]],
+             ["Zahltag", "", RED, [16], [16]],
+             ["", "Du hast Geburtstag und erhältst 1.000.", YELLOW, [17], [2]],
+             ["", "Du gewinnst in der Lotterie und erhältst 50.000.", YELLOW, [18], [13]],
+             ["", "Du fichst ein Testament an. Zahle 10.000 Gerichtsgebühren.", YELLOW, [19], [14]],
+             ["", "Deine Tante stirbt. Du erbst 50.000", YELLOW, [20], [13]]]
 
-actions = [[False, -1000, False, 0, -1, None, None, False, False, False, 0],  # - 1.000
+actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0],  # + 3.000 und Autoversicherung
+           [False, -1000, False, 0, -1, None, None, False, False, False, 0],  # - 1.000
            [False, 1000, False, 0, -1, None, None, False, False, False, 0],  # + 1.000
            [False, 0, True, 0, -1, None, None, False, False, False, 0],  # Pause
            [True, -2000, False, 0, -1, None, None, False, False, False, 0],  # - 2.000 immer
@@ -120,22 +141,9 @@ actions = [[False, -1000, False, 0, -1, None, None, False, False, False, 0],  # 
            [False, 0, False, 0, -1, None, None, False, False, False, 0],
            [False, 0, False, 0, -1, None, None, False, False, False, 0]]
 
-ACTIONS = [{"act with more steps": False,
-            "add_money": 0,
-            "pause": False,
-            "set income": 0,
-            "go more steps": 0,  # -1 = planned, 0 = stay, number = go directed
-            "add insurance": None,
-            "lose insurance": None,
-            "payday": False,
-            "marriage": False,
-            "buy statussymbol": False,
-            "income if 0": 0
-            }]
 
-BULLYCARDS = []
-STATUSSYMBOLS = []
-"""self.player.append(Player(1170, 360, (0, 212, 28)))
+"""
+self.player.append(Player(1170, 360, (0, 212, 28)))
         self.player.append(Player(1185, 360, (255, 0, 0)))
         self.player.append(Player(1200, 360, (0, 212, 28)))
         self.player.append(Player(1215, 360, (255, 255, 0)))
@@ -146,10 +154,72 @@ STATUSSYMBOLS = []
         self.player.append(Player(1215, 411, (0, 68, 220)))
         self.player.append(Player(1200, 411, (255, 0, 0)))
         self.player.append(Player(1170, 411, (255, 255, 0)))
-        self.player.append(Player(1185, 411, (0, 68, 220)))"""
+        self.player.append(Player(1185, 411, (0, 68, 220)))
+"""
+
+ACTIONS_Vorlage = [{"act with more steps": False,
+                    "add_money": 0,
+                    "pause": False,
+                    "set income": 0,
+                    "go more steps": 0,  # -1 = planned, 0 = stay, number = go directed
+                    "add insurance": None,
+                    "lose insurance": None,
+                    "payday": False,
+                    "marriage": False,
+                    "buy statussymbol": False,
+                    "income if 0": 0
+                    }]
+
+ACTIONS = []
+for action in actions:
+    ACTIONS.append({"act with more steps": action[0],
+                    "add_money": action[1],
+                    "pause": action[2],
+                    "set income": action[3],
+                    "go more steps": action[4],  # -1 = planned, 0 = stay, number = go directed
+                    "add insurance": action[5],
+                    "lose insurance": action[6],
+                    "payday": action[7],
+                    "marriage": action[8],
+                    "buy statussymbol": action[9],
+                    "income if 0": action[10]
+                    })
+FIELDS = []
+for idx, info in enumerate(fieldinfo):
+    FIELDS.append({"title": info[0],
+                   "text": info[1],
+                   "following_field": info[3],
+                   "x": WAYPOINTS[idx][0],
+                   "y": WAYPOINTS[idx][1],
+                   "rotation": WAYPOINTS[idx][2],
+                   "color": info[2],
+                   "action": info[4]})
+
+for idx, waypoint in enumerate(WAYPOINTS[20:]):
+    FIELDS.append({"title": "",
+                   "text": "Add 1.000.",
+                   "following_field": [idx + 21],
+                   "x": waypoint[0],
+                   "y": waypoint[1],
+                   "rotation": waypoint[2],
+                   "color": YELLOW,
+                   "action": [2]})
+for field in FIELDS:
+    print(field)
+STATUSSYMBOLS = []
+for symbol in statussymbols:
+    STATUSSYMBOLS.append({"name": symbol[0], "description": symbol[1], "value": symbol[2]})
+BULLYCARDS = []
+for card in bullycards:
+    BULLYCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
 
 
-def copy_data():
+def read_json(filename):
+    with open(f"{filename}.json", "r") as infile:
+        return json.load(infile)
+
+
+def save_json(filename, json_dict):
     fields = []
     for idx, waypoint in enumerate(WAYPOINTS):
         fields.append({"title": fieldinfo[0],
@@ -166,14 +236,6 @@ def copy_data():
         BULLYCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
     data_dict = {"fields": fields, "actions": ACTIONS, "bully_cards": BULLYCARDS, "status_symbols": STATUSSYMBOLS}
     save_json("data", data_dict)
-
-
-def read_json(filename):
-    with open(f"{filename}.json", "r") as infile:
-        return json.load(infile)
-
-
-def save_json(filename, json_dict):
     with open(f"{filename}.json", "w") as outfile:
         json.dump(json_dict, outfile)
 
@@ -189,6 +251,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.state = ''
         self.player_turn_index = 0
+        self.has_acted = False
 
         self.spinned_wheel = False
         self.selected_number = 0
@@ -220,33 +283,75 @@ class Game:
         for i in range(self.player_number):
             player = Player(START_POSITION_PLAYER1[0],
                             START_POSITION_PLAYER1[1] + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)),
-                            START_POSITION_PLAYER1[2], self.colors[i])
+                            START_POSITION_PLAYER1[2], self.colors[i], name="Player " + str(i + 1))
 
             self.players.add(player)
         print(len(self.players.sprites()))
 
-    def draw_rectangles(self):
+    def draw_rectangles(self, current_player):
         y = 5
 
-        for i, rect_data in enumerate(rectangles):
-            color = rect_data["color"]
-            text = rect_data["text"]
+        for i, player in enumerate(self.players):
 
             # Draw the rectangle
-            pygame.draw.rect(self.screen, color, (5, 5 + 790 * i / len(rectangles), 290, 120))
+            pygame.draw.rect(self.screen, player.color, (5, 5 + 790 * i / len(rectangles), 290, 120))
 
             # Render the text
-            text_surface = self.font.render(text, True, WHITE)
-            self.screen.blit(text_surface, (10, 10 + 790 * i / len(rectangles)))
+            name_surface = self.font.render(player.name, True, WHITE)
+            self.screen.blit(name_surface, (10, 10 + 790 * i / len(rectangles)))
+            money_surface = self.font.render("Money: " + str(player.money), True, WHITE)
+            self.screen.blit(money_surface, (10, 40 + 790 * i / len(rectangles)))
+            income_surface = self.font.render("Income: " + str(player.income), True, WHITE)
+            self.screen.blit(income_surface, (10, 70 + 790 * i / len(rectangles)))
+            if player.pause:
+                pause_surface = self.font.render("Aussetzen!", True, WHITE)
+                self.screen.blit(pause_surface, (10, 100 + 790 * i / len(rectangles)))
 
             # Move to the next position
             y += 125
+        pygame.draw.rect(self.screen, WHITE, (5, 5 + 790 * len(self.players) / len(rectangles), 290, 120))
+
+        # Render the text
+        title_surface = self.font.render(FIELDS[current_player.current_field]["title"], True, BLUE)
+        self.screen.blit(title_surface, (10, 10 + 790 * len(self.players) / len(rectangles)))
+
+        text_font = pygame.font.Font(None, 25)
+        text_lines = []
+        text = FIELDS[current_player.current_field]["text"]
+        max_line_width = 290 - 20  # Leave some padding on each side
+
+        # Split the text into lines based on the width of the box
+        words = text.split()
+        current_line = ""
+        for word in words:
+            test_line = current_line + word + " "
+            if text_font.size(test_line)[0] <= max_line_width:
+                current_line = test_line
+            else:
+                text_lines.append(current_line)
+                current_line = word + " "
+        if current_line:
+            text_lines.append(current_line)
+
+        line_height = text_font.get_linesize()
+        for i, line in enumerate(text_lines):
+            text_surface = text_font.render(line, True, BLUE)
+            self.screen.blit(text_surface, (10, 40 + 790 * len(self.players) / len(rectangles) + i * line_height))
 
     def run(self):
         running = True
         while running:
 
             current_player = self.players.sprites()[self.player_turn_index]
+            pause = True
+            while pause:
+                if current_player.pause:
+                    current_player.pause = False
+
+                    self.player_turn_index = (self.player_turn_index + 1) % self.player_number
+                    current_player = self.players.sprites()[self.player_turn_index]
+                else:
+                    pause = False
             # print(current_player.color)
 
             for event in pygame.event.get():
@@ -257,6 +362,11 @@ class Game:
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_ESCAPE:
                         return 'game_pausing'
+
+                    if event.key == pygame.K_RETURN:
+                        self.has_acted = False
+                        self.player_turn_index = (self.player_turn_index + 1) % self.player_number
+                        current_player.active = False
 
                     if event.key == pygame.K_SPACE:
                         current_player.active = True
@@ -275,74 +385,42 @@ class Game:
                 current_player.moving = True
                 self.selected_number = self.wheel.get_selected_number()
 
-                current_player.current_waypoint += self.selected_number
+                current_player.steps_to_go = self.selected_number
+                current_player.x_new = FIELDS[current_player.current_field]["x"]
+                current_player.y_new = FIELDS[current_player.current_field]["y"]
+                current_player.rotation_new = FIELDS[current_player.current_field]["rotation"]
                 print(self.selected_number)
 
             if self.state == 'player_moving':
-                # print("state player_moving")
-                current_player.move()
-
-                print(WAYPOINTS[current_player.current_waypoint][0], WAYPOINTS[current_player.current_waypoint][1],
-                      WAYPOINTS[current_player.current_waypoint][2])
-                current_player.update(WAYPOINTS[current_player.current_waypoint][0],
-                                      WAYPOINTS[current_player.current_waypoint][1],
-                                      WAYPOINTS[current_player.current_waypoint][2])
-                self.player_turn_index = (self.player_turn_index + 1) % self.player_number
-                self.state = ''
-                current_player.active = False
+                print("state player_moving")
+                if current_player.moving:
+                    current_player.move()
+                else:
+                    if current_player.steps_to_go > 0:
+                        if FIELDS[current_player.current_field + 1]["color"] == RED:
+                            current_player.act(
+                                ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
+                        current_player.steps_to_go -= 1
+                        current_player.moving = True
+                        current_player.current_field = FIELDS[current_player.current_field]["following_field"][0]  # TODO implement choice
+                        current_player.x_new = FIELDS[current_player.current_field]["x"]
+                        current_player.y_new = FIELDS[current_player.current_field]["y"]
+                        current_player.rotation_new = FIELDS[current_player.current_field]["rotation"]
+                    else:
+                        if not self.has_acted:
+                            current_player.act(
+                                ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
+                        self.state = ''
+                        self.has_acted = True
 
             self.screen.fill((0, 0, 0))
-            self.draw_rectangles()
+            self.draw_rectangles(current_player)
             self.screen.blit(self.board_image, (300, 0))
-
             self.wheel.draw(self.screen)
-
-            # pressed_keys = pygame.key.get_pressed()
-
-            # current_player.update(pressed_keys)
-
-            """
-            myFont = pygame.font.SysFont("Times New Roman", 18)
-            randNumLabel = self.font.render("Player 1:", 1, (255, 255, 255))
-            diceDisplay = self.font.render(str(random.randint(1, 10)), 1, (255, 255, 255))
-
-            self.screen.blit(randNumLabel, (20, 20))
-            self.screen.blit(diceDisplay, (20, 45))
-            
-            self.players[0].x_new = 1237
-            self.players[0].y_new = 257
-            self.players[0].rotation_new = 360
-            self.screen.blit(self.board_image, (300, 0))
-
-            if self.players[0].x != self.players[0].x_new or \
-                    self.players[0].y != self.players[0].y_new \
-                    or self.players[0].rotation != self.players[0].rotation:
-                self.players[0].move()
-
-            self.players[0].draw(self.screen)
-            """
 
             for entity in self.players:
                 entity.draw()
                 self.screen.blit(entity.image, entity.rect)
-
-            #self.players.draw(self.screen)
-
-            """if self.player_turn_index == 0:
-                self.players.sprites()[self.player_turn_index].update(WAYPOINTS[3][0], WAYPOINTS[3][1], WAYPOINTS[3][2])
-                self.player_turn_index = 1
-
-            if self.player_turn_index == 1:
-                self.players.sprites()[self.player_turn_index].update(WAYPOINTS[4][0], WAYPOINTS[4][1], WAYPOINTS[4][2])
-                self.player_turn_index = 2"""
-
-            """if self.player_turn_index == 1:
-                self.players.sprites()[self.player_turn_index].update(WAYPOINTS[5][0], WAYPOINTS[5][1], WAYPOINTS[5][2])
-                self.player_turn_index = 2"""
-            #self.players.sprites()[0].update(WAYPOINTS[][0], WAYPOINTS[2][1], WAYPOINTS[2][2])
-            #self.players.sprites()[1].update(WAYPOINTS[6][0], WAYPOINTS[6][1], WAYPOINTS[6][2])
-            #self.players.sprites()[2].update(WAYPOINTS[3][0], WAYPOINTS[3][1], WAYPOINTS[3][2])
-            #self.players.update()
 
             pygame.display.update()
             self.clock.tick(60)
