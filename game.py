@@ -106,7 +106,7 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["", "Anwalt! Einkommen 15.000. Du rückst 4 Felder vor.", YELLOW, [12], [7]],
              ["", "Lehrer! Einkommen 8.000. Du rückst 3 Felder vor.", YELLOW, [13], [8]],
              ["", "Physiker! Einkommen 10.000. Du rückst 2 Felder vor.", YELLOW, [14], [9]],
-             ["", "Bachelor! Einkommen 6.000.", RED, [15], [10]],
+             ["", "Bachelor! Wenn du noch kein Einkommen hast beträgt dein Einkommen jetzt 6.000.", RED, [15], [10]],
              ["Zahltag", "", RED, [16], [16]],
              ["", "Du hast Geburtstag und erhältst 1.000.", YELLOW, [17], [2]],
              ["", "Du gewinnst in der Lotterie und erhältst 50.000.", YELLOW, [18], [13]],
@@ -140,7 +140,6 @@ actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0],  # 
            [False, 0, False, 0, -1, None, None, False, False, False, 0],
            [False, 0, False, 0, -1, None, None, False, False, False, 0],
            [False, 0, False, 0, -1, None, None, False, False, False, 0]]
-
 
 """
 self.player.append(Player(1170, 360, (0, 212, 28)))
@@ -194,8 +193,7 @@ for idx, info in enumerate(fieldinfo):
                    "rotation": WAYPOINTS[idx][2],
                    "color": info[2],
                    "action": info[4]})
-
-for idx, waypoint in enumerate(WAYPOINTS[20:]):
+for idx, waypoint in enumerate(WAYPOINTS[len(fieldinfo):]):
     FIELDS.append({"title": "",
                    "text": "Add 1.000.",
                    "following_field": [idx + 21],
@@ -251,7 +249,6 @@ class Game:
         self.clock = pygame.time.Clock()
         self.state = ''
         self.player_turn_index = 0
-        self.has_acted = False
 
         self.spinned_wheel = False
         self.selected_number = 0
@@ -288,36 +285,42 @@ class Game:
             self.players.add(player)
         print(len(self.players.sprites()))
 
-    def draw_rectangles(self, current_player):
-        y = 5
-
+    def draw_infos(self, current_player):
         for i, player in enumerate(self.players):
 
             # Draw the rectangle
-            pygame.draw.rect(self.screen, player.color, (5, 5 + 790 * i / len(rectangles), 290, 120))
+            pygame.draw.rect(self.screen, player.color, (5, 5 + 800 * i / len(rectangles), 290, 120))
 
             # Render the text
             name_surface = self.font.render(player.name, True, WHITE)
-            self.screen.blit(name_surface, (10, 10 + 790 * i / len(rectangles)))
+            self.screen.blit(name_surface, (10, 10 + 800 * i / len(rectangles)))
             money_surface = self.font.render("Money: " + str(player.money), True, WHITE)
-            self.screen.blit(money_surface, (10, 40 + 790 * i / len(rectangles)))
+            self.screen.blit(money_surface, (10, 40 + 800 * i / len(rectangles)))
             income_surface = self.font.render("Income: " + str(player.income), True, WHITE)
-            self.screen.blit(income_surface, (10, 70 + 790 * i / len(rectangles)))
+            self.screen.blit(income_surface, (10, 70 + 800 * i / len(rectangles)))
             if player.pause:
                 pause_surface = self.font.render("Aussetzen!", True, WHITE)
-                self.screen.blit(pause_surface, (10, 100 + 790 * i / len(rectangles)))
+                self.screen.blit(pause_surface, (10, 100 + 800 * i / len(rectangles)))
+        if current_player.current_field == 0:  # TODO Field logik muss in extra methode weil sie vor moving logik
+            # aufgerufen werden muss, da update_player sonst das falsche feld einträgt
+            field = 0
+        else:
+            field = current_player.current_field - 1
 
-            # Move to the next position
-            y += 125
-        pygame.draw.rect(self.screen, WHITE, (5, 5 + 790 * len(self.players) / len(rectangles), 290, 120))
+        pygame.draw.rect(self.screen, FIELDS[field]["color"], (5, 5 + 670, 290, 120))
 
         # Render the text
-        title_surface = self.font.render(FIELDS[current_player.current_field]["title"], True, BLUE)
-        self.screen.blit(title_surface, (10, 10 + 790 * len(self.players) / len(rectangles)))
+        if FIELDS[field]["color"] == YELLOW:
+            text_color = BLUE
+        else:
+            text_color = WHITE
+
+        title_surface = self.font.render(FIELDS[field]["title"], True, text_color)
+        self.screen.blit(title_surface, (10, 10 + 670))
 
         text_font = pygame.font.Font(None, 25)
         text_lines = []
-        text = FIELDS[current_player.current_field]["text"]
+        text = FIELDS[field]["text"]
         max_line_width = 290 - 20  # Leave some padding on each side
 
         # Split the text into lines based on the width of the box
@@ -335,8 +338,32 @@ class Game:
 
         line_height = text_font.get_linesize()
         for i, line in enumerate(text_lines):
-            text_surface = text_font.render(line, True, BLUE)
-            self.screen.blit(text_surface, (10, 40 + 790 * len(self.players) / len(rectangles) + i * line_height))
+            text_surface = text_font.render(line, True, text_color)
+            self.screen.blit(text_surface, (10, 40 + 670 + i * line_height))
+
+    def update_player(self, current_player):
+        current_player.steps_to_go -= 1
+        current_player.moving = True
+
+        # TODO implement choice???
+        current_player.x_new = FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"]
+        current_player.y_new = FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"]
+
+        rotation_new = FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"]
+
+        if current_player.rotation > 180:
+            rotation_modified = rotation_new + 360
+            diff = abs(current_player.rotation - rotation_modified)
+        else:
+            rotation_modified = rotation_new - 360
+            diff = abs(current_player.rotation - rotation_modified)
+
+        if diff < abs(rotation_new - current_player.rotation):
+            rotation_new = rotation_modified
+        current_player.rotation_new = rotation_new
+        current_player.current_field = FIELDS[current_player.current_field]["following_field"][0]
+
+        return current_player
 
     def run(self):
         running = True
@@ -363,58 +390,59 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         return 'game_pausing'
 
-                    if event.key == pygame.K_RETURN:
-                        self.has_acted = False
-                        self.player_turn_index = (self.player_turn_index + 1) % self.player_number
-                        current_player.active = False
-
                     if event.key == pygame.K_SPACE:
-                        current_player.active = True
-                        self.wheel.spin()
-                        # self.player_turn_index = (self.player_turn_index + 1) % self.player_number
-                        if not current_player.moving:
-                            current_player.update()
+                        if self.state == 'player returning':
+                            self.state = 'player_moving'
+                        elif self.state == 'next_player':
+                            self.state = ''
+                            current_player.active = False
+                            self.player_turn_index = (self.player_turn_index + 1) % self.player_number
+                            current_player = self.players.sprites()[self.player_turn_index]
+                            current_player.active = True
+                        else:
+                            current_player.active = True
+                            self.wheel.spin()
+                            # self.player_turn_index = (self.player_turn_index + 1) % self.player_number
+                            if not current_player.moving:
+                                current_player.update()
 
-                        self.spinned_wheel = True
+                            self.spinned_wheel = True
 
             self.wheel.update()
 
             if self.spinned_wheel and self.wheel.has_stopped():
                 self.spinned_wheel = False
                 self.state = 'player_moving'
-                current_player.moving = True
                 self.selected_number = self.wheel.get_selected_number()
 
                 current_player.steps_to_go = self.selected_number
-                current_player.x_new = FIELDS[current_player.current_field]["x"]
-                current_player.y_new = FIELDS[current_player.current_field]["y"]
-                current_player.rotation_new = FIELDS[current_player.current_field]["rotation"]
+                current_player.moving = False
                 print(self.selected_number)
 
             if self.state == 'player_moving':
-                print("state player_moving")
                 if current_player.moving:
                     current_player.move()
                 else:
                     if current_player.steps_to_go > 0:
-                        if FIELDS[current_player.current_field + 1]["color"] == RED:
+                        if FIELDS[current_player.current_field]["color"] == RED:
                             current_player.act(
                                 ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
-                        current_player.steps_to_go -= 1
-                        current_player.moving = True
-                        current_player.current_field = FIELDS[current_player.current_field]["following_field"][0]  # TODO implement choice
-                        current_player.x_new = FIELDS[current_player.current_field]["x"]
-                        current_player.y_new = FIELDS[current_player.current_field]["y"]
-                        current_player.rotation_new = FIELDS[current_player.current_field]["rotation"]
+                            self.state = 'player returning'
+
+                        if current_player.steps_to_go > 0:
+                            current_player = self.update_player(current_player)
                     else:
-                        if not self.has_acted:
-                            current_player.act(
-                                ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
-                        self.state = ''
-                        self.has_acted = True
+                        current_player.act(
+                            ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
+
+                        if current_player.steps_to_go > 0:
+                            current_player = self.update_player(current_player)
+                            self.state = 'player returning'
+                        else:
+                            self.state = 'next_player'
 
             self.screen.fill((0, 0, 0))
-            self.draw_rectangles(current_player)
+            self.draw_infos(current_player)
             self.screen.blit(self.board_image, (300, 0))
             self.wheel.draw(self.screen)
 
@@ -427,4 +455,4 @@ class Game:
 
 
 if __name__ == "__main__":
-    Game(pygame.display.set_mode((1400, 800))).run()
+    Game(pygame.display.set_mode((1700, 1000))).run()

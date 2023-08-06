@@ -34,15 +34,15 @@ class Player(pygame.sprite.Sprite):
         self.x_new = x
         self.y_new = y
         self.rotation_new = rotation
-        self.rate = 5
+        self.rate = 30
 
         # game logic
-        self.money = 10000
+        self.money = 0
         self.children = []
         self.status_symbols = []
         self.bully_cards = []
         self.insurance = []
-        self.depth = 0
+        self.debt = 0
         self.income = 0
         self.pause = False
 
@@ -59,7 +59,7 @@ class Player(pygame.sprite.Sprite):
             self.y += (self.y_new - self.y) / self.rate
             self.rotation += (self.rotation_new - self.rotation) / self.rate
         else:
-            self.rate = 5
+            self.rate = 30
             self.moving = False
 
     def draw(self):
@@ -109,6 +109,9 @@ class Player(pygame.sprite.Sprite):
             self.money += self.income
         if action["income if 0"] != 0 and self.income == 0:
             self.income = action["income if 0"]
+        if self.money < 0:
+            self.money += 20000
+            self.debt += 1
 
     def change_money(self, amount):
         self.money = self.money + amount
