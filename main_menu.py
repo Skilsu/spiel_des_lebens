@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+
 # Button Klasse
 class Button:
     def __init__(self, color, x, y, width, height, text=''):
@@ -19,9 +20,9 @@ class Button:
 
         if self.text != '':
             font = pygame.font.SysFont('comicsans', 60)
-            text = font.render(self.text, 1, (0,0,0))
+            text = font.render(self.text, 1, (0, 0, 0))
             win.blit(text, (
-            self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
+                self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
 
     def is_over(self, pos):
         # Pos is the mouse position or a tuple of (x,y) coordinates
@@ -30,6 +31,7 @@ class Button:
                 return True
         return False
 
+
 class MainMenu:
     def __init__(self, screen):
         pygame.init()
@@ -37,7 +39,7 @@ class MainMenu:
         # Bildschirmeinstellungen
         WIDTH, HEIGHT = 1400, 800
         self.screen = screen
-        #self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        # self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
         # Farbdefinitionen
         self.WHITE = (255, 255, 255)
@@ -100,6 +102,7 @@ class MainMenu:
                         self.quit_button.color = (255, 0, 0)
                     else:
                         self.quit_button.color = self.GREY
+
 
 if __name__ == "__main__":
     MainMenu(pygame.display.set_mode((1400, 800))).run()

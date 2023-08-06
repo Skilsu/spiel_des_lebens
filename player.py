@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
         self.money = 0
         self.children = []
         self.status_symbols = []
-        self.bully_cards = []
+        self.action_cards = []
         self.insurance = []
         self.debt = 0
         self.income = 0

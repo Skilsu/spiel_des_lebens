@@ -73,15 +73,14 @@ statussymbols = [["Rolls Royce", "Millionärs-Einkommen aus Vermietung ", 1000],
                  ["Rennpferde", "Millionärs-Einkommen aus Geldpreisen ", 3000],
                  ["Luxus-Yacht", "Millionärs-Einkommen aus Charteraufträgen ", 4000],
                  ["Privat-Jet", "Millionärs-Einkommen aus Charterflügen ", 4000]]
-
-bullycards = [["Verpflichtungs-Karte", "Der Inhaber dieser Karte kann von einem Mitspieler seiner Wahl verlangen, "
+actioncards = [["Verpflichtungs-Karte", "Der Inhaber dieser Karte kann von einem Mitspieler seiner Wahl verlangen, "
                                        "die Hälfte des Betrages, den er bezahlen muss, mitzutragen, sofern dieser "
                                        "über 6.000 liegt.", 6000],
               ["Befreiungs-Karte", "Der Inhaber dieser Karte ist berechtigt, Zahlungen aufgrund der "
                                    "Berechtigungskarte oder Verpflichtungskarte eines Mitspielers zu verweigern.", 0],
               ["Berechtigungskarte", "Der Inhaber dieser Karte ist berechtigt, von einem Mitspieler seiner Wahl die "
                                      "Hälfte eines Gewinnes zu verlangen, sofern dieser Gewinn über 10.000 beträgt.",
-               10000]]
+               10000]]  # TODO Button auf spieler rect um anderem spieler aktion zu ermöglichen
 
 FIELDS_Vorlage = [{"title": "",
                    "text": "",
@@ -130,7 +129,7 @@ actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0],  # 
            [True, 0, False, 5000, 1, None, None, False, False, False, 0],  # Einkommen 5.000 und 1 Feld vor immer
            [False, 50000, False, 0, -1, None, None, False, False, False, 0],  # + 50.000
            [False, -10000, False, 0, -1, None, None, False, False, False, 0],  # -10.000
-           [False, -5000, False, 0, -1, "live", None, False, False, False, 0],
+           [False, -5000, False, 0, -1, "life", None, False, False, False, 0],
            # Lebensversicherung abgeschlossen und 5.000 gezahlt
            [False, 0, False, 0, -1, None, None, True, False, False, 0],  # Payday
            [False, 0, False, 0, -1, None, None, False, True, False, 0],  # Marriage
@@ -162,7 +161,7 @@ ACTIONS_Vorlage = [{"act with more steps": False,
                     "pause": False,
                     "set income": 0,
                     "go more steps": 0,  # -1 = planned, 0 = stay, number = go directed
-                    "add insurance": None,
+                    "add insurance": None,  # "car", "fire", "life"
                     "lose insurance": None,
                     "payday": False,
                     "marriage": False,
@@ -208,9 +207,9 @@ for field in FIELDS:
 STATUSSYMBOLS = []
 for symbol in statussymbols:
     STATUSSYMBOLS.append({"name": symbol[0], "description": symbol[1], "value": symbol[2]})
-BULLYCARDS = []
-for card in bullycards:
-    BULLYCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
+ACTIONCARDS = []
+for card in actioncards:
+    ACTIONCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
 
 
 def read_json(filename):
@@ -231,9 +230,9 @@ def save_json(filename, json_dict):
                        "action": None})
     for symbol in statussymbols:
         STATUSSYMBOLS.append({"name": symbol[0], "description": symbol[1], "value": symbol[2]})
-    for card in bullycards:
-        BULLYCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
-    data_dict = {"fields": fields, "actions": ACTIONS, "bully_cards": BULLYCARDS, "status_symbols": STATUSSYMBOLS}
+    for card in actioncards:
+        ACTIONCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
+    data_dict = {"fields": fields, "actions": ACTIONS, "action_cards": ACTIONCARDS, "status_symbols": STATUSSYMBOLS}
     save_json("data", data_dict)
     with open(f"{filename}.json", "w") as outfile:
         json.dump(json_dict, outfile)
@@ -303,7 +302,7 @@ class Game:
         """
         self.children = []
         self.status_symbols = []
-        self.bully_cards = []
+        self.action_cards = []
         self.insurance = []
         self.debt = 0
         self.income = 0

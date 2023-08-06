@@ -4,7 +4,7 @@ from main_menu import MainMenu
 from game import Game
 from pause_menu import PauseMenu
 
-SCREEN_SIZE = (1400, 800)
+SCREEN_SIZE = (1700, 930)
 
 
 class GameState:
