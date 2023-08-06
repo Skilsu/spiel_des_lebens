@@ -72,6 +72,6 @@ class Wheel:
         return self.selected_number
 
     def has_stopped(self):
-        return not self.is_spinning
+        return not self.is_spinning and self.has_spun
 
 
