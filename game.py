@@ -74,13 +74,13 @@ statussymbols = [["Rolls Royce", "Millionärs-Einkommen aus Vermietung ", 1000],
                  ["Luxus-Yacht", "Millionärs-Einkommen aus Charteraufträgen ", 4000],
                  ["Privat-Jet", "Millionärs-Einkommen aus Charterflügen ", 4000]]
 actioncards = [["Verpflichtungs-Karte", "Der Inhaber dieser Karte kann von einem Mitspieler seiner Wahl verlangen, "
-                                       "die Hälfte des Betrages, den er bezahlen muss, mitzutragen, sofern dieser "
-                                       "über 6.000 liegt.", 6000],
-              ["Befreiungs-Karte", "Der Inhaber dieser Karte ist berechtigt, Zahlungen aufgrund der "
-                                   "Berechtigungskarte oder Verpflichtungskarte eines Mitspielers zu verweigern.", 0],
-              ["Berechtigungskarte", "Der Inhaber dieser Karte ist berechtigt, von einem Mitspieler seiner Wahl die "
-                                     "Hälfte eines Gewinnes zu verlangen, sofern dieser Gewinn über 10.000 beträgt.",
-               10000]]  # TODO Button auf spieler rect um anderem spieler aktion zu ermöglichen
+                                        "die Hälfte des Betrages, den er bezahlen muss, mitzutragen, sofern dieser "
+                                        "über 6.000 liegt.", 6000],
+               ["Befreiungs-Karte", "Der Inhaber dieser Karte ist berechtigt, Zahlungen aufgrund der "
+                                    "Berechtigungskarte oder Verpflichtungskarte eines Mitspielers zu verweigern.", 0],
+               ["Berechtigungskarte", "Der Inhaber dieser Karte ist berechtigt, von einem Mitspieler seiner Wahl die "
+                                      "Hälfte eines Gewinnes zu verlangen, sofern dieser Gewinn über 10.000 beträgt.",
+                10000]]  # TODO Button auf spieler rect um anderem spieler aktion zu ermöglichen
 
 FIELDS_Vorlage = [{"title": "",
                    "text": "",
@@ -298,14 +298,13 @@ class Game:
         income_surface = text_font.render("Income: " + str(current_player.income), True, BLACK)
         self.screen.blit(income_surface, (1410, 55))
 
-        # TODO als nächstes umsetzen (würde ich gerne machen)
+        # TODO als nächstes umsetzen
         """
         self.children = []
         self.status_symbols = []
         self.action_cards = []
         self.insurance = []
         self.debt = 0
-        self.income = 0
         self.pause = False
         """
         if current_player.pause:
