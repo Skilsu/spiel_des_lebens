@@ -20,6 +20,7 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
+BLACK = (0, 0, 0)
 
 # Define the colors and text for each rectangle
 rectangles = [
@@ -285,43 +286,77 @@ class Game:
             self.players.add(player)
         print(len(self.players.sprites()))
 
-    def draw_infos(self, current_player):
-        for i, player in enumerate(self.players):
+    def draw_current_player(self, current_player):
+        pygame.draw.rect(self.screen, YELLOW, (1405, 5, 290, 790))
 
-            # Draw the rectangle
-            pygame.draw.rect(self.screen, player.color, (5, 5 + 800 * i / len(rectangles), 290, 120))
+        # Render the text
+        name_surface = self.font.render(current_player.name, True, BLACK)
+        self.screen.blit(name_surface, (1410, 10))
 
-            # Render the text
-            name_surface = self.font.render(player.name, True, WHITE)
-            self.screen.blit(name_surface, (10, 10 + 800 * i / len(rectangles)))
-            money_surface = self.font.render("Money: " + str(player.money), True, WHITE)
-            self.screen.blit(money_surface, (10, 40 + 800 * i / len(rectangles)))
-            income_surface = self.font.render("Income: " + str(player.income), True, WHITE)
-            self.screen.blit(income_surface, (10, 70 + 800 * i / len(rectangles)))
-            if player.pause:
-                pause_surface = self.font.render("Aussetzen!", True, WHITE)
-                self.screen.blit(pause_surface, (10, 100 + 800 * i / len(rectangles)))
-        if current_player.current_field == 0:  # TODO Field logik muss in extra methode weil sie vor moving logik
-            # aufgerufen werden muss, da update_player sonst das falsche feld einträgt
+        text_font = pygame.font.Font(None, 25)
+        money_surface = text_font.render("Money: " + str(current_player.money), True, BLACK)
+        self.screen.blit(money_surface, (1410, 35))
+        income_surface = text_font.render("Income: " + str(current_player.income), True, BLACK)
+        self.screen.blit(income_surface, (1410, 55))
+
+        # TODO als nächstes umsetzen (würde ich gerne machen)
+        """
+        self.children = []
+        self.status_symbols = []
+        self.bully_cards = []
+        self.insurance = []
+        self.debt = 0
+        self.income = 0
+        self.pause = False
+        """
+        if current_player.pause:
+            pause_surface = self.font.render("Aussetzen!", True, BLACK)
+            self.screen.blit(pause_surface, (1410, 780))
+
+    def draw_wheel_fields(self):
+        for idx, color in enumerate(self.colors):
+            rect_x = 305 + 1100 * idx / len(self.colors)
+            rect_y = 805
+            rect_width = 100
+            rect_height = 120
+
+            pygame.draw.rect(self.screen, color, (rect_x, rect_y, rect_width, rect_height))
+
+            num_x = rect_x + rect_width / 2
+            num_y = rect_y + rect_height / 2
+
+            text_font = pygame.font.Font(None, 50)
+            if idx >= 5:
+                num_surface = text_font.render(str(idx + 1), True, BLACK)
+            else:
+                num_surface = text_font.render(str(idx + 1), True, WHITE)
+            num_rect = num_surface.get_rect(center=(num_x, num_y))
+
+            self.screen.blit(num_surface, num_rect)
+
+    def draw_field_info(self, current_player):
+        if current_player.current_field == 0:
             field = 0
-        else:
+        elif self.state == 'player returning':
             field = current_player.current_field - 1
+        else:
+            field = current_player.current_field
 
-        pygame.draw.rect(self.screen, FIELDS[field]["color"], (5, 5 + 670, 290, 120))
+        pygame.draw.rect(self.screen, FIELDS[field]["color"], (0, 800, 300, 130))
 
         # Render the text
         if FIELDS[field]["color"] == YELLOW:
-            text_color = BLUE
+            text_color = BLACK
         else:
             text_color = WHITE
 
         title_surface = self.font.render(FIELDS[field]["title"], True, text_color)
-        self.screen.blit(title_surface, (10, 10 + 670))
+        self.screen.blit(title_surface, (10, 810))
 
         text_font = pygame.font.Font(None, 25)
         text_lines = []
         text = FIELDS[field]["text"]
-        max_line_width = 290 - 20  # Leave some padding on each side
+        max_line_width = 270  # Leave some padding on each side
 
         # Split the text into lines based on the width of the box
         words = text.split()
@@ -339,7 +374,26 @@ class Game:
         line_height = text_font.get_linesize()
         for i, line in enumerate(text_lines):
             text_surface = text_font.render(line, True, text_color)
-            self.screen.blit(text_surface, (10, 40 + 670 + i * line_height))
+            self.screen.blit(text_surface, (10, 840 + i * line_height))
+
+    def draw_player_infos(self, current_player):
+        for i, player in enumerate(self.players):
+
+            # Draw the rectangle
+            pygame.draw.rect(self.screen, player.color, (5, 5 + 800 * i / len(rectangles), 290, 120))
+
+            # Render the text
+            name_surface = self.font.render(player.name, True, WHITE)
+            self.screen.blit(name_surface, (10, 10 + 800 * i / len(rectangles)))
+
+            text_font = pygame.font.Font(None, 25)
+            money_surface = text_font.render("Money: " + str(player.money), True, WHITE)
+            self.screen.blit(money_surface, (10, 35 + 800 * i / len(rectangles)))
+            income_surface = text_font.render("Income: " + str(player.income), True, WHITE)
+            self.screen.blit(income_surface, (10, 55 + 800 * i / len(rectangles)))
+            if player.pause:
+                pause_surface = text_font.render("Aussetzen!", True, WHITE)
+                self.screen.blit(pause_surface, (10, 100 + 800 * i / len(rectangles)))
 
     def update_player(self, current_player):
         current_player.steps_to_go -= 1
@@ -409,6 +463,8 @@ class Game:
                             self.spinned_wheel = True
 
             self.wheel.update()
+            self.screen.fill((0, 0, 0))
+            self.draw_field_info(current_player)
 
             if self.spinned_wheel and self.wheel.has_stopped():
                 self.spinned_wheel = False
@@ -441,8 +497,9 @@ class Game:
                         else:
                             self.state = 'next_player'
 
-            self.screen.fill((0, 0, 0))
-            self.draw_infos(current_player)
+            self.draw_player_infos(current_player)
+            self.draw_current_player(current_player)
+            self.draw_wheel_fields()
             self.screen.blit(self.board_image, (300, 0))
             self.wheel.draw(self.screen)
 
@@ -455,4 +512,4 @@ class Game:
 
 
 if __name__ == "__main__":
-    Game(pygame.display.set_mode((1700, 1000))).run()
+    Game(pygame.display.set_mode((1700, 930))).run()
