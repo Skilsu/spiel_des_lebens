@@ -270,8 +270,12 @@ class Game:
             (200, 255, 0)  # gelb-grün
         ]
         # Schriftart für die Zahlen in Wheel
+        self.font_text = pygame.font.Font(None, 25)
         self.font = pygame.font.Font(None, 35)
+        self.font_big = pygame.font.Font(None, 50)
         self.font_large = pygame.font.Font(None, 70)
+        self.font_large_bolt = pygame.font.Font(None, 70)
+        self.font_large_bolt.set_bold(True)
         self.wheel = Wheel(WHEEL_POSITION, WHEEL_RADIUS, self.colors, self.font, self.font_large)
 
         self.players = pygame.sprite.Group()
@@ -285,6 +289,18 @@ class Game:
             self.players.add(player)
         print(len(self.players.sprites()))
 
+    def draw_circle_with_i(self):
+
+        circle_center = (335, 40)
+
+        # Draw the circle
+        pygame.draw.circle(self.screen, BLUE, circle_center, 30)
+
+        # Draw the "i" symbol in white
+        text = self.font_large_bolt.render("i", True, WHITE)
+        text_rect = text.get_rect(center=circle_center)
+        self.screen.blit(text, text_rect)
+
     def draw_current_player(self, current_player):
         pygame.draw.rect(self.screen, YELLOW, (1405, 5, 290, 790))
 
@@ -292,10 +308,9 @@ class Game:
         name_surface = self.font.render(current_player.name, True, BLACK)
         self.screen.blit(name_surface, (1410, 10))
 
-        text_font = pygame.font.Font(None, 25)
-        money_surface = text_font.render("Money: " + str(current_player.money), True, BLACK)
+        money_surface = self.font_text.render("Money: " + str(current_player.money), True, BLACK)
         self.screen.blit(money_surface, (1410, 35))
-        income_surface = text_font.render("Income: " + str(current_player.income), True, BLACK)
+        income_surface = self.font_text.render("Income: " + str(current_player.income), True, BLACK)
         self.screen.blit(income_surface, (1410, 55))
 
         # TODO als nächstes umsetzen
@@ -305,11 +320,45 @@ class Game:
         self.action_cards = []
         self.insurance = []
         self.debt = 0
-        self.pause = False
         """
+
+        if current_player.debt > 0:
+            pygame.draw.rect(self.screen, CYAN, (1410, 660, 290, 80))
+            debt_title = self.font.render("Schuldschein", True, BLACK)
+            self.screen.blit(debt_title, (1415, 665))
+
+            debt_text = self.font_text.render("Du hast " + str(current_player.debt) + " Schuldscheine.", True, BLACK)
+            self.screen.blit(debt_text, (1415, 690))
+            debt_money = self.font_text.render("Wert: " + str(current_player.debt * 20000), True, BLACK)
+            self.screen.blit(debt_money, (1415, 710))
+
         if current_player.pause:
             pause_surface = self.font.render("Aussetzen!", True, BLACK)
-            self.screen.blit(pause_surface, (1410, 780))
+            self.screen.blit(pause_surface, (1410, 765))
+
+    def descriptions(self):
+
+        debt_description_str = "Ein Schuldschein entspricht 20.000 Schulden. Du kannst einen Schuldschein zu " \
+                               "jederzeit im Spiel für 22.000 abbezahlen oder du musst deine Schulden am Ende des" \
+                               " Spiels für 25.000 begleichen."
+        words = debt_description_str.split()
+        text_lines = []
+        max_line_width = 280
+        current_line = ""
+        for word in words:
+            test_line = current_line + word + " "
+            if self.font_text.size(test_line)[0] <= max_line_width:
+                current_line = test_line
+            else:
+                text_lines.append(current_line)
+                current_line = word + " "
+        if current_line:
+            text_lines.append(current_line)
+
+        line_height = self.font_text.get_linesize()
+        for i, line in enumerate(text_lines):
+            text_surface = self.font_text.render(line, True, BLACK)
+            self.screen.blit(text_surface, (1415, 705 + i * line_height))
 
     def draw_wheel_fields(self):
         for idx, color in enumerate(self.colors):
@@ -323,11 +372,10 @@ class Game:
             num_x = rect_x + rect_width / 2
             num_y = rect_y + rect_height / 2
 
-            text_font = pygame.font.Font(None, 50)
             if idx >= 5:
-                num_surface = text_font.render(str(idx + 1), True, BLACK)
+                num_surface = self.font_big.render(str(idx + 1), True, BLACK)
             else:
-                num_surface = text_font.render(str(idx + 1), True, WHITE)
+                num_surface = self.font_big.render(str(idx + 1), True, WHITE)
             num_rect = num_surface.get_rect(center=(num_x, num_y))
 
             self.screen.blit(num_surface, num_rect)
@@ -351,7 +399,6 @@ class Game:
         title_surface = self.font.render(FIELDS[field]["title"], True, text_color)
         self.screen.blit(title_surface, (10, 810))
 
-        text_font = pygame.font.Font(None, 25)
         text_lines = []
         text = FIELDS[field]["text"]
         max_line_width = 270  # Leave some padding on each side
@@ -361,7 +408,7 @@ class Game:
         current_line = ""
         for word in words:
             test_line = current_line + word + " "
-            if text_font.size(test_line)[0] <= max_line_width:
+            if self.font_text.size(test_line)[0] <= max_line_width:
                 current_line = test_line
             else:
                 text_lines.append(current_line)
@@ -369,9 +416,9 @@ class Game:
         if current_line:
             text_lines.append(current_line)
 
-        line_height = text_font.get_linesize()
+        line_height = self.font_text.get_linesize()
         for i, line in enumerate(text_lines):
-            text_surface = text_font.render(line, True, text_color)
+            text_surface = self.font_text.render(line, True, text_color)
             self.screen.blit(text_surface, (10, 840 + i * line_height))
 
     def draw_player_infos(self, current_player):
@@ -384,13 +431,12 @@ class Game:
             name_surface = self.font.render(player.name, True, WHITE)
             self.screen.blit(name_surface, (10, 10 + 800 * i / len(rectangles)))
 
-            text_font = pygame.font.Font(None, 25)
-            money_surface = text_font.render("Money: " + str(player.money), True, WHITE)
+            money_surface = self.font_text.render("Money: " + str(player.money), True, WHITE)
             self.screen.blit(money_surface, (10, 35 + 800 * i / len(rectangles)))
-            income_surface = text_font.render("Income: " + str(player.income), True, WHITE)
+            income_surface = self.font_text.render("Income: " + str(player.income), True, WHITE)
             self.screen.blit(income_surface, (10, 55 + 800 * i / len(rectangles)))
             if player.pause:
-                pause_surface = text_font.render("Aussetzen!", True, WHITE)
+                pause_surface = self.font_text.render("Aussetzen!", True, WHITE)
                 self.screen.blit(pause_surface, (10, 100 + 800 * i / len(rectangles)))
 
     def update_player(self, current_player):
@@ -422,15 +468,8 @@ class Game:
         while running:
 
             current_player = self.players.sprites()[self.player_turn_index]
-            pause = True
-            while pause:
-                if current_player.pause:
-                    current_player.pause = False
-
-                    self.player_turn_index = (self.player_turn_index + 1) % self.player_number
-                    current_player = self.players.sprites()[self.player_turn_index]
-                else:
-                    pause = False
+            if current_player.pause:
+                self.state = 'player returning'
             # print(current_player.color)
 
             for event in pygame.event.get():
@@ -501,6 +540,7 @@ class Game:
             self.draw_current_player(current_player)
             self.draw_wheel_fields()
             self.screen.blit(self.board_image, (300, 0))
+            self.draw_circle_with_i()
             self.wheel.draw(self.screen)
 
             for entity in self.players:

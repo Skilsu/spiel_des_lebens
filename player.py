@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.status_symbols = []
         self.action_cards = []
         self.insurance = []
-        self.debt = 0
+        self.debt = 2
         self.income = 0
         self.pause = False
 
@@ -88,7 +88,7 @@ class Player(pygame.sprite.Sprite):
         if action["add_money"] != 0:
             self.money += action["add_money"]
         if action["pause"]:
-            self.pause = True
+            self.pause = not self.pause
         if action["set income"] != 0:
             self.income = action["set income"]
         if action["go more steps"] != -1:
