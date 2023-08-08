@@ -113,33 +113,36 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["", "Du fichst ein Testament an. Zahle 10.000 Gerichtsgebühren.", YELLOW, [19], [14]],
              ["", "Deine Tante stirbt. Du erbst 50.000", YELLOW, [20], [13]]]
 
-actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0],  # + 3.000 und Autoversicherung
-           [False, -1000, False, 0, -1, None, None, False, False, False, 0],  # - 1.000
-           [False, 1000, False, 0, -1, None, None, False, False, False, 0],  # + 1.000
-           [False, 0, True, 0, -1, None, None, False, False, False, 0],  # Pause
-           [True, -2000, False, 0, -1, None, None, False, False, False, 0],  # - 2.000 immer
-           [False, 0, False, 10000, 6, None, None, False, False, False, 0],  # Einkommen 10.000 und 6 Felder vor
-           [False, 0, False, 20000, 5, None, None, False, False, False, 0],  # Einkommen 20.000 und 5 Felder vor
-           [False, 0, False, 15000, 4, None, None, False, False, False, 0],  # Einkommen 15.000 und 4 Felder vor
-           [False, 0, False, 8000, 3, None, None, False, False, False, 0],  # Einkommen 8.000 und 3 Felder vor
-           [False, 0, False, 10000, 2, None, None, False, False, False, 0],  # Einkommen 10.000 und 2 Felder vor
-           [True, 0, False, 0, 1, None, None, False, False, False, 6000],
+actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None],  # + 3.000 und Autoversicherung
+           [False, -1000, False, 0, -1, None, None, False, False, False, 0, None],  # - 1.000
+           [False, 1000, False, 0, -1, None, None, False, False, False, 0, None],  # + 1.000
+           [False, 0, True, 0, -1, None, None, False, False, False, 0, None],  # Pause
+           [True, -2000, False, 0, -1, None, None, False, False, False, 0, None],  # - 2.000 immer
+           [False, 0, False, 10000, 6, None, None, False, False, False, 0, "Arzt"],  # Einkommen 10.000 und 6 Felder vor
+           [False, 0, False, 20000, 5, None, None, False, False, False, 0, "Journalist"],
+           # Einkommen 20.000 und 5 Felder vor
+           [False, 0, False, 15000, 4, None, None, False, False, False, 0, "Anwalt"],
+           # Einkommen 15.000 und 4 Felder vor
+           [False, 0, False, 8000, 3, None, None, False, False, False, 0, "Lehrer"],  # Einkommen 8.000 und 3 Felder vor
+           [False, 0, False, 10000, 2, None, None, False, False, False, 0, "Physiker"],
+           # Einkommen 10.000 und 2 Felder vor
+           [True, 0, False, 0, 1, None, None, False, False, False, 6000, None],
            # Einkommen 6.000 und 1 Feld vor wenn Einkommen vorher 0
-           [False, 5000, False, 0, -1, None, None, False, False, False, 0],  # + 5.000
-           [True, 0, False, 5000, 1, None, None, False, False, False, 0],  # Einkommen 5.000 und 1 Feld vor immer
-           [False, 50000, False, 0, -1, None, None, False, False, False, 0],  # + 50.000
-           [False, -10000, False, 0, -1, None, None, False, False, False, 0],  # -10.000
-           [False, -5000, False, 0, -1, "life", None, False, False, False, 0],
+           [False, 5000, False, 0, -1, None, None, False, False, False, 0, None],  # + 5.000
+           [True, 0, False, 5000, 1, None, None, False, False, False, 0, None],  # Einkommen 5.000 und 1 Feld vor immer
+           [False, 50000, False, 0, -1, None, None, False, False, False, 0, None],  # + 50.000
+           [False, -10000, False, 0, -1, None, None, False, False, False, 0, None],  # -10.000
+           [False, -5000, False, 0, -1, "life", None, False, False, False, 0, None],
            # Lebensversicherung abgeschlossen und 5.000 gezahlt
-           [False, 0, False, 0, -1, None, None, True, False, False, 0],  # Payday
-           [False, 0, False, 0, -1, None, None, False, True, False, 0],  # Marriage
-           [False, 0, False, 0, -1, None, "car", False, False, False, 0],  # Autoversicherung verloren
-           [False, -4000, False, 0, -1, None, None, False, False, False, 0],  # - 4.000 TODO Versicherung prüfen!
-           [False, -10000, False, 0, -1, None, None, False, False, True, 0],  # Buy Statussymbol for 10.000
-           [False, 0, False, 0, -1, None, None, False, False, False, 0],
-           [False, 0, False, 0, -1, None, None, False, False, False, 0],
-           [False, 0, False, 0, -1, None, None, False, False, False, 0],
-           [False, 0, False, 0, -1, None, None, False, False, False, 0]]
+           [False, 0, False, 0, -1, None, None, True, False, False, 0, None],  # Payday
+           [False, 0, False, 0, -1, None, None, False, True, False, 0, None],  # Marriage
+           [False, 0, False, 0, -1, None, "car", False, False, False, 0, None],  # Autoversicherung verloren
+           [False, -4000, False, 0, -1, None, None, False, False, False, 0, None],  # - 4.000 TODO Versicherung prüfen!
+           [False, -10000, False, 0, -1, None, None, False, False, True, 0, None],  # Buy Statussymbol for 10.000
+           [False, 0, False, 0, -1, None, None, False, False, False, 0, None],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0, None],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0, None],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0, None]]
 
 """
 self.player.append(Player(1170, 360, (0, 212, 28)))
@@ -166,7 +169,8 @@ ACTIONS_Vorlage = [{"act with more steps": False,
                     "payday": False,
                     "marriage": False,
                     "buy statussymbol": False,
-                    "income if 0": 0
+                    "income if 0": 0,
+                    "job": None
                     }]
 
 ACTIONS = []
@@ -181,7 +185,8 @@ for action in actions:
                     "payday": action[7],
                     "marriage": action[8],
                     "buy statussymbol": action[9],
-                    "income if 0": action[10]
+                    "income if 0": action[10],
+                    "job": action[11]
                     })
 FIELDS = []
 for idx, info in enumerate(fieldinfo):
@@ -252,6 +257,7 @@ class Game:
 
         self.spinned_wheel = False
         self.selected_number = 0
+        self.current_field = 0
 
         self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 1.png').convert()
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
@@ -276,6 +282,7 @@ class Game:
         self.font_large = pygame.font.Font(None, 70)
         self.font_large_bolt = pygame.font.Font(None, 70)
         self.font_large_bolt.set_bold(True)
+
         self.wheel = Wheel(WHEEL_POSITION, WHEEL_RADIUS, self.colors, self.font, self.font_large)
 
         self.players = pygame.sprite.Group()
@@ -284,7 +291,7 @@ class Game:
         for i in range(self.player_number):
             player = Player(START_POSITION_PLAYER1[0],
                             START_POSITION_PLAYER1[1] + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)),
-                            START_POSITION_PLAYER1[2], self.colors[i], name="Player " + str(i + 1))
+                            START_POSITION_PLAYER1[2], self.colors[i], name="Player " + str(i + 1), number=i)
 
             self.players.add(player)
         print(len(self.players.sprites()))
@@ -302,41 +309,186 @@ class Game:
         self.screen.blit(text, text_rect)
 
     def draw_current_player(self, current_player):
-        pygame.draw.rect(self.screen, YELLOW, (1405, 5, 290, 790))
+        y = 5
+        x = 1410
+        x_text = 1415
+        y_box = 75
 
-        # Render the text
-        name_surface = self.font.render(current_player.name, True, BLACK)
-        self.screen.blit(name_surface, (1410, 10))
+        verpflichtung = 0
+        befreiung = 0
+        berechtigung = 0
+        rolls_royce = 0
+        villa = 0
+        kunst = 0
+        pferd = 0
+        yacht = 0
+        jet = 0
 
-        money_surface = self.font_text.render("Money: " + str(current_player.money), True, BLACK)
-        self.screen.blit(money_surface, (1410, 35))
-        income_surface = self.font_text.render("Income: " + str(current_player.income), True, BLACK)
-        self.screen.blit(income_surface, (1410, 55))
+        for card in current_player.action_cards:
+            if card == "Verpflichtungs-Karte":
+                verpflichtung += 1
+            elif card == "Befreiungs-Karte":
+                befreiung += 1
+            elif card == "Berechtigungskarte":
+                berechtigung += 1
+        for symbol in current_player.status_symbols:
+            if symbol == "Rolls Royce":
+                rolls_royce += 1
+            elif symbol == "Villa in Südfrankreich":
+                villa += 1
+            elif symbol == "Kunstsammlung":
+                kunst += 1
+            elif symbol == "Rennpferde":
+                pferd += 1
+            elif symbol == "Luxus-Yacht":
+                yacht += 1
+            elif symbol == "Privat-Jet":
+                jet += 1
 
-        # TODO als nächstes umsetzen
-        """
-        self.children = []
-        self.status_symbols = []
-        self.action_cards = []
-        self.insurance = []
-        self.debt = 0
-        """
+        if verpflichtung > 0:
+            y_box += 45
+        if befreiung > 0:
+            y_box += 45
+        if berechtigung > 0:
+            y_box += 45
+        if rolls_royce > 0:
+            y_box += 45
+        if villa > 0:
+            y_box += 45
+        if kunst > 0:
+            y_box += 45
+        if pferd > 0:
+            y_box += 45
+        if yacht > 0:
+            y_box += 45
+        if jet > 0:
+            y_box += 45
 
-        if current_player.debt > 0:
-            pygame.draw.rect(self.screen, CYAN, (1410, 660, 290, 80))
-            debt_title = self.font.render("Schuldschein", True, BLACK)
-            self.screen.blit(debt_title, (1415, 665))
-
-            debt_text = self.font_text.render("Du hast " + str(current_player.debt) + " Schuldscheine.", True, BLACK)
-            self.screen.blit(debt_text, (1415, 690))
-            debt_money = self.font_text.render("Wert: " + str(current_player.debt * 20000), True, BLACK)
-            self.screen.blit(debt_money, (1415, 710))
+        if current_player.car:
+            y_box += 45
+        if current_player.life:
+            y_box += 45
+        if current_player.fire:
+            y_box += 45
 
         if current_player.pause:
-            pause_surface = self.font.render("Aussetzen!", True, BLACK)
-            self.screen.blit(pause_surface, (1410, 765))
+            y_box += 45
+        if current_player.debt > 0:
+            y_box += 85
+        if current_player.job is not None:
+            y_box += 25
+        if current_player.children:
+            dy = int(len(current_player.children) / 11 + 1)
+            dy *= 25
+            y_box += dy + 5
 
-    def descriptions(self):
+        pygame.draw.rect(self.screen, YELLOW, (x - 5, y, 290, y_box))
+
+        # Render the text
+        y += 5
+        name_surface = self.font.render(current_player.name, True, BLACK)
+        self.screen.blit(name_surface, (x, y))
+        y += 25
+
+        if current_player.job is not None:
+            job_title = self.font_text.render("Beruf: " + current_player.job, True, BLACK)
+            self.screen.blit(job_title, (x, y))
+            y += 20
+
+        money_surface = self.font_text.render("Money: " + str(current_player.money), True, BLACK)
+        self.screen.blit(money_surface, (x, y))
+        y += 20
+
+        income_surface = self.font_text.render("Income: " + str(current_player.income), True, BLACK)
+        self.screen.blit(income_surface, (x, y))
+        y += 20
+
+        if current_player.children:
+            children_surface = self.font_text.render("Kinder: ", True, BLACK)
+            self.screen.blit(children_surface, (x, y))
+            y += 20
+
+            dy = 0
+            for i in range(int(len(current_player.children) / 11) + 1):
+                dx = 0
+                for child in current_player.children[11 * i: 11 * (i + 1)]:
+                    image = pygame.Surface((20, 20), pygame.SRCALPHA)
+                    if child == "boy":
+                        pygame.draw.circle(image, BLUE, (10, 10), 10)
+                    else:
+                        pygame.draw.circle(image, RED, (10, 10), 10)
+                    rect = image.get_rect(topleft=(x_text + dx, y + dy))
+                    self.screen.blit(image, rect)
+                    dx += 25
+                y += 25
+
+        if current_player.status_symbols:
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, rolls_royce, "1 Rolls Royce", "Rolls Royce")
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, villa, "1 Villa in Südfrankreich", "Villen in Südfrankreich")
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, kunst, "1 Kunstsammlung", "Kunstsammlungen")
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, pferd, "1 Rennpferd", "Rennpferde")
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, yacht, "1 Luxus-Yacht", "Luxus-Yachten")
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, jet, "1 Privat-Jet", "Privat-Jets")
+        if current_player.car:
+            y = self.draw_single_info_rect(GREEN, x, y, 290, 35, 1, "Autoversicherung")
+        if current_player.life:
+            y = self.draw_single_info_rect(GREEN, x, y, 290, 35, 1, "Lebensversicherung")
+        if current_player.fire:
+            y = self.draw_single_info_rect(GREEN, x, y, 290, 35, 1, "Feuerversicherung")
+
+        if current_player.debt > 0:
+            pygame.draw.rect(self.screen, CYAN, (x, y, 290, 75))
+            y += 5
+
+            debt_title = self.font.render("Schuldschein", True, BLACK)
+            self.screen.blit(debt_title, (x_text, y))
+
+            y += 25
+            if current_player.debt == 1:
+                debt_text_str = "Du hast 1 Schuldschein."
+            else:
+                debt_text_str = "Du hast " + str(current_player.debt) + " Schuldscheine."
+            debt_text = self.font_text.render(debt_text_str, True, BLACK)
+            self.screen.blit(debt_text, (x_text, y))
+
+            y += 20
+            debt_money = self.font_text.render("Wert: " + str(current_player.debt * 20000), True, BLACK)
+            self.screen.blit(debt_money, (x_text, y))
+
+            y += 35
+
+        if current_player.action_cards:
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, verpflichtung, "1x Verpflichtungs Karte", "x Verpflichtungs Karten")
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, befreiung, "1x Befreiungs Karte", "x Befreiungs Karten")
+            y = self.draw_single_info_rect(
+                GREEN, x, y, 290, 35, berechtigung, "1x Berechtigungs Karte", "x Berechtigungs Karten")
+
+        if current_player.pause:
+            y = self.draw_single_info_rect(
+                RED, x, y, 275, 35, 1, "Aussetzen!")
+
+    def draw_single_info_rect(self, color, x, y, hight, witdh, amount=0, single=None, more=None):
+        if amount > 0:
+            pygame.draw.rect(self.screen, color, (x, y, hight, witdh))
+            y += 5
+
+            if amount == 1:
+                title = self.font.render(single, True, BLACK)
+            else:
+                title = self.font.render(str(amount) + " " + more, True, BLACK)
+            self.screen.blit(title, (x + 5, y))
+            return y + 40
+        return y
+
+    def descriptions(self, x, y):
 
         debt_description_str = "Ein Schuldschein entspricht 20.000 Schulden. Du kannst einen Schuldschein zu " \
                                "jederzeit im Spiel für 22.000 abbezahlen oder du musst deine Schulden am Ende des" \
@@ -380,27 +532,21 @@ class Game:
 
             self.screen.blit(num_surface, num_rect)
 
-    def draw_field_info(self, current_player):
-        if current_player.current_field == 0:
-            field = 0
-        elif self.state == 'player returning':
-            field = current_player.current_field - 1
-        else:
-            field = current_player.current_field
+    def draw_field_info(self):
 
-        pygame.draw.rect(self.screen, FIELDS[field]["color"], (0, 800, 300, 130))
+        pygame.draw.rect(self.screen, FIELDS[self.current_field]["color"], (0, 800, 300, 130))
 
         # Render the text
-        if FIELDS[field]["color"] == YELLOW:
+        if FIELDS[self.current_field]["color"] == YELLOW:
             text_color = BLACK
         else:
             text_color = WHITE
 
-        title_surface = self.font.render(FIELDS[field]["title"], True, text_color)
+        title_surface = self.font.render(FIELDS[self.current_field]["title"], True, text_color)
         self.screen.blit(title_surface, (10, 810))
 
         text_lines = []
-        text = FIELDS[field]["text"]
+        text = FIELDS[self.current_field]["text"]
         max_line_width = 270  # Leave some padding on each side
 
         # Split the text into lines based on the width of the box
@@ -503,7 +649,7 @@ class Game:
 
             self.wheel.update()
             self.screen.fill((0, 0, 0))
-            self.draw_field_info(current_player)
+            self.draw_field_info()
 
             if self.spinned_wheel and self.wheel.has_stopped():
                 self.spinned_wheel = False
