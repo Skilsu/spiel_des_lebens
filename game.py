@@ -22,6 +22,19 @@ MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 
+colors = [
+    (168, 0, 185),  # Lila
+    (255, 0, 255),  # pink
+    (255, 0, 0),  # rot
+    (255, 73, 0),  # rot-orange
+    (255, 109, 0),  # orange-rot
+    (255, 146, 0),  # orange
+    (255, 182, 0),  # orange-gelb
+    (255, 219, 0),  # gelb-orange
+    (255, 255, 0),  # gelb
+    (200, 255, 0)  # gelb-grün
+]
+
 # Define the colors and text for each rectangle
 rectangles = [
     {"color": RED, "text": "Spieler 1"},
@@ -263,18 +276,8 @@ class Game:
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
         # Für Wheel
-        self.colors = [
-            (168, 0, 185),  # Lila
-            (255, 0, 255),  # pink
-            (255, 0, 0),  # rot
-            (255, 73, 0),  # rot-orange
-            (255, 109, 0),  # orange-rot
-            (255, 146, 0),  # orange
-            (255, 182, 0),  # orange-gelb
-            (255, 219, 0),  # gelb-orange
-            (255, 255, 0),  # gelb
-            (200, 255, 0)  # gelb-grün
-        ]
+        self.colors = colors
+
         # Schriftart für die Zahlen in Wheel
         self.font_text = pygame.font.Font(None, 25)
         self.font = pygame.font.Font(None, 35)
@@ -283,10 +286,18 @@ class Game:
         self.font_large_bolt = pygame.font.Font(None, 70)
         self.font_large_bolt.set_bold(True)
 
+        self.wheel_fields = self.draw_wheel_fields()
+        self.active_fields = []
         self.wheel = Wheel(WHEEL_POSITION, WHEEL_RADIUS, self.colors, self.font, self.font_large)
 
         self.players = pygame.sprite.Group()
         spacing = 1
+
+        self.clickable_objects = []
+        for field in self.wheel_fields:
+            self.clickable_objects.append(field)
+        self.motion_action = -1
+        self.pos = (0, 0)
 
         for i in range(self.player_number):
             player = Player(START_POSITION_PLAYER1[0],
@@ -512,15 +523,22 @@ class Game:
             text_surface = self.font_text.render(line, True, BLACK)
             self.screen.blit(text_surface, (1415, 705 + i * line_height))
 
-    def draw_wheel_fields(self):
+    def draw_wheel_fields(self, active_fields=None):
+        rects = []
+        if active_fields is None:
+            active_fields = []
         for idx, color in enumerate(self.colors):
             rect_x = 305 + 1100 * idx / len(self.colors)
             rect_y = 805
             rect_width = 100
             rect_height = 120
-
-            pygame.draw.rect(self.screen, color, (rect_x, rect_y, rect_width, rect_height))
-
+            if idx in active_fields:
+                i = idx + 5
+                if i > 9:
+                    i -= 10
+                pygame.draw.rect(self.screen, self.colors[i],
+                                 (rect_x - 5, rect_y - 5, rect_width + 10, rect_height + 10))
+            rects.append(pygame.draw.rect(self.screen, color, (rect_x, rect_y, rect_width, rect_height)))
             num_x = rect_x + rect_width / 2
             num_y = rect_y + rect_height / 2
 
@@ -531,6 +549,7 @@ class Game:
             num_rect = num_surface.get_rect(center=(num_x, num_y))
 
             self.screen.blit(num_surface, num_rect)
+        return rects
 
     def draw_field_info(self):
 
@@ -609,6 +628,12 @@ class Game:
 
         return current_player
 
+    def find_pos(self, pos):
+        for idx, rect in enumerate(self.clickable_objects):
+            if rect.collidepoint(pos):
+                return idx
+        return -1
+
     def run(self):
         running = True
         while running:
@@ -616,7 +641,8 @@ class Game:
             current_player = self.players.sprites()[self.player_turn_index]
             if current_player.pause:
                 self.state = 'player returning'
-            # print(current_player.color)
+
+            self.pos = pygame.mouse.get_pos()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -647,6 +673,23 @@ class Game:
 
                             self.spinned_wheel = True
 
+                if event.type == pygame.MOUSEMOTION:
+                    if self.motion_action >= 0 and self.motion_action in self.active_fields:
+                        self.active_fields.remove(self.motion_action)
+                    i = self.find_pos(self.pos)
+                    if i not in self.active_fields:
+                        self.motion_action = i
+                    if i not in self.active_fields:
+                        self.active_fields.append(i)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    i = self.find_pos(self.pos)
+                    if i not in self.active_fields:
+                        self.active_fields.append(i)
+                    elif self.motion_action is not i:
+                        self.active_fields.remove(i)
+                    self.motion_action = -1
+
             self.wheel.update()
             self.screen.fill((0, 0, 0))
             self.draw_field_info()
@@ -655,6 +698,7 @@ class Game:
                 self.spinned_wheel = False
                 self.state = 'player_moving'
                 self.selected_number = self.wheel.get_selected_number()
+                self.active_fields = [self.selected_number - 1]
 
                 current_player.steps_to_go = self.selected_number
                 current_player.moving = False
@@ -684,7 +728,7 @@ class Game:
 
             self.draw_player_infos(current_player)
             self.draw_current_player(current_player)
-            self.draw_wheel_fields()
+            self.wheel_fields = self.draw_wheel_fields(self.active_fields)
             self.screen.blit(self.board_image, (300, 0))
             self.draw_circle_with_i()
             self.wheel.draw(self.screen)
