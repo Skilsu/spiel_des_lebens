@@ -126,36 +126,41 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["", "Du fichst ein Testament an. Zahle 10.000 Gerichtsgebühren.", YELLOW, [19], [14]],
              ["", "Deine Tante stirbt. Du erbst 50.000", YELLOW, [20], [13]]]
 
-actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None],  # + 3.000 und Autoversicherung
-           [False, -1000, False, 0, -1, None, None, False, False, False, 0, None],  # - 1.000
-           [False, 1000, False, 0, -1, None, None, False, False, False, 0, None],  # + 1.000
-           [False, 0, True, 0, -1, None, None, False, False, False, 0, None],  # Pause
-           [True, -2000, False, 0, -1, None, None, False, False, False, 0, None],  # - 2.000 immer
-           [False, 0, False, 10000, 6, None, None, False, False, False, 0, "Arzt"],  # Einkommen 10.000 und 6 Felder vor
-           [False, 0, False, 20000, 5, None, None, False, False, False, 0, "Journalist"],
+actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None, False],
+           # + 3.000 und Autoversicherung
+           [False, -1000, False, 0, -1, None, None, False, False, False, 0, None, False],  # - 1.000
+           [False, 1000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 1.000
+           [False, 0, True, 0, -1, None, None, False, False, False, 0, None, False],  # Pause
+           [True, -2000, False, 0, -1, None, None, False, False, False, 0, None, False],  # - 2.000 immer
+           [False, 0, False, 10000, 6, None, None, False, False, False, 0, "Arzt", False],
+           # Einkommen 10.000 und 6 Felder vor
+           [False, 0, False, 20000, 5, None, None, False, False, False, 0, "Journalist", False],
            # Einkommen 20.000 und 5 Felder vor
-           [False, 0, False, 15000, 4, None, None, False, False, False, 0, "Anwalt"],
+           [False, 0, False, 15000, 4, None, None, False, False, False, 0, "Anwalt", False],
            # Einkommen 15.000 und 4 Felder vor
-           [False, 0, False, 8000, 3, None, None, False, False, False, 0, "Lehrer"],  # Einkommen 8.000 und 3 Felder vor
-           [False, 0, False, 10000, 2, None, None, False, False, False, 0, "Physiker"],
+           [False, 0, False, 8000, 3, None, None, False, False, False, 0, "Lehrer", False],
+           # Einkommen 8.000 und 3 Felder vor
+           [False, 0, False, 10000, 2, None, None, False, False, False, 0, "Physiker", False],
            # Einkommen 10.000 und 2 Felder vor
-           [True, 0, False, 0, 1, None, None, False, False, False, 6000, None],
+           [True, 0, False, 0, 1, None, None, False, False, False, 6000, None, False],
            # Einkommen 6.000 und 1 Feld vor wenn Einkommen vorher 0
-           [False, 5000, False, 0, -1, None, None, False, False, False, 0, None],  # + 5.000
-           [True, 0, False, 5000, 1, None, None, False, False, False, 0, None],  # Einkommen 5.000 und 1 Feld vor immer
-           [False, 50000, False, 0, -1, None, None, False, False, False, 0, None],  # + 50.000
-           [False, -10000, False, 0, -1, None, None, False, False, False, 0, None],  # -10.000
-           [False, -5000, False, 0, -1, "life", None, False, False, False, 0, None],
+           [False, 5000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 5.000
+           [True, 0, False, 5000, 1, None, None, False, False, False, 0, None, False],
+           # Einkommen 5.000 und 1 Feld vor immer
+           [False, 50000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 50.000
+           [False, -10000, False, 0, -1, None, None, False, False, False, 0, None, False],  # -10.000
+           [False, -5000, False, 0, -1, "life", None, False, False, False, 0, None, False],
            # Lebensversicherung abgeschlossen und 5.000 gezahlt
-           [False, 0, False, 0, -1, None, None, True, False, False, 0, None],  # Payday
-           [False, 0, False, 0, -1, None, None, False, True, False, 0, None],  # Marriage
-           [False, 0, False, 0, -1, None, "car", False, False, False, 0, None],  # Autoversicherung verloren
-           [False, -4000, False, 0, -1, None, None, False, False, False, 0, None],  # - 4.000 TODO Versicherung prüfen!
-           [False, -10000, False, 0, -1, None, None, False, False, True, 0, None],  # Buy Statussymbol for 10.000
-           [False, 0, False, 0, -1, None, None, False, False, False, 0, None],
-           [False, 0, False, 0, -1, None, None, False, False, False, 0, None],
-           [False, 0, False, 0, -1, None, None, False, False, False, 0, None],
-           [False, 0, False, 0, -1, None, None, False, False, False, 0, None]]
+           [False, 0, False, 0, -1, None, None, True, False, False, 0, None, False],  # Payday
+           [False, 0, False, 0, -1, None, None, False, True, False, 0, None, False],  # Marriage
+           [False, 0, False, 0, -1, None, "car", False, False, False, 0, None, False],  # Autoversicherung verloren
+           [False, -4000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 4.000 TODO Versicherung prüfen!
+           [False, -10000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 10.000
+           [False, 0, False, 0, -1, None, None, False, False, False, 0, None, False],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0, None, False],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0, None, False],
+           [False, 0, False, 0, -1, None, None, False, False, False, 0, None, False]]
 
 """
 self.player.append(Player(1170, 360, (0, 212, 28)))
@@ -183,7 +188,8 @@ ACTIONS_Vorlage = [{"act with more steps": False,
                     "marriage": False,
                     "buy statussymbol": False,
                     "income if 0": 0,
-                    "job": None
+                    "job": None,
+                    "aktie": False
                     }]
 
 ACTIONS = []
@@ -199,7 +205,8 @@ for action in actions:
                     "marriage": action[8],
                     "buy statussymbol": action[9],
                     "income if 0": action[10],
-                    "job": action[11]
+                    "job": action[11],
+                    "aktie": action[12]
                     })
 FIELDS = []
 for idx, info in enumerate(fieldinfo):
@@ -663,6 +670,7 @@ class Game:
                             current_player = self.players.sprites()[self.player_turn_index]
                             current_player.active = True
                             self.current_field = current_player.current_field
+                            current_player.has_moved = False
                         elif self.state == 'player_moving':
                             pass
                         else:
@@ -703,20 +711,23 @@ class Game:
 
                 current_player.steps_to_go = self.selected_number
                 current_player.moving = False
-                print(self.selected_number)
 
             if self.state == 'player_moving':
                 if current_player.moving:
                     current_player.move()
                 else:
                     if current_player.steps_to_go > 0:
-                        if FIELDS[current_player.current_field]["color"] == RED or \
-                                FIELDS[current_player.current_field]["color"] == WHITE:
-                            current_player.act(
-                                ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
-                            self.state = 'player returning'
-                            self.current_field = current_player.current_field
-
+                        if current_player.has_moved or current_player.current_field == 0:
+                            if FIELDS[current_player.current_field]["color"] == RED or \
+                                    FIELDS[current_player.current_field]["color"] == WHITE:
+                                if ACTIONS[FIELDS[current_player.current_field]["action"][0]]["income if 0"] == 0 \
+                                        or current_player.income == 0:  # Einzelfallbehandlung! Sinnvoll?
+                                    current_player.act(
+                                        ACTIONS[
+                                            FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
+                                    self.state = 'player returning'
+                                    self.current_field = current_player.current_field
+                        current_player.has_moved = True
                         if current_player.steps_to_go > 0:
                             current_player = self.update_player(current_player)
                     else:

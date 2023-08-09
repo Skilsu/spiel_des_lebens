@@ -36,6 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.y_new = y
         self.rotation_new = rotation
         self.rate = 30
+        self.has_moved = False
 
         # game logic
         self.money = 0
@@ -49,6 +50,7 @@ class Player(pygame.sprite.Sprite):
         self.income = 0
         self.pause = False
         self.job = None
+        self.aktie = False
 
     """def update(self, pressed_keys):
             if pressed_keys[pygame.K_SPACE]:
@@ -132,6 +134,8 @@ class Player(pygame.sprite.Sprite):
             self.debt += 1
         if action["job"] is not None:
             self.job = action["job"]
+        if action["aktie"]:
+            self.aktie = True
 
     def change_money(self, amount):
         self.money = self.money + amount
