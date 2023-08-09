@@ -639,7 +639,7 @@ class Game:
         while running:
 
             current_player = self.players.sprites()[self.player_turn_index]
-            if current_player.pause:
+            if current_player.pause and not self.state == 'next_player':
                 self.state = 'player returning'
 
             self.pos = pygame.mouse.get_pos()
@@ -662,6 +662,7 @@ class Game:
                             self.player_turn_index = (self.player_turn_index + 1) % self.player_number
                             current_player = self.players.sprites()[self.player_turn_index]
                             current_player.active = True
+                            self.current_field = current_player.current_field
                         elif self.state == 'player_moving':
                             pass
                         else:
@@ -709,16 +710,19 @@ class Game:
                     current_player.move()
                 else:
                     if current_player.steps_to_go > 0:
-                        if FIELDS[current_player.current_field]["color"] == RED:
+                        if FIELDS[current_player.current_field]["color"] == RED or \
+                                FIELDS[current_player.current_field]["color"] == WHITE:
                             current_player.act(
                                 ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
                             self.state = 'player returning'
+                            self.current_field = current_player.current_field
 
                         if current_player.steps_to_go > 0:
                             current_player = self.update_player(current_player)
                     else:
                         current_player.act(
                             ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
+                        self.current_field = current_player.current_field
 
                         if current_player.steps_to_go > 0:
                             current_player = self.update_player(current_player)
