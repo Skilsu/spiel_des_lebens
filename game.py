@@ -124,7 +124,19 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["", "Du hast Geburtstag und erhältst 1.000.", YELLOW, [17], [2]],
              ["", "Du gewinnst in der Lotterie und erhältst 50.000.", YELLOW, [18], [13]],
              ["", "Du fichst ein Testament an. Zahle 10.000 Gerichtsgebühren.", YELLOW, [19], [14]],
-             ["", "Deine Tante stirbt. Du erbst 50.000", YELLOW, [20], [13]]]
+             ["", "Deine Tante stirbt. Du erbst 50.000.", YELLOW, [20], [13]],
+             ["", "Wenn du eine Lebensversicherung abschließen willst, zahle 5000.", WHITE, [21], [15]], # TODO Choice in White field + change font of text to another color because white and white
+             ["", "Du verlobst Dich. Zahle 1000 für den Verlobungsring.", YELLOW, [22], [1]],
+             ["", "Du gewinnst bei einem Fernsehquiz und erhältst 5000.", YELLOW, [23], [11]],
+             ["Zahltag", "", RED, [24], [16]],
+             ["", "Geschwindigkeitsübertretung. Zahle 1000.", YELLOW, [25], [1]],
+             ["", "Du heiratest. Sammle Geschenke ein.", RED, [26], [17]],
+             ["", "Du gehst auf Hochzeitsreise. Zahle 1000.", YELLOW, [27], [1]],
+             ["", "Du hast einen Termin als Geschworener. Einmal aussetzen.", YELLOW, [28], [3]],
+             ["", "Du verlierst deine Autoversicherung wegen Raserei.", YELLOW, [29], [18]],
+             ["", "Autounfall! Zahle 4000, wenn du nicht versichert bist.", YELLOW, [30], [19]],
+             ["", "Die Flitterwochen sind vorüber. Zahle 10.000 für fällige Rechnungen.", YELLOW, [31], [1]], # TODO Schuldscheine überprüfen
+             ]
 
 actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None, False],
            # + 3.000 und Autoversicherung
@@ -149,13 +161,11 @@ actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None
            # Einkommen 5.000 und 1 Feld vor immer
            [False, 50000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 50.000
            [False, -10000, False, 0, -1, None, None, False, False, False, 0, None, False],  # -10.000
-           [False, -5000, False, 0, -1, "life", None, False, False, False, 0, None, False],
-           # Lebensversicherung abgeschlossen und 5.000 gezahlt
+           [False, -5000, False, 0, -1, "life", None, False, False, False, 0, None, False], # Lebensversicherung abgeschlossen und 5.000 gezahlt
            [False, 0, False, 0, -1, None, None, True, False, False, 0, None, False],  # Payday
-           [False, 0, False, 0, -1, None, None, False, True, False, 0, None, False],  # Marriage
+           [False, 0, False, 0, 0, None, None, False, True, False, 0, None, False],  # Marriage # TODO Heirat Spielregel
            [False, 0, False, 0, -1, None, "car", False, False, False, 0, None, False],  # Autoversicherung verloren
-           [False, -4000, False, 0, -1, None, None, False, False, False, 0, None, False],
-           # - 4.000 TODO Versicherung prüfen!
+           [False, -4000, False, 0, -1, None, None, False, False, False, 0, None, False],  # - 4.000 TODO Versicherung prüfen!
            [False, -10000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 10.000
            [False, 0, False, 0, -1, None, None, False, False, False, 0, None, False],
            [False, 0, False, 0, -1, None, None, False, False, False, 0, None, False],
@@ -218,7 +228,7 @@ for idx, info in enumerate(fieldinfo):
                    "rotation": WAYPOINTS[idx][2],
                    "color": info[2],
                    "action": info[4]})
-for idx, waypoint in enumerate(WAYPOINTS[len(fieldinfo):]):
+"""for idx, waypoint in enumerate(WAYPOINTS[len(fieldinfo):]):
     FIELDS.append({"title": "",
                    "text": "Add 1.000.",
                    "following_field": [idx + 21],
@@ -226,7 +236,7 @@ for idx, waypoint in enumerate(WAYPOINTS[len(fieldinfo):]):
                    "y": waypoint[1],
                    "rotation": waypoint[2],
                    "color": YELLOW,
-                   "action": [2]})
+                   "action": [2]})"""
 for field in FIELDS:
     print(field)
 STATUSSYMBOLS = []
@@ -266,7 +276,8 @@ def save_json(filename, json_dict):
 class Game:
 
     def __init__(self, screen, player_number=1):
-        self.player_number = 4  # DEBUG Zwecke
+        self.player_number = player_number
+        #self.player_number = 4  # DEBUG Zwecke
 
         pygame.init()
         self.screen = screen
