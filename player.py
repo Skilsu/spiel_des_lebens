@@ -102,7 +102,9 @@ class Player(pygame.sprite.Sprite):
         "payday": False,
         "marriage": False,
         "buy statussymbol": False,
-        "income if 0": 0
+        "income if 0": 0,
+        "job": None,
+        "aktie": False
         }]
         """
         if action["add_money"] != 0:
