@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.steps_to_go = 0
         self.player_number = number
 
-        image = pygame.image.load("graphics/car.png").convert_alpha()
+        image = pygame.image.load("other_cars/car_baby_blue.png").convert_alpha()
         self.image_without_rotation = pygame.transform.scale(image, PLAYER_SIZE_ACTIVE).convert_alpha()
 
         """if self.active:

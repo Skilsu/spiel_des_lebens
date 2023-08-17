@@ -35,7 +35,7 @@ class PauseMenu:
         pygame.init()
 
         # Bildschirmeinstellungen
-        WIDTH, HEIGHT = 1400, 800
+
         self.screen = screen
         #self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 

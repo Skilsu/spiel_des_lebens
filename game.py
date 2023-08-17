@@ -398,8 +398,8 @@ for idx, info in enumerate(fieldinfo):
                    "rotation": waypoint[2],
                    "color": YELLOW,
                    "action": [2]})"""
-for field in FIELDS:
-    print(field)
+"""for field in FIELDS:
+    print(field)"""
 STATUSSYMBOLS = []
 for symbol in statussymbols:
     STATUSSYMBOLS.append({"name": symbol[0], "description": symbol[1], "value": symbol[2]})
@@ -438,7 +438,7 @@ class Game:
 
     def __init__(self, screen, player_number=1):
         self.player_number = player_number
-        #self.player_number = 4  # DEBUG Zwecke
+        self.player_number = 4  # DEBUG Zwecke
 
         pygame.init()
         self.screen = screen
@@ -487,7 +487,7 @@ class Game:
         print(len(self.players.sprites()))
 
         """# printing one car
-        self.car_image = pygame.transform.scale(pygame.image.load("graphics/car.png").convert_alpha(), (25, 40)).convert_alpha()
+        self.car_image = pygame.transform.scale(pygame.image.load("graphics/car_red.png").convert_alpha(), (25, 40)).convert_alpha()
         self.car_image = pygame.transform.rotate(self.car_image, TEST_POSITION[2])
         self.car_rect = self.car_image.get_rect(topleft=(TEST_POSITION[0], TEST_POSITION[1]))"""
 
@@ -937,7 +937,7 @@ class Game:
             #self.screen.blit(self.car_image, self.car_rect)
 
             pygame.display.update()
-            self.clock.tick(120)
+            self.clock.tick(60)
 
 
 if __name__ == "__main__":
