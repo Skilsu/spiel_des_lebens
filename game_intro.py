@@ -23,6 +23,7 @@ class Button:
 
     def handle_event(self, event):
         if event.type == MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos):
+            self.hovered = False
             return True
         elif event.type == MOUSEMOTION:
             if self.rect.collidepoint(event.pos):
@@ -39,9 +40,9 @@ class ImageButton:
         self.image_rect = pygame.Rect(x + border_size, y + border_size, width - 2 * border_size,
                                       height - 2 * border_size)
 
-        self.image = pygame.image.load(image_path)  # Lädt das Bild
+        self.image = pygame.image.load(image_path).convert_alpha()  # Lädt das Bild
         self.image = pygame.transform.scale(self.image, (
-        self.image_rect.width, self.image_rect.height))  # Skaliert das Bild auf die Größe innerhalb des Rahmens
+        self.image_rect.width, self.image_rect.height)).convert_alpha()  # Skaliert das Bild auf die Größe innerhalb des Rahmens
 
         self.bg_color = bg_color
         self.border_color = border_color
@@ -159,7 +160,7 @@ class GameIntro:
                     for index, button in enumerate(self.buttons):
                         if button.handle_event(event):
                             if event.type == MOUSEBUTTONDOWN:
-                                self.selected = index
+                                self.selected = index+2
                                 for btn in self.buttons:
                                     btn.active = False
                                 button.active = True
@@ -178,7 +179,7 @@ class GameIntro:
 
                     if self.ok_button.rect.collidepoint(event.pos) and self.selected is not None:
                         if self.state == 'player_number':
-                            print(f"Sie haben {self.selected + 2} Spieler ausgewählt.")
+                            print(f"Sie haben {self.selected} Spieler ausgewählt.")
                             self.state = 'choose_color'
 
                 self.back_button.handle_event(event)

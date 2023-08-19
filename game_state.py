@@ -3,6 +3,7 @@ import pygame.display
 from main_menu import MainMenu
 from game import Game
 from pause_menu import PauseMenu
+from game_intro import GameIntro
 
 SCREEN_SIZE = (1700, 930)
 
@@ -14,6 +15,7 @@ class GameState:
         self.main_menu = MainMenu(self.screen)
         self.game = Game(self.screen)
         self.pause_menu = PauseMenu(self.screen)
+        self.game_intro = GameIntro(self.screen)
 
     def event_handler(self):
         if self.state == 'main_menu':
@@ -22,6 +24,8 @@ class GameState:
             self.state = self.game.run()
         elif self.state == 'game_pausing':
             self.state = self.pause_menu.run()
+        elif self.state == 'game_intro':
+            self.state = self.game_intro.run()
 
 
 game_state = GameState()
