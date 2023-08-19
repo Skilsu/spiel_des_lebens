@@ -484,7 +484,7 @@ class Game:
                             START_POSITION_PLAYER1[2], self.colors[i], name="Player " + str(i + 1), number=i)
 
             self.players.add(player)
-        print(len(self.players.sprites()))
+        #print(len(self.players.sprites()))
 
         """# printing one car
         self.car_image = pygame.transform.scale(pygame.image.load("graphics/car_red.png").convert_alpha(), (25, 40)).convert_alpha()

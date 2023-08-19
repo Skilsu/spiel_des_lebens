@@ -3,7 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 
-
+WHITE = (255, 255, 255)
 class Button:
     def __init__(self, x, y, width, height, text, bg_color, txt_color, active_color, hover_color, font):
         self.rect = pygame.Rect(x, y, width, height)
@@ -51,11 +51,20 @@ class ImageButton:
         self.hover_color = hover_color
         self.hovered = False
 
+        self.player_number = None
+        self.font = pygame.font.SysFont("comicsans", 48)
+
     def draw(self, screen):
         color = self.hover_color if self.hovered else self.active_color if self.active else self.bg_color
         pygame.draw.rect(screen, color, self.rect)  # Hintergrundrechteck
         pygame.draw.rect(screen, self.border_color, self.rect, 2)  # Rahmen
         screen.blit(self.image, self.image_rect.topleft)  # Zeichnet das Bild innerhalb des Rahmens
+
+        if self.player_number is not None:
+            num_text = self.font.render(str(self.player_number), True, WHITE)
+            num_pos = (self.rect.x + (self.rect.width - num_text.get_width()) // 2,
+                       self.rect.y - num_text.get_height())
+            screen.blit(num_text, num_pos)
 
     def handle_event(self, event):
         if event.type == MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos):
@@ -97,7 +106,7 @@ class GameIntro:
 
         self.buttons = [
             Button(start_x, start_y + i * (button_height + button_gap), button_width, button_height, str(i + 2),
-                   self.DARK_BROWN, self.WHITE, self.SELECTED_BROWN, self.DARK_BROWN, self.font) for i in range(5)
+                   self.DARK_BROWN, self.WHITE, self.SELECTED_BROWN, self.SELECTED_BROWN, self.font) for i in range(5)
         ]
         self.back_button = Button(10, self.screen.get_height() - 60, 150, 50, "Zurück", self.BLACK, self.WHITE,
                                   self.BLACK, self.RED, self.font)
@@ -108,7 +117,7 @@ class GameIntro:
         self.state = 'player_number'
 
         self.colors = [self.BABY_BLUE, self.GREEN, (255, 165, 0), (128, 0, 128), self.RED,
-                  (255, 255, 0)]  # Orange, Lila hinzugefügt
+                  (255, 219, 0)]  # Orange, Lila hinzugefügt
         self.car_images = ["other_cars/car_baby_blue.png", "other_cars/car_green.png", "other_cars/car_orange.png", "other_cars/car_purple.png", "other_cars/car_red.png",
                       "other_cars/car_yellow.png"]
 
@@ -122,6 +131,14 @@ class GameIntro:
             btn_x = start_x_cars + i * (button_width_cars + button_gap_cars)
             btn = ImageButton(btn_x, start_y_cars, button_width_cars, button_height_cars, car_image, color, self.SELECTED_BROWN, color, border_size=20)
             self.color_buttons.append(btn)
+
+        # Auto auswahl
+        self.current_selection = 0
+        self.selection_display_font = pygame.font.SysFont("comicsans", 40)
+
+        self.selected_cars = []
+
+
 
     def draw_title(self, text):
         pygame.draw.rect(self.screen, self.BABY_BLUE,
@@ -138,9 +155,16 @@ class GameIntro:
         pygame.draw.line(self.screen, self.WHITE, (0, title_frame_rect.bottom),
                          (self.screen.get_width(), title_frame_rect.bottom), 2)
 
+    def draw_player_selection_display(self):
+        text = f"Ausgewählt: {self.current_selection}/{self.selected}"
+        rendered_text = self.selection_display_font.render(text, True, self.WHITE)
+        position = (20, 200)
+        self.screen.blit(rendered_text, position)
+
     def run(self):
         running = True
         while running:
+
             self.screen.fill(self.LIGHT_BROWN)
 
             # Title
@@ -154,21 +178,39 @@ class GameIntro:
                     running = False
                     pygame.quit()
                     sys.exit()
+                if event.type == KEYUP:
+                    if event.key == K_ESCAPE:
+                        return 'game_pausing'
+
 
                 # Move this outside of MOUSEBUTTONDOWN to handle hover
                 if self.state == 'player_number':
                     for index, button in enumerate(self.buttons):
-                        if button.handle_event(event):
-                            if event.type == MOUSEBUTTONDOWN:
-                                self.selected = index+2
-                                for btn in self.buttons:
-                                    btn.active = False
-                                button.active = True
+                        if button.handle_event(event) and event.type == MOUSEBUTTONDOWN:
+                            self.selected = index+2
+                            for btn in self.buttons:
+                                btn.active = False
+                            button.active = True
+
+
 
                 elif self.state == 'choose_color':
                     for btn in self.color_buttons:
-                        btn.handle_event(event)
-                        btn.draw(self.screen)
+                        if btn.handle_event(event) and event.type == MOUSEBUTTONDOWN:
+                            if btn.player_number is None and self.current_selection < self.selected:  # Auto wurde noch nicht ausgewählt
+                                self.current_selection += 1
+                                btn.player_number = self.current_selection
+                            elif btn.player_number is not None:  # Auto wurde bereits ausgewählt
+                                deselected_number = btn.player_number
+                                btn.player_number = None
+                                self.current_selection -= 1
+                                # Aktualisieren der player_number für alle anderen ausgewählten Autos
+                                for other_btn in self.color_buttons:
+                                    if other_btn.player_number and other_btn.player_number > deselected_number:
+                                        other_btn.player_number -= 1
+                            else:
+                                print("Maximale Anzahl an Spielern erreicht!")
+
 
                 if event.type == MOUSEBUTTONDOWN:
                     if self.back_button.rect.collidepoint(event.pos):
@@ -178,23 +220,33 @@ class GameIntro:
                             self.state = 'player_number'
 
                     if self.ok_button.rect.collidepoint(event.pos) and self.selected is not None:
+                        if self.state == 'choose_color':
+
+                            if self.current_selection == self.selected:
+                                self.selected_cars = [(btn.player_number, btn.bg_color) for btn in self.color_buttons if btn.player_number is not None]
+                                self.selected_cars.sort(key=lambda x: x[0])
+                                print(self.selected_cars)
+                                return 'game_intro_order_decision'
+                            else: # TODO als Warnung im Bildschirm anzeigen
+                                print("Nicht alle Autos ausgewählt")
                         if self.state == 'player_number':
                             print(f"Sie haben {self.selected} Spieler ausgewählt.")
                             self.state = 'choose_color'
 
-                self.back_button.handle_event(event)
+
                 self.ok_button.handle_event(event)
+                self.back_button.handle_event(event)
 
             # Draw buttons based on the state
             if self.state == 'player_number':
                 for button in self.buttons:
                     button.draw(self.screen)
             elif self.state == 'choose_color':
+                self.back_button.draw(self.screen)
+                self.draw_player_selection_display()
                 for button in self.color_buttons:
                     button.draw(self.screen)
 
-            # Draw back and ok buttons
-            self.back_button.draw(self.screen)
             if self.selected is not None:
                 self.ok_button.draw(self.screen)
 

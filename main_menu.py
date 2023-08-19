@@ -85,7 +85,7 @@ class MainMenu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
                         print('Spiel starten geklickt')
-                        return 'game_playing'
+                        return 'game_intro_choose_player'
                     if self.instructions_button.is_over(pos):
                         print('Anleitung geklickt')
                         # Hier können Sie die Logik zum Anzeigen der Anleitung hinzufügen
