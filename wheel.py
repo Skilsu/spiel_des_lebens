@@ -23,7 +23,7 @@ class Wheel:
             end_angle += 360
 
         points = [self.center]
-        for a in range(start_angle, end_angle+1, 5):
+        for a in range(start_angle, end_angle + 1, 5):
             x = self.center[0] + self.radius * math.cos(math.radians(a))
             y = self.center[1] + self.radius * math.sin(math.radians(a))
             points.append((x, y))
@@ -32,7 +32,7 @@ class Wheel:
         text_angle = (start_angle + end_angle) / 2
         text_x = self.center[0] + (self.radius * 0.65) * math.cos(math.radians(text_angle)) - 10
         text_y = self.center[1] + (self.radius * 0.65) * math.sin(math.radians(text_angle)) - 10
-        text = self.font.render(str(n+1), True, (0, 0, 0))
+        text = self.font.render(str(n + 1), True, (0, 0, 0))
         screen.blit(text, (text_x, text_y))
 
     def draw_selected_number(self, screen):
@@ -41,8 +41,8 @@ class Wheel:
             screen.blit(text, (self.center[0] - text.get_width() // 2, self.center[1] - text.get_height() // 2))
 
     def draw_pointer(self, screen):
-        pointer_position = (self.center[0] + self.radius -20, self.center[1])
-        pygame.draw.polygon(screen, (0, 0, 0),
+        pointer_position = (self.center[0] + self.radius - 20, self.center[1])
+        pygame.draw.polygon(screen, (255, 255, 255),
                             [pointer_position, (pointer_position[0] + 30, pointer_position[1] - 15),
                              (pointer_position[0] + 30, pointer_position[1] + 15)])
 
@@ -73,5 +73,3 @@ class Wheel:
 
     def has_stopped(self):
         return not self.is_spinning and self.has_spun
-
-

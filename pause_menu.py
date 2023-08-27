@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+
 # Button Klasse
 class Button:
     def __init__(self, color, x, y, width, height, text=''):
@@ -10,6 +11,7 @@ class Button:
         self.width = width
         self.height = height
         self.text = text
+        self.previous_state = None
 
     def draw(self, win, outline=None):
         # Call this method to draw the button on the screen
@@ -30,14 +32,12 @@ class Button:
                 return True
         return False
 
+
 class PauseMenu:
     def __init__(self, screen):
         pygame.init()
 
-        # Bildschirmeinstellungen
-        WIDTH, HEIGHT = 1400, 800
         self.screen = screen
-        #self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
         # Farbdefinitionen
         self.WHITE = (255, 255, 255)
@@ -47,10 +47,10 @@ class PauseMenu:
         self.BUTTON_SIZE_WIDTH = 600
 
         # Buttons erstellen
-        self.start_button = Button(self.GREY, 350, 150, self.BUTTON_SIZE_WIDTH, 100, 'Weiter Spielen')
-        self.restart_button = Button(self.GREY, 350, 300, self.BUTTON_SIZE_WIDTH, 100, 'Neues Spiel starten')
-        self.instructions_button = Button(self.GREY, 350, 450, self.BUTTON_SIZE_WIDTH, 100, 'Anleitung')
-        self.quit_button = Button(self.GREY, 350, 600, self.BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
+        self.start_button = Button(self.GREY, 550, 150, self.BUTTON_SIZE_WIDTH, 100, 'Weiter Spielen')
+        self.restart_button = Button(self.GREY, 550, 300, self.BUTTON_SIZE_WIDTH, 100, 'Neues Spiel starten')
+        self.instructions_button = Button(self.GREY, 550, 450, self.BUTTON_SIZE_WIDTH, 100, 'Anleitung')
+        self.quit_button = Button(self.GREY, 550, 600, self.BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
 
     def redraw_window(self):
         # Hintergrundfarbe
@@ -79,12 +79,13 @@ class PauseMenu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
                         print('Weiter spielen geklickt')
-                        return 'game_playing'
+                        return 'resume'
                     if self.instructions_button.is_over(pos):
                         print('Anleitung geklickt')
                         # Hier können Sie die Logik zum Anzeigen der Anleitung hinzufügen
                     if self.restart_button.is_over(pos):
                         print("Spiel neustarten geklickt")
+                        return "restart_game"
                     if self.quit_button.is_over(pos):
                         print('Spiel beenden geklickt')
                         run = False
@@ -110,4 +111,4 @@ class PauseMenu:
                         self.quit_button.color = self.GREY
 
 if __name__ == "__main__":
-    PauseMenu(pygame.display.set_mode((1400, 800))).run()
+    PauseMenu(pygame.display.set_mode((1700, 930))).run()

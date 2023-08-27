@@ -6,7 +6,7 @@ PLAYER_SIZE_INACTIVE = (15, 15)
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, rotation, color, name="", active=False):
+    def __init__(self, x, y, rotation, color, name="", number=-1, active=False):
         super(Player, self).__init__()
 
         self.name = name
@@ -16,8 +16,9 @@ class Player(pygame.sprite.Sprite):
         self.active = active
         self.color = color
         self.steps_to_go = 0
+        self.player_number = number
 
-        image = pygame.image.load("graphics/car.png").convert_alpha()
+        image = pygame.image.load("graphics/other_cars/car_baby_blue.png").convert_alpha()
         self.image_without_rotation = pygame.transform.scale(image, PLAYER_SIZE_ACTIVE).convert_alpha()
 
         """if self.active:
@@ -35,16 +36,21 @@ class Player(pygame.sprite.Sprite):
         self.y_new = y
         self.rotation_new = rotation
         self.rate = 30
+        self.has_moved = False
 
         # game logic
         self.money = 0
         self.children = []
         self.status_symbols = []
         self.action_cards = []
-        self.insurance = []
+        self.car = False
+        self.life = False
+        self.fire = False
         self.debt = 0
         self.income = 0
         self.pause = False
+        self.job = None
+        self.aktie = False
 
     """def update(self, pressed_keys):
             if pressed_keys[pygame.K_SPACE]:
@@ -65,10 +71,24 @@ class Player(pygame.sprite.Sprite):
     def draw(self):
         if self.active:
             self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
+            self.rect = self.image.get_rect(topleft=(self.x, self.y))
         else:
             self.image = pygame.Surface(PLAYER_SIZE_INACTIVE, pygame.SRCALPHA)
             pygame.draw.circle(self.image, self.color, (7.5, 7.5), 5)
-        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+            if self.current_field == 0:
+                self.rect = self.image.get_rect(topleft=(self.x, self.y))
+            elif self.player_number <= 0:
+                self.rect = self.image.get_rect(topleft=(self.x, self.y))
+            elif self.player_number == 1:
+                self.rect = self.image.get_rect(midtop=(self.x, self.y))
+            elif self.player_number == 2:
+                self.rect = self.image.get_rect(midleft=(self.x, self.y))
+            elif self.player_number == 3:
+                self.rect = self.image.get_rect(center=(self.x, self.y))
+            elif self.player_number == 4:
+                self.rect = self.image.get_rect(bottomleft=(self.x, self.y))
+            elif self.player_number == 5:
+                self.rect = self.image.get_rect(midbottom=(self.x, self.y))
 
     def act(self, action):
         """
@@ -82,29 +102,31 @@ class Player(pygame.sprite.Sprite):
         "payday": False,
         "marriage": False,
         "buy statussymbol": False,
-        "income if 0": 0
+        "income if 0": 0,
+        "job": None,
+        "aktie": False
         }]
         """
         if action["add_money"] != 0:
             self.money += action["add_money"]
         if action["pause"]:
-            self.pause = True
+            self.pause = not self.pause
         if action["set income"] != 0:
             self.income = action["set income"]
         if action["go more steps"] != -1:
             self.steps_to_go = action["go more steps"]
-        if action.get("add insurance") == "car" and "car" not in self.insurance:
-            self.insurance.append("car")
-        if action.get("add insurance") == "fire" and "fire" not in self.insurance:
-            self.insurance.append("fire")
-        if action.get("add insurance") == "live" and "live" not in self.insurance:
-            self.insurance.append("live")
-        if action.get("lose insurance") == "car" and "car" in self.insurance:
-            self.insurance.remove("car")
-        if action.get("lose insurance") == "fire" and "fire" in self.insurance:
-            self.insurance.remove("fire")
-        if action.get("lose insurance") == "live" and "live" in self.insurance:
-            self.insurance.remove("live")
+        if action.get("add insurance") == "car":
+            self.car = True
+        if action.get("add insurance") == "fire":
+            self.fire = True
+        if action.get("add insurance") == "life":
+            self.life = True
+        if action.get("lose insurance") == "car":
+            self.car = False
+        if action.get("lose insurance") == "fire":
+            self.fire = False
+        if action.get("lose insurance") == "life":
+            self.life = False
         if action["payday"]:
             self.money += self.income
         if action["income if 0"] != 0 and self.income == 0:
@@ -112,6 +134,10 @@ class Player(pygame.sprite.Sprite):
         if self.money < 0:
             self.money += 20000
             self.debt += 1
+        if action["job"] is not None:
+            self.job = action["job"]
+        if action["aktie"]:
+            self.aktie = True
 
     def change_money(self, amount):
         self.money = self.money + amount

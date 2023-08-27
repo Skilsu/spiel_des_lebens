@@ -49,9 +49,13 @@ class MainMenu:
         self.BUTTON_SIZE_WIDTH = 600
 
         # Buttons erstellen
-        self.start_button = Button(self.GREY, 350, 200, self.BUTTON_SIZE_WIDTH, 100, 'Spiel starten')
-        self.instructions_button = Button(self.GREY, 350, 350, self.BUTTON_SIZE_WIDTH, 100, 'Anleitung')
-        self.quit_button = Button(self.GREY, 350, 500, self.BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
+        self.start_button = Button(self.GREY, 550, 400, self.BUTTON_SIZE_WIDTH, 100, 'Spiel starten')
+        self.instructions_button = Button(self.GREY, 550, 550, self.BUTTON_SIZE_WIDTH, 100, 'Anleitung')
+        self.quit_button = Button(self.GREY, 550, 700, self.BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
+
+        # Game Logo
+        self.image_logo = pygame.image.load("graphics/game_logo.png").convert_alpha()
+        self.image_logo = pygame.transform.scale(self.image_logo, (600, 300))
 
     def redraw_window(self):
         # Hintergrundfarbe
@@ -61,6 +65,8 @@ class MainMenu:
         self.start_button.draw(self.screen, self.BLACK)
         self.instructions_button.draw(self.screen, self.BLACK)
         self.quit_button.draw(self.screen, self.BLACK)
+
+        self.screen.blit(self.image_logo, (550,100))
 
     def run(self):
         run = True
@@ -79,7 +85,7 @@ class MainMenu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
                         print('Spiel starten geklickt')
-                        return 'game_playing'
+                        return 'game_intro_choose_player'
                     if self.instructions_button.is_over(pos):
                         print('Anleitung geklickt')
                         # Hier können Sie die Logik zum Anzeigen der Anleitung hinzufügen
@@ -105,4 +111,4 @@ class MainMenu:
 
 
 if __name__ == "__main__":
-    MainMenu(pygame.display.set_mode((1400, 800))).run()
+    MainMenu(pygame.display.set_mode((1700, 930))).run()
