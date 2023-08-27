@@ -10,7 +10,7 @@ class Field:
         self.y = y
         self.rotation = rotation
 
-        self.action = action
+        self.action = action  [MoneyAction(3000), InsuranceAction("car")]
 
     def act(self, left_moves):
         return left_moves - 1

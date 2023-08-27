@@ -333,21 +333,6 @@ actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None
            [False, -50000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 50.000                            #63
            ]
 
-"""
-self.player.append(Player(1170, 360, (0, 212, 28)))
-        self.player.append(Player(1185, 360, (255, 0, 0)))
-        self.player.append(Player(1200, 360, (0, 212, 28)))
-        self.player.append(Player(1215, 360, (255, 255, 0)))
-        self.player.append(Player(1230, 360, (0, 212, 28)))
-        self.player.append(Player(1245, 360, (255, 255, 0)))
-        self.player.append(Player(1245, 411, (0, 68, 220)))
-        self.player.append(Player(1230, 411, (255, 0, 0)))
-        self.player.append(Player(1215, 411, (0, 68, 220)))
-        self.player.append(Player(1200, 411, (255, 0, 0)))
-        self.player.append(Player(1170, 411, (255, 255, 0)))
-        self.player.append(Player(1185, 411, (0, 68, 220)))
-"""
-
 ACTIONS_Vorlage = [{"act with more steps": False,
                     "add_money": 0,
                     "pause": False,
@@ -879,6 +864,10 @@ class Game:
                                     FIELDS[current_player.current_field]["color"] == WHITE:
                                 if ACTIONS[FIELDS[current_player.current_field]["action"][0]]["income if 0"] == 0 \
                                         or current_player.income == 0:  # Einzelfallbehandlung! Sinnvoll?
+
+                                    for action in current_player.current_field.actions:
+                                        action.act(current_player)
+
                                     current_player.act(
                                         ACTIONS[
                                             FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
