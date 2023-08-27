@@ -880,7 +880,7 @@ class Game:
                     self.motion_action = -1
 
             self.wheel.update()
-            self.screen.fill((0, 0, 0))
+            self.screen.fill(BACKGROUND_COLOR)
             self.draw_field_info()
 
             if self.spinned_wheel and self.wheel.has_stopped():
