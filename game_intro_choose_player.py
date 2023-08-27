@@ -118,8 +118,8 @@ class GameIntro:
 
         self.colors = [self.BABY_BLUE, self.GREEN, (255, 165, 0), (128, 0, 128), self.RED,
                   (255, 219, 0)]  # Orange, Lila hinzugefügt
-        self.car_images = ["other_cars/car_baby_blue.png", "other_cars/car_green.png", "other_cars/car_orange.png", "other_cars/car_purple.png", "other_cars/car_red.png",
-                      "other_cars/car_yellow.png"]
+        self.car_images = ["graphics/other_cars/car_baby_blue.png", "graphics/other_cars/car_green.png", "graphics/other_cars/car_orange.png", "graphics/other_cars/car_purple.png", "graphics/other_cars/car_red.png",
+                      "graphics/other_cars/car_yellow.png"]
 
         button_width_cars, button_height_cars = 250, 250  # Beispielgröße
         button_gap_cars = 20

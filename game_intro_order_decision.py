@@ -45,7 +45,7 @@ class GameIntro:
         self.players_data = [(1, (173, 216, 230)), (2, (0, 255, 0)), (3, (255, 165, 0)), (4, (128, 0, 128)), (5, (255, 0, 0)),
                              (6, (255, 219, 0))] # debug zwecke
         self.players_data = [{'player_number': num, 'car_color': color} for num, color in self.players_data]
-        image_directory = 'other_cars/'
+        image_directory = 'graphics/other_cars/'
 
         for player in self.players_data:
             color_name = [name for name, rgb in car_colors.items() if rgb == player["car_color"]][0]
