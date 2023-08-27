@@ -429,7 +429,7 @@ def save_json(filename, json_dict):
     for card in actioncards:
         ACTIONCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
     data_dict = {"fields": fields, "actions": ACTIONS, "action_cards": ACTIONCARDS, "status_symbols": STATUSSYMBOLS}
-    save_json("data", data_dict)
+
     with open(f"{filename}.json", "w") as outfile:
         json.dump(json_dict, outfile)
 
@@ -791,30 +791,6 @@ class Game:
                 pause_surface = self.font_text.render("Aussetzen!", True, WHITE)
                 self.screen.blit(pause_surface, (10, 100 + 800 * i / len(rectangles)))
 
-    def update_player(self, current_player):
-        current_player.steps_to_go -= 1
-        current_player.moving = True
-
-        # TODO aufruf field.get_following_field()  -> in dieser methode wird entschieden
-
-        current_player.x_new = FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"]
-        current_player.y_new = FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"]
-
-        rotation_new = FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"]
-
-        if current_player.rotation > 180:
-            rotation_modified = rotation_new + 360
-            diff = abs(current_player.rotation - rotation_modified)
-        else:
-            rotation_modified = rotation_new - 360
-            diff = abs(current_player.rotation - rotation_modified)
-
-        if diff < abs(rotation_new - current_player.rotation):
-            rotation_new = rotation_modified
-        current_player.rotation_new = rotation_new
-        current_player.current_field = FIELDS[current_player.current_field]["following_field"][0]
-
-        return current_player
 
     def find_pos(self, pos):
         for idx, rect in enumerate(self.clickable_objects):
@@ -910,6 +886,9 @@ class Game:
                                     self.current_field = current_player.current_field
                         current_player.has_moved = True
                         if current_player.steps_to_go > 0:
+                            # following_field = current_player.current_field.get_following_field()
+                            # current_player.update_position(self.fields(following_field))
+
                             current_player.update_position(FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
                                                            FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
                                                            FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"],
@@ -920,6 +899,9 @@ class Game:
                         self.current_field = current_player.current_field
 
                         if current_player.steps_to_go > 0:
+                            # following_field = current_player.current_field.get_following_field()
+                            # current_player.update_position(self.fields(following_field))
+
                             current_player.update_position(
                                 FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
                                 FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
