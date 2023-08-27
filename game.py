@@ -795,7 +795,8 @@ class Game:
         current_player.steps_to_go -= 1
         current_player.moving = True
 
-        # TODO implement choice???
+        # TODO aufruf field.get_following_field()  -> in dieser methode wird entschieden
+
         current_player.x_new = FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"]
         current_player.y_new = FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"]
 
