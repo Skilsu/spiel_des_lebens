@@ -144,3 +144,26 @@ class Player(pygame.sprite.Sprite):
 
     def payday(self):
         self.money = self.money + self.income
+
+    def update_position(self, field_x, field_y, field_rotation, following_field): # TODO
+        self.steps_to_go -= 1
+        self.moving = True
+
+        # TODO aufruf field.get_following_field()  -> in dieser methode wird entschieden
+
+        self.x_new = field_x
+        self.y_new = field_y
+
+        rotation_new = field_rotation
+
+        if self.rotation > 180:
+            rotation_modified = rotation_new + 360
+            diff = abs(self.rotation - rotation_modified)
+        else:
+            rotation_modified = rotation_new - 360
+            diff = abs(self.rotation - rotation_modified)
+
+        if diff < abs(rotation_new - self.rotation):
+            rotation_new = rotation_modified
+        self.rotation_new = rotation_new
+        self.current_field = following_field

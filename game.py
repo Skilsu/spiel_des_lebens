@@ -910,14 +910,22 @@ class Game:
                                     self.current_field = current_player.current_field
                         current_player.has_moved = True
                         if current_player.steps_to_go > 0:
-                            current_player = self.update_player(current_player)
+                            current_player.update_position(FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
+                                                           FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
+                                                           FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"],
+                                                           FIELDS[current_player.current_field]["following_field"][0])
                     else:
                         current_player.act(
                             ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
                         self.current_field = current_player.current_field
 
                         if current_player.steps_to_go > 0:
-                            current_player = self.update_player(current_player)
+                            current_player.update_position(
+                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
+                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
+                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"],
+                                FIELDS[current_player.current_field]["following_field"][0])
+
                             self.state = 'player returning'
                         else:
                             self.state = 'next_player'
