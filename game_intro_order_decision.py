@@ -39,7 +39,7 @@ class GameIntro:
 
         self.font = pygame.font.Font(None, 35)
         font_large = pygame.font.Font(None, 70)
-        self.wheel = Wheel((self.screen.get_width()/2, self.screen.get_height()/2), WHEEL_RADIUS, colors, self.font, font_large)
+        self.wheel = Wheel((self.screen.get_width()/2, self.screen.get_height()/2), WHEEL_RADIUS)
         self.clock = pygame.time.Clock()
         self.players_data = []
         self.players_data = [(1, (173, 216, 230)), (2, (0, 255, 0)), (3, (255, 165, 0)), (4, (128, 0, 128)), (5, (255, 0, 0)),
