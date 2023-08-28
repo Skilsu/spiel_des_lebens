@@ -1,4 +1,5 @@
 import json
+from actions import create_action
 
 from fields import WhiteField, OrangeField, YellowField, RedField
 
@@ -16,11 +17,14 @@ def load_fields():
 
     for info in json_dict["fields"]:
         if info["color"] == list(RED):
+
+            actions = create_action(info["action"])
+
             fields.append(RedField(following_fields=info["following_fields"],
                                    x=info["x"],
                                    y=info["y"],
                                    rotation=info["rotation"],
-                                   action=info["action"],
+                                   action=actions,
                                    title=info["title"],
                                    text=info["text"]
                                    ))

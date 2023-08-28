@@ -46,7 +46,7 @@ rectangles = [
     {"color": CYAN, "text": "Spieler 6"},
 ]
 
-#TEST_POSITION = (801, 195, 180)
+# TEST_POSITION = (801, 195, 180)
 START_POSITION_PLAYER1 = (1160, 354, 270)
 WAYPOINTS = [(1160, 372, 270),  # I divide
              (1237, 257, 0), (1237, 205, 0), (1250, 145, 300),  # I first path end
@@ -64,8 +64,10 @@ WAYPOINTS = [(1160, 372, 270),  # I divide
              (632, 710, 90), (568, 720, 90), (495, 710, 75), (430, 678, 60), (370, 645, 60), (353, 602, 0),
              # II second path end
              (355, 545, 0),  # II reunion
-             (367, 492, 315), (425, 474, 275), (485, 469, 280), (525, 425, 0), (525, 378, 0), (525, 332, 1), (513, 280, 15), (486, 236, 37),
-             (447, 205, 55), (407, 145, 0), (407, 93, 335), (443, 55, 300), (502, 38, 285), (564, 41, 271), (615, 41, 271),
+             (367, 492, 315), (425, 474, 275), (485, 469, 280), (525, 425, 0), (525, 378, 0), (525, 332, 1),
+             (513, 280, 15), (486, 236, 37),
+             (447, 205, 55), (407, 145, 0), (407, 93, 335), (443, 55, 300), (502, 38, 285), (564, 41, 271),
+             (615, 41, 271),
              (670, 41, 271), (722, 41, 271), (773, 38, 240), (801, 75, 180), (801, 117, 180), (801, 161, 180),
              (801, 195, 180),  # III divide
              (801, 248, 180), (801, 291, 180), (801, 335, 180), (801, 379, 180), (801, 424, 180), (782, 463, 130),
@@ -128,7 +130,8 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["", "Du gewinnst in der Lotterie und erhältst 50.000.", YELLOW, [18], [13]],
              ["", "Du fichtst ein Testament an. Zahle 10.000 Gerichtsgebühren.", YELLOW, [19], [14]],
              ["", "Deine Tante stirbt. Du erbst 50.000.", YELLOW, [20], [13]],
-             ["", "Wenn du eine Lebensversicherung abschließen willst, zahle 5000.", WHITE, [21], [15]], # TODO Choice in White field + change font of text to another color because white on white
+             ["", "Wenn du eine Lebensversicherung abschließen willst, zahle 5000.", WHITE, [21], [15]],
+             # TODO Choice in White field + change font of text to another color because white on white
              ["", "Du verlobst Dich. Zahle 1000 für den Verlobungsring.", YELLOW, [22], [1]],
              ["", "Du gewinnst bei einem Fernsehquiz und erhältst 5000.", YELLOW, [23], [11]],
              ["Zahltag", "", RED, [24], [16]],
@@ -138,63 +141,92 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["", "Du hast einen Termin als Geschworener. Einmal aussetzen.", YELLOW, [28], [3]],
              ["", "Du verlierst deine Autoversicherung wegen Raserei.", YELLOW, [29], [18]],
              ["", "Autounfall! Zahle 4000, wenn du nicht versichert bist.", YELLOW, [30], [19]],
-             ["", "Die Flitterwochen sind vorüber. Zahle 10.000 für fällige Rechnungen.", YELLOW, [31], [1]], # TODO Schuldscheine überprüfen
-             ["", "Option auf den Kauf eines Status Symbols für 10.000", YELLOW, [32], [20]], # TODO choice buy statussymbol
+             ["", "Die Flitterwochen sind vorüber. Zahle 10.000 für fällige Rechnungen.", YELLOW, [31], [1]],
+             # TODO Schuldscheine überprüfen
+             ["", "Option auf den Kauf eines Status Symbols für 10.000", YELLOW, [32], [20]],
+             # TODO choice buy statussymbol
              ["Zahltag", "", RED, [33], [16]],
              ["", "Erpressung durch den Butler. Zahle 10.000.", YELLOW, [34], [14]],
              ["", "Verspätetes Hochzeitsgeschenk. Du erhältst 80.000.", YELLOW, [35], [21]],
              ["", "Parkverbot! Einmal aussetzen.", YELLOW, [36], [3]],
-             ["", "Du kaufst ein kleines Haus. Zahle 15.000.", RED, [37], [22]], # Haus?
-             ["", "Wenn du eine Feuerversicherung abschließen willst, zahle 5000.", WHITE, [38], [23]], # TODO Choice in White field + change font of text to another color because white on white
+             ["", "Du kaufst ein kleines Haus. Zahle 15.000.", RED, [37], [22]],  # Haus?
+             ["", "Wenn du eine Feuerversicherung abschließen willst, zahle 5000.", WHITE, [38], [23]],
+             # TODO Choice in White field + change font of text to another color because white on white
              ["Zahltag", "", RED, [39], [16]],
-             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [40], [1]], # TODO Glückstag regel
-             ["", "Ein Sohn! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [41], [1]], # TODO adding children and becoming money from every player
-             ["", "Option auf den Kauf eines Status Symbols für 12.000", YELLOW, [42], [24]], # TODO choice buy statussymbol
-             ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [43], [1]], # TODO adding children and becoming money from every player
+             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [40], [1]],
+             # TODO Glückstag regel
+             ["", "Ein Sohn! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [41], [1]],
+             # TODO adding children and becoming money from every player
+             ["", "Option auf den Kauf eines Status Symbols für 12.000", YELLOW, [42], [24]],
+             # TODO choice buy statussymbol
+             ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [43], [1]],
+             # TODO adding children and becoming money from every player
              ["Zahltag", "", RED, [44], [16]],
              ["", "Du gewinnst beim Pferderennen und erhältst 50.000", YELLOW, [45], [13]],
-             ["", "Klage auf Schadenersatz. Dir werden 50.000 zugesprochen", ORANGE, [46], [1]], # TODO choice spieler auswählen und geld von ihm nehmen
+             ["", "Klage auf Schadenersatz. Dir werden 50.000 zugesprochen", ORANGE, [46], [1]],
+             # TODO choice spieler auswählen und geld von ihm nehmen
              # Dieses Feld weg, da Spielfeld zu klein ["", "Zwillinge! Du erhältst 2.000 von jedem Mitspieler.", YELLOW, [47], [1]], # TODO adding children and becoming money from every player
-             ["", "Steuernachzahlung. Zahle 10.000 für jedes Status Symbol.", RED, [47], [1]], # TODO statussymbole zählen
-             ["", "Wenn du eine Aktie kaufen willst, zahle 25.000.", WHITE, [48], [25]], # TODO Choice in White field + change font of text to another color because white on white
-             ["", "Ein Sohn! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [49], [1]], # TODO adding children and becoming money from every player
+             ["", "Steuernachzahlung. Zahle 10.000 für jedes Status Symbol.", RED, [47], [1]],
+             # TODO statussymbole zählen
+             ["", "Wenn du eine Aktie kaufen willst, zahle 25.000.", WHITE, [48], [25]],
+             # TODO Choice in White field + change font of text to another color because white on white
+             ["", "Ein Sohn! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [49], [1]],
+             # TODO adding children and becoming money from every player
              # TODO implementieren von 2 Wegen
-             ["", "Wenn du ein Aktionär bist, kannst du an der Börse spekulieren.", WHITE, [50], [1]], # TODO Choice in White field + change font of text to another color because white on white + Check aktie and spekulieren an der Börse Spielregel
-             ["", "Option auf den Kauf eines Status Symbols für 10.000", YELLOW, [51], [20]], # TODO choice buy statussymbol
+             ["", "Wenn du ein Aktionär bist, kannst du an der Börse spekulieren.", WHITE, [50], [1]],
+             # TODO Choice in White field + change font of text to another color because white on white + Check aktie and spekulieren an der Börse Spielregel
+             ["", "Option auf den Kauf eines Status Symbols für 10.000", YELLOW, [51], [20]],
+             # TODO choice buy statussymbol
              ["", "Baisse. Wenn du ein Aktionär bist, zahle 16.000", YELLOW, [52], [26]],
              ["Zahltag", "", RED, [53], [16]],
              ["", "Zinsen auf deine Ersparnisse. Du bekommst 40.000", YELLOW, [54], [27]],
-             ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [55], [1]], # TODO adding children and becoming money from every player
+             ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [55], [1]],
+             # TODO adding children and becoming money from every player
              ["", "Autounfall! Zahle 6000, wenn du nicht versichert bist.", YELLOW, [56], [28]],
-             ["", "Drehe das Glücksrad. Du erhältst 1.000 mal Deine Zahl.", YELLOW, [57], [1]], # TODO Glücksrad drehen und geld bekommen
-             ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [58], [1]], # TODO adding children and becoming money from every player
+             ["", "Drehe das Glücksrad. Du erhältst 1.000 mal Deine Zahl.", YELLOW, [57], [1]],
+             # TODO Glücksrad drehen und geld bekommen
+             ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [58], [1]],
+             # TODO adding children and becoming money from every player
              ["", "Du gewinnst eine Rally! DU erhältst 120.000", YELLOW, [59], [29]],
              ["", "Baisse. Wenn du ein Aktionär bist, zahle 16.000", YELLOW, [60], [26]],
              ["Zahltag", "", RED, [61], [16]],
-             ["", "Option auf den Kauf eines Status Symbols für 18.000", YELLOW, [62], [30]], # TODO choice buy statussymbol
+             ["", "Option auf den Kauf eines Status Symbols für 18.000", YELLOW, [62], [30]],
+             # TODO choice buy statussymbol
              ["", "Deine Schallplatte ist in der Hauptrunde. Du erhältst 50.000", YELLOW, [63], [13]],
-             ["", "Option auf den Kauf eines Status Symbols für 14.000", YELLOW, [64], [31]], # TODO choice buy statussymbol
-             ["", "Klage auf Schadenersatz. Dir werden 60.000 zugesprochen", ORANGE, [65], [1]], # TODO choice spieler auswählen und geld von ihm nehmen
-             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [66], [1]], # TODO Glückstag regel
-             ["", "Ein Sohn! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [67], [1]], # TODO adding children and becoming money from every player
-             ["Zahltag", "Zahle Zinsen auf Schuldscheine", RED, [68], [16]], # TODO Zinsen auf Schuldscheine
+             ["", "Option auf den Kauf eines Status Symbols für 14.000", YELLOW, [64], [31]],
+             # TODO choice buy statussymbol
+             ["", "Klage auf Schadenersatz. Dir werden 60.000 zugesprochen", ORANGE, [65], [1]],
+             # TODO choice spieler auswählen und geld von ihm nehmen
+             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [66], [1]],
+             # TODO Glückstag regel
+             ["", "Ein Sohn! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [67], [1]],
+             # TODO adding children and becoming money from every player
+             ["Zahltag", "Zahle Zinsen auf Schuldscheine", RED, [68], [16]],  # TODO Zinsen auf Schuldscheine
              ["", "Hausse. Wenn du ein Aktionär bist, erhältst du 100.000", YELLOW, [69], [32]],
-             ["", "Option auf den Kauf eines Status Symbols für 16.000", YELLOW, [70], [33]], # TODO choice buy statussymbol
+             ["", "Option auf den Kauf eines Status Symbols für 16.000", YELLOW, [70], [33]],
+             # TODO choice buy statussymbol
              ["", "Baisse. Wenn du ein Aktionär bist, zahle 8.000", YELLOW, [71], [34]],
              ["", "Du hast zu viel Steuern gezahlt und bekommst 5.000 zurück.", YELLOW, [72], [11]],
-             ["Zahltag", "Wenn du Geschäftsmann bist, erhöhe dein Einkommen auf 12.000", RED, [73], [16]], # TODO Erhöhung Einkommen bei Geschäftsmann
+             ["Zahltag", "Wenn du Geschäftsmann bist, erhöhe dein Einkommen auf 12.000", RED, [73], [16]],
+             # TODO Erhöhung Einkommen bei Geschäftsmann
              ["", "Wenn du eine Lebensversicherung hast, erhältst du 30.000", YELLOW, [74], [35]],
              ["", "Du besteigst den Mount Everest und bekommst 50.000", YELLOW, [75], [13]],
-             ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [76], [1]], # TODO adding children and becoming money from every player
-             ["", "Steuernachzahlung. Zahle ein halbes Gehalt", RED, [77], [1]], # TODO halbes gehalt abziehen
-             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [78], [1]], # TODO Glückstag regel
-             ["", "Option auf den Kauf eines Status Symbols für 28.000", YELLOW, [79], [36]], # TODO choice buy statussymbol
+             ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [76], [1]],
+             # TODO adding children and becoming money from every player
+             ["", "Steuernachzahlung. Zahle ein halbes Gehalt", RED, [77], [1]],  # TODO halbes gehalt abziehen
+             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [78], [1]],
+             # TODO Glückstag regel
+             ["", "Option auf den Kauf eines Status Symbols für 28.000", YELLOW, [79], [36]],
+             # TODO choice buy statussymbol
              ["Zahltag", "", RED, [80], [16]],
-             ["", "Wenn du ein Aktionär bist, kannst du an der Börse spekulieren.", WHITE, [81], [1]], # TODO Choice in White field + change font of text to another color because white on white + Check aktie and spekulieren an der Börse Spielregel
-             ["", "Klage auf Schadenersatz. Dir werden 80.000 zugesprochen", ORANGE, [82], [1]], # TODO choice spieler auswählen und geld von ihm nehmen
+             ["", "Wenn du ein Aktionär bist, kannst du an der Börse spekulieren.", WHITE, [81], [1]],
+             # TODO Choice in White field + change font of text to another color because white on white + Check aktie and spekulieren an der Börse Spielregel
+             ["", "Klage auf Schadenersatz. Dir werden 80.000 zugesprochen", ORANGE, [82], [1]],
+             # TODO choice spieler auswählen und geld von ihm nehmen
              ["", "Du erfindest einen automatischen Cocktail-Shaker und erhältst dafür 20.000", YELLOW, [83], [37]],
              ["", "Du gewinnst ein Tennis-Turnier und bekommst 40.000", YELLOW, [84], [27]],
-             ["", "Option auf den Kauf eines Status Symbols für 20.000", YELLOW, [85], [38]], # TODO choice buy statussymbol
+             ["", "Option auf den Kauf eines Status Symbols für 20.000", YELLOW, [85], [38]],
+             # TODO choice buy statussymbol
              ["", "Du finanziert eine erfolglose Expedition zum Südpol. Zahle 30.000", YELLOW, [86], [39]],
              ["Zahltag", "", RED, [87], [16]],
              ["", "Wenn du eine Lebensversicherung hast, erhältst du 24.000", YELLOW, [88], [40]],
@@ -206,131 +238,206 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["Zahltag", "", RED, [94], [16]],
              ["", "Wenn du Aktionär bist, bekommst du 5.000", YELLOW, [95], [46]],
              ["", "Du gewinnst in der Lotterie und erhältst 10.000", YELLOW, [96], [47]],
-             ["Zahltag", "Zahle Zinsen auf Schuldscheine", RED, [97], [16]], # TODO Zinsen auf Schuldscheine
-             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [98], [1]], # TODO Glückstag regel
-             ["", "Drehe das Glücksrad. Du erhältst 1.000 mal Deine Zahl.", YELLOW, [99], [1]], # TODO Glücksrad drehen und geld bekommen
+             ["Zahltag", "Zahle Zinsen auf Schuldscheine", RED, [97], [16]],  # TODO Zinsen auf Schuldscheine
+             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [98], [1]],
+             # TODO Glückstag regel
+             ["", "Drehe das Glücksrad. Du erhältst 1.000 mal Deine Zahl.", YELLOW, [99], [1]],
+             # TODO Glücksrad drehen und geld bekommen
              ["", "Du erbst eine Skunk-Farm. Zahle 12.000, um sie loszuwerden.", YELLOW, [100], [48]],
              ["", "GOLDMINE! Wenn du Aktionär bist, bekommst du 150.000", YELLOW, [101], [49]],
-             ["", "Option auf den Kauf eines Status Symbols für 20.000", YELLOW, [102], [38]], # TODO choice buy statussymbol
-             ["", "Drehe das Glücksrad. Du erhältst 2.000 mal Deine Zahl.", YELLOW, [103], [1]], # TODO Glücksrad drehen und geld bekommen
+             ["", "Option auf den Kauf eines Status Symbols für 20.000", YELLOW, [102], [38]],
+             # TODO choice buy statussymbol
+             ["", "Drehe das Glücksrad. Du erhältst 2.000 mal Deine Zahl.", YELLOW, [103], [1]],
+             # TODO Glücksrad drehen und geld bekommen
              ["", "Du machst eine Weltreise. Zahle 8.000", YELLOW, [104], [50]],
              ["Zahltag", "", RED, [105], [16]],
              ["", "Dein Onkel sitzt im Gefängnis. Zahle eine Kaution von 2.000", YELLOW, [106], [51]],
-             ["", "Option auf den Kauf eines Status Symbols für 18.000", YELLOW, [107], [30]], # TODO choice buy statussymbol
+             ["", "Option auf den Kauf eines Status Symbols für 18.000", YELLOW, [107], [30]],
+             # TODO choice buy statussymbol
              ["", "Du schreibst einen Bestseller und erhältst 80.000", YELLOW, [108], [21]],
-             ["", "Eine Ziege frisst deine preisgekrönten Orchideen. Du setzt einmal aus, um sie zu verjagen.", YELLOW, [109], [3]],
+             ["", "Eine Ziege frisst deine preisgekrönten Orchideen. Du setzt einmal aus, um sie zu verjagen.", YELLOW,
+              [109], [3]],
              ["", "Du hast Übergewicht! Mache Urlaub auf einer Gesundheitsfarm und zahle 6.000", YELLOW, [110], [52]],
              ["", "Du bekommst eine eigene TV Serie und erhältst 40.000", YELLOW, [111], [27]],
              ["Zahltag", "", RED, [112], [16]],
-             ["", "Wenn du ein Aktionär bist, kannst du an der Börse spekulieren.", WHITE, [113], [1]], # TODO Choice in White field + change font of text to another color because white on white + Check aktie and spekulieren an der Börse Spielregel
-             ["", "Option auf den Kauf eines Status Symbols für 24.000", YELLOW, [114], [53]], # TODO choice buy statussymbol
-             ["", "Steuernachzahlung. Zahle ein halbes Gehalt", RED, [115], [1]], # TODO halbes gehalt abziehen
+             ["", "Wenn du ein Aktionär bist, kannst du an der Börse spekulieren.", WHITE, [113], [1]],
+             # TODO Choice in White field + change font of text to another color because white on white + Check aktie and spekulieren an der Börse Spielregel
+             ["", "Option auf den Kauf eines Status Symbols für 24.000", YELLOW, [114], [53]],
+             # TODO choice buy statussymbol
+             ["", "Steuernachzahlung. Zahle ein halbes Gehalt", RED, [115], [1]],  # TODO halbes gehalt abziehen
              ["", "Du entdeckst beim Tiefseetauchen einen Schatz und erhältst 20.000", YELLOW, [116], [37]],
-             ["", "Klage auf Schadenersatz. Dir werden 100.000 zugesprochen", ORANGE, [117], [1]], # TODO choice spieler auswählen und geld von ihm nehmen
+             ["", "Klage auf Schadenersatz. Dir werden 100.000 zugesprochen", ORANGE, [117], [1]],
+             # TODO choice spieler auswählen und geld von ihm nehmen
              ["", "Schenkung für wohltätige Zwecke. Zahle 16.000", YELLOW, [118], [45]],
-             ["Zahltag", "Zahle Zinsen auf Schuldscheine", RED, [119], [16]], # TODO Zinsen auf Schuldscheine
+             ["Zahltag", "Zahle Zinsen auf Schuldscheine", RED, [119], [16]],  # TODO Zinsen auf Schuldscheine
              ["", "Wenn du eine Lebensversicherung hast, erhältst du 50.000", YELLOW, [120], [54]],
              ["", "Hausse. Wenn du ein Aktionär bist, erhältst du 60.000", YELLOW, [121], [55]],
-             ["", "Steuernachzahlung. Zahle 5.000 für jedes Status Symbol.", RED, [122], [1]], # TODO statussymbole zählen
-             ["", "Option auf den Kauf eines Status Symbols für 28.000", YELLOW, [123], [36]], # TODO choice buy statussymbol
-             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [124], [1]], # TODO Glückstag regel
+             ["", "Steuernachzahlung. Zahle 5.000 für jedes Status Symbol.", RED, [122], [1]],
+             # TODO statussymbole zählen
+             ["", "Option auf den Kauf eines Status Symbols für 28.000", YELLOW, [123], [36]],
+             # TODO choice buy statussymbol
+             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [124], [1]],
+             # TODO Glückstag regel
              ["", "Dein Haus brennt. Zahle 26.000, wenn du nicht versichert bist.", YELLOW, [125], [56]],
              ["Zahltag", "", RED, [126], [16]],
              ["", "Du erhältst Tantiemen aus einem Film in Höhe von 50.000", YELLOW, [127], [13]],
-             ["", "Deine Tante hinterlässt dir ihre streunenden Katzen. Zahle 12.000 Unterhaltungskosten.", YELLOW, [128], [48]],
+             ["", "Deine Tante hinterlässt dir ihre streunenden Katzen. Zahle 12.000 Unterhaltungskosten.", YELLOW,
+              [128], [48]],
              ["", "Wenn du keine Kinder hast, zahle 50.000 an ein Waisenhaus.", YELLOW, [129], [57]],
-             ["", "Option auf den Kauf eines Status Symbols für 30.000", YELLOW, [130], [58]], # TODO choice buy statussymbol
+             ["", "Option auf den Kauf eines Status Symbols für 30.000", YELLOW, [130], [58]],
+             # TODO choice buy statussymbol
              ["", "Du bekommst den Nobelpreis und erhältst 50.000", YELLOW, [131], [13]],
              ["", "Du gehst zum Fischen. Setze einmal aus.", YELLOW, [132], [3]],
              ["", "ÖL! Wenn du Aktionär bist, erhältst du 200.000", YELLOW, [133], [59]],
              ["Zahltag", "", RED, [134], [16]],
              ["", "Du verkaufst deine Lebensgeschichte und erhältst 100.000", YELLOW, [135], [44]],
-             ["", "Verkaufe ein beliebiges Status Symbol für 250.000 an die Bank zurück.", YELLOW, [136], [1]], # TODO choice statussymbol and sell to bank
+             ["", "Verkaufe ein beliebiges Status Symbol für 250.000 an die Bank zurück.", YELLOW, [136], [1]],
+             # TODO choice statussymbol and sell to bank
              ["", "Dein Haus brennt. Zahle 40.000, wenn du nicht versichert bist.", YELLOW, [137], [60]],
-             ["Zahltag", "Zahle Zinsen auf Schuldscheine", RED, [138], [16]], # TODO Zinsen auf Schuldscheine
+             ["Zahltag", "Zahle Zinsen auf Schuldscheine", RED, [138], [16]],  # TODO Zinsen auf Schuldscheine
              ["", "Du gehst zum Film. Zahle 50.000 zum Aufbau eines neuen Images.", YELLOW, [139], [61]],
              ["", "Wenn du eine Lebensversicherung hast bekommst du 100.000", YELLOW, [140], [62]],
              ["", "Wenn du Aktionär bist, bekommst du 200.000", YELLOW, [141], [59]],
-             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [142], [1]], # TODO Glückstag regel
-             ["", "Klage auf Schadenersatz. Dir werden 200.000 zugesprochen", ORANGE, [143], [1]], # TODO choice spieler auswählen und geld von ihm nehmen
+             ["Glückstag", "Du erhältst 10.000. Behalte sie oder spiele auf 150.000.", YELLOW, [142], [1]],
+             # TODO Glückstag regel
+             ["", "Klage auf Schadenersatz. Dir werden 200.000 zugesprochen", ORANGE, [143], [1]],
+             # TODO choice spieler auswählen und geld von ihm nehmen
              ["Zahltag", "", RED, [144], [16]],
-             ["", "Option auf den Kauf eines Status Symbols für 50.000", YELLOW, [145], [63]], # TODO choice buy statussymbol
+             ["", "Option auf den Kauf eines Status Symbols für 50.000", YELLOW, [145], [63]],
+             # TODO choice buy statussymbol
              ["", "Übernahmeangebot erfolgreich. Du erhältst 100.000", YELLOW, [146], [44]],
              ["", "Wenn du eine Lebensversicherung hast bekommst du 100.000", RED, [147], [62]],
-             ["TAG DER ABRECHNUNG", "", RED, [147], [62]], # TODO Tag der Abrechnung Spielregel
-            ]
-
-actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None, False],  # + 3.000 und Autoversicherung   #0
-           [False, -1000, False, 0, -1, None, None, False, False, False, 0, None, False],  # - 1.000                        #1
-           [False, 1000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 1.000                         #2
-           [False, 0, True, 0, -1, None, None, False, False, False, 0, None, False],  # Pause                               #3
-           [True, -2000, False, 0, -1, None, None, False, False, False, 0, None, False],  # - 2.000 immer                   #4
-           [False, 0, False, 10000, 6, None, None, False, False, False, 0, "Arzt", False],                                  #5
+             ["TAG DER ABRECHNUNG", "", RED, [147], [62]],  # TODO Tag der Abrechnung Spielregel
+             ]
+actions_neu = [{"add_money": 3000, "add_insurance": "car"}]
+actions = [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None, False],
+           # + 3.000 und Autoversicherung   #0
+           [False, -1000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 1.000                        #1
+           [False, 1000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 1.000                         #2
+           [False, 0, True, 0, -1, None, None, False, False, False, 0, None, False],
+           # Pause                               #3
+           [True, -2000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 2.000 immer                   #4
+           [False, 0, False, 10000, 6, None, None, False, False, False, 0, "Arzt", False],  # 5
            # Einkommen 10.000 und 6 Felder vor
-           [False, 0, False, 20000, 5, None, None, False, False, False, 0, "Journalist", False],                            #6
+           [False, 0, False, 20000, 5, None, None, False, False, False, 0, "Journalist", False],  # 6
            # Einkommen 20.000 und 5 Felder vor
-           [False, 0, False, 15000, 4, None, None, False, False, False, 0, "Anwalt", False],                                #7
+           [False, 0, False, 15000, 4, None, None, False, False, False, 0, "Anwalt", False],  # 7
            # Einkommen 15.000 und 4 Felder vor
-           [False, 0, False, 8000, 3, None, None, False, False, False, 0, "Lehrer", False],                                 #8
+           [False, 0, False, 8000, 3, None, None, False, False, False, 0, "Lehrer", False],  # 8
            # Einkommen 8.000 und 3 Felder vor
-           [False, 0, False, 10000, 2, None, None, False, False, False, 0, "Physiker", False],                                                      #9
+           [False, 0, False, 10000, 2, None, None, False, False, False, 0, "Physiker", False],  # 9
            # Einkommen 10.000 und 2 Felder vor
-           [True, 0, False, 0, 1, None, None, False, False, False, 6000, None, False],                                                              #10
+           [True, 0, False, 0, 1, None, None, False, False, False, 6000, None, False],  # 10
            # Einkommen 6.000 und 1 Feld vor wenn Einkommen vorher 0
-           [False, 5000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 5.000                                                 #11
-           [True, 0, False, 5000, 1, None, None, False, False, False, 0, None, False],                                                              #12
+           [False, 5000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 5.000                                                 #11
+           [True, 0, False, 5000, 1, None, None, False, False, False, 0, None, False],  # 12
            # Einkommen 5.000 und 1 Feld vor immer
-           [False, 50000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 50.000                                               #13
-           [False, -10000, False, 0, -1, None, None, False, False, False, 0, None, False],  # -10.000                                               #14
-           [False, -5000, False, 0, -1, "life", None, False, False, False, 0, None, False], # Lebensversicherung abgeschlossen und 5.000 gezahlt    #15
-           [False, 0, False, 0, -1, None, None, True, False, False, 0, None, False],# Payday TODO Schikane Karte erhalten, nur wenn keine besitzt #16
-           [False, 0, False, 0, 0, None, None, False, True, False, 0, None, False],  # Marriage TODO Heirat Spielregel                            #17
-           [False, 0, False, 0, -1, None, "car", False, False, False, 0, None, False],  # Autoversicherung verloren                                 #18
-           [False, -4000, False, 0, -1, None, None, False, False, False, 0, None, False],  # - 4.000 TODO Versicherung prüfen!                      #19
-           [False, -10000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 10.000                            #20
-           [False, 80000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 80.000                                                #21
-           [True, -15000, False, 0, -1, None, None, False, False, False, 0, None, False],  # -15.000 immer                                          #22
-           [False, -5000, False, 0, -1, "fire", None, False, False, False, 0, None, False], # Feuerversicherung abgeschlossen und 5.000 gezahlt     #23
-           [False, -12000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 12.000                            #24
-           [False, -25000, False, 0, -1, None, None, False, False, False, 0, None, True],  # Aktie gekauft und 25.000 gezahlt                       #25
-           [False, -16000, False, 0, -1, None, None, False, False, False, 0, None, False],  # - 16.000 TODO Aktie prüfen!                           #26
-           [False, 40000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 40.000                                               #27
-           [False, -6000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 6.000 TODO Versicherung prüfen!                       #28
-           [False, 120000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 120.000                                             #29
-           [False, -18000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 18.000                            #30
-           [False, -14000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 14.000                            #31
-           [False, 100000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 100.000 TODO Aktie prüfen!                          #32
-           [False, -16000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 16.000                            #33
-           [False, -8000, False, 0, -1, None, None, False, False, False, 0, None, False],  # - 8.000 TODO Aktie prüfen!                             #34
-           [False, 30000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 30.000 TODO Versicherung prüfen!                      #35
-           [False, -28000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 28.000                            #36
-           [False, 20000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 20.000                                                #37
-           [False, -20000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 20.000                            #38
-           [False, -30000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 30.000                                               #39
-           [False, 24000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 24.000 TODO Versicherung prüfen!                      #40
-           [False, -18000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 18.000 TODO Versicherung prüfen!                     #41
-           [False, 0, False, 0, -1, None, "fire", False, False, False, 0, None, False],  # Feuerversicherung verloren                               #42
-           [False, 7000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 7.000 TODO Aktie prüfen!                               #43
-           [False, 100000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 100.000                                              #44
-           [False, -16000, False, 0, -1, None, None, False, False, False, 0, None, False], # -16.000                                                #45
-           [False, 5000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 5.000 TODO Aktie prüfen!                               #46
-           [False, 10000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 10.000                                                #47
-           [False, -12000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 12.000                                               #48
-           [False, 150000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 150.000 TODO Aktie prüfen!                          #49
-           [False, -8000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 8.000                                                 #50
-           [False, -2000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 2.000                                                 #51
-           [False, -6000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 6.000                                                 #52
-           [False, -24000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 24.000                            #53
-           [False, 40000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 40.000 TODO Versicherung prüfen!                      #54
-           [False, 60000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 60.000 TODO Aktie prüfen!                            #55
-           [False, -26000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 26.000 TODO Versicherung (fire) prüfen!              #56
-           [False, -50000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 50.000 TODO Kinder prüfen                            #57
-           [False, -30000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 30.000                            #58
-           [False, 200000, False, 0, -1, None, None, False, False, False, 0, None, False],  # + 200.000 TODO Aktie prüfen!                          #59
-           [False, -40000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 40.000 TODO Versicherung (fire) prüfen!              #60
-           [False, -50000, False, 0, -1, None, None, False, False, False, 0, None, False], # - 50.000                                               #61
-           [False, 100000, False, 0, -1, None, None, False, False, False, 0, None, False], # + 100.000 TODO Versicherung (life) prüfen!             #62
-           [False, -50000, False, 0, -1, None, None, False, False, True, 0, None, False],  # Buy Statussymbol for 50.000                            #63
+           [False, 50000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 50.000                                               #13
+           [False, -10000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # -10.000                                               #14
+           [False, -5000, False, 0, -1, "life", None, False, False, False, 0, None, False],
+           # Lebensversicherung abgeschlossen und 5.000 gezahlt    #15
+           [False, 0, False, 0, -1, None, None, True, False, False, 0, None, False],
+           # Payday TODO Schikane Karte erhalten, nur wenn keine besitzt #16
+           [False, 0, False, 0, 0, None, None, False, True, False, 0, None, False],
+           # Marriage TODO Heirat Spielregel                            #17
+           [False, 0, False, 0, -1, None, "car", False, False, False, 0, None, False],
+           # Autoversicherung verloren                                 #18
+           [False, -4000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 4.000 TODO Versicherung prüfen!                      #19
+           [False, -10000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 10.000                            #20
+           [False, 80000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 80.000                                                #21
+           [True, -15000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # -15.000 immer                                          #22
+           [False, -5000, False, 0, -1, "fire", None, False, False, False, 0, None, False],
+           # Feuerversicherung abgeschlossen und 5.000 gezahlt     #23
+           [False, -12000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 12.000                            #24
+           [False, -25000, False, 0, -1, None, None, False, False, False, 0, None, True],
+           # Aktie gekauft und 25.000 gezahlt                       #25
+           [False, -16000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 16.000 TODO Aktie prüfen!                           #26
+           [False, 40000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 40.000                                               #27
+           [False, -6000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 6.000 TODO Versicherung prüfen!                       #28
+           [False, 120000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 120.000                                             #29
+           [False, -18000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 18.000                            #30
+           [False, -14000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 14.000                            #31
+           [False, 100000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 100.000 TODO Aktie prüfen!                          #32
+           [False, -16000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 16.000                            #33
+           [False, -8000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 8.000 TODO Aktie prüfen!                             #34
+           [False, 30000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 30.000 TODO Versicherung prüfen!                      #35
+           [False, -28000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 28.000                            #36
+           [False, 20000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 20.000                                                #37
+           [False, -20000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 20.000                            #38
+           [False, -30000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 30.000                                               #39
+           [False, 24000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 24.000 TODO Versicherung prüfen!                      #40
+           [False, -18000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 18.000 TODO Versicherung prüfen!                     #41
+           [False, 0, False, 0, -1, None, "fire", False, False, False, 0, None, False],
+           # Feuerversicherung verloren                               #42
+           [False, 7000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 7.000 TODO Aktie prüfen!                               #43
+           [False, 100000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 100.000                                              #44
+           [False, -16000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # -16.000                                                #45
+           [False, 5000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 5.000 TODO Aktie prüfen!                               #46
+           [False, 10000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 10.000                                                #47
+           [False, -12000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 12.000                                               #48
+           [False, 150000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 150.000 TODO Aktie prüfen!                          #49
+           [False, -8000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 8.000                                                 #50
+           [False, -2000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 2.000                                                 #51
+           [False, -6000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 6.000                                                 #52
+           [False, -24000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 24.000                            #53
+           [False, 40000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 40.000 TODO Versicherung prüfen!                      #54
+           [False, 60000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 60.000 TODO Aktie prüfen!                            #55
+           [False, -26000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 26.000 TODO Versicherung (fire) prüfen!              #56
+           [False, -50000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 50.000 TODO Kinder prüfen                            #57
+           [False, -30000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 30.000                            #58
+           [False, 200000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 200.000 TODO Aktie prüfen!                          #59
+           [False, -40000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 40.000 TODO Versicherung (fire) prüfen!              #60
+           [False, -50000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # - 50.000                                               #61
+           [False, 100000, False, 0, -1, None, None, False, False, False, 0, None, False],
+           # + 100.000 TODO Versicherung (life) prüfen!             #62
+           [False, -50000, False, 0, -1, None, None, False, False, True, 0, None, False],
+           # Buy Statussymbol for 50.000                            #63
            ]
 
 ACTIONS_Vorlage = [{"act with more steps": False,
@@ -469,7 +576,7 @@ class Game:
                             START_POSITION_PLAYER1[2], self.colors[i], name="Player " + str(i + 1), number=i)
 
             self.players.add(player)
-        #print(len(self.players.sprites()))
+        # print(len(self.players.sprites()))
 
         """# printing one car
         self.car_image = pygame.transform.scale(pygame.image.load("graphics/car_red.png").convert_alpha(), (25, 40)).convert_alpha()
@@ -776,7 +883,6 @@ class Game:
                 pause_surface = self.font_text.render("Aussetzen!", True, WHITE)
                 self.screen.blit(pause_surface, (10, 100 + 800 * i / len(rectangles)))
 
-
     def find_pos(self, pos):
         for idx, rect in enumerate(self.clickable_objects):
             if rect.collidepoint(pos):
@@ -865,7 +971,7 @@ class Game:
                                 if ACTIONS[FIELDS[current_player.current_field]["action"][0]]["income if 0"] == 0 \
                                         or current_player.income == 0:  # Einzelfallbehandlung! Sinnvoll?
 
-                                    for action in current_player.current_field.actions:
+                                    for action in self.field[current_player.current_field].actions:
                                         action.act(current_player)
 
                                     current_player.act(
@@ -878,10 +984,11 @@ class Game:
                             # following_field = current_player.current_field.get_following_field()
                             # current_player.update_position(self.fields(following_field))
 
-                            current_player.update_position(FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
-                                                           FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
-                                                           FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"],
-                                                           FIELDS[current_player.current_field]["following_field"][0])
+                            current_player.update_position(
+                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
+                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
+                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"],
+                                FIELDS[current_player.current_field]["following_field"][0])
                     else:
                         current_player.act(
                             ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
@@ -912,9 +1019,7 @@ class Game:
                 entity.draw()
                 self.screen.blit(entity.image, entity.rect)
 
-
-
-            #self.screen.blit(self.car_image, self.car_rect)
+            # self.screen.blit(self.car_image, self.car_rect)
 
             pygame.display.update()
             self.clock.tick(60)

@@ -139,11 +139,6 @@ class Player(pygame.sprite.Sprite):
         if action["aktie"]:
             self.aktie = True
 
-    def change_money(self, amount):
-        self.money = self.money + amount
-
-    def payday(self):
-        self.money = self.money + self.income
 
     def update_position(self, field_x, field_y, field_rotation, following_field): # TODO
         self.steps_to_go -= 1
