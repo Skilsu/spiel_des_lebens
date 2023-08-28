@@ -58,6 +58,27 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
                 print("pressd")"""
 
+    def __str__(self):  # Not complete
+        print(f"{self.name=} \n"
+              f"{self.active=} \n"
+              f"{self.steps_to_go=} \n"
+              f"{self.player_number=} \n\n"
+              f"{self.moving=} \n\n"
+              f"{self.current_field=} \n\n"
+              f"game logic"
+              f"{self.money=} \n"
+              f"{self.children=} \n"
+              f"{self.status_symbols=} \n"
+              f"{self.action_cards=} \n"
+              f"{self.car=} \n"
+              f"{self.life=} \n"
+              f"{self.fire=} \n"
+              f"{self.debt=} \n"
+              f"{self.income=} \n"
+              f"{self.pause=} \n"
+              f"{self.job=} \n"
+              f"{self.aktie=} \n")
+
     def move(self):
         if self.rate > 1:
             self.rate -= 1
@@ -139,8 +160,7 @@ class Player(pygame.sprite.Sprite):
         if action["aktie"]:
             self.aktie = True
 
-
-    def update_position(self, field_x, field_y, field_rotation, following_field): # TODO
+    def update_position(self, field_x, field_y, field_rotation, following_field):  # TODO
         self.steps_to_go -= 1
         self.moving = True
 
