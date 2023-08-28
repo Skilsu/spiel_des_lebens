@@ -104,11 +104,6 @@ class AktieAction(Action):
         player.aktie = True  # TODO right implemented???
 
 
-class ChoiceAction(Action):
-
-    def act(self, player):
-
-
 def create_action(action_dict):
     actions = []
 
