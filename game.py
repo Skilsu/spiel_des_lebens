@@ -5,6 +5,7 @@ import pygame
 import sys
 from player import Player, PLAYER_SIZE_INACTIVE
 from wheel import Wheel
+from game_view import GameView
 
 # Spiel-Parameter
 BACKGROUND_COLOR = (0, 0, 0)
@@ -550,11 +551,11 @@ class Game:
         self.colors = colors
 
         # Schriftart für die Zahlen in Wheel
-        self.font_text = pygame.font.Font(None, 25)
-        self.font = pygame.font.Font(None, 35)
-        self.font_big = pygame.font.Font(None, 50)
+        self.font_text = pygame.font.Font(None, 25) # verwendet in draw_current_player
+        self.font = pygame.font.Font(None, 35) # verwendet in draw_current_player
+        self.font_big = pygame.font.Font(None, 50) # draw wheel fields
         self.font_large = pygame.font.Font(None, 70)
-        self.font_large_bolt = pygame.font.Font(None, 70)
+        self.font_large_bolt = pygame.font.Font(None, 70) # verwendet in draw_circle_with_i
         self.font_large_bolt.set_bold(True)
 
         self.wheel_fields = self.draw_wheel_fields()
@@ -582,6 +583,8 @@ class Game:
         self.car_image = pygame.transform.scale(pygame.image.load("graphics/car_red.png").convert_alpha(), (25, 40)).convert_alpha()
         self.car_image = pygame.transform.rotate(self.car_image, TEST_POSITION[2])
         self.car_rect = self.car_image.get_rect(topleft=(TEST_POSITION[0], TEST_POSITION[1]))"""
+
+        self.game_view = GameView()
 
     def draw_circle_with_i(self):
 
@@ -865,7 +868,7 @@ class Game:
             text_surface = self.font_text.render(line, True, text_color)
             self.screen.blit(text_surface, (10, 840 + i * line_height))
 
-    def draw_player_infos(self, current_player):
+    def draw_player_infos(self):
         for i, player in enumerate(self.players):
 
             # Draw the rectangle
@@ -949,7 +952,7 @@ class Game:
 
             self.wheel.update()
             self.screen.fill(BACKGROUND_COLOR)
-            self.draw_field_info()
+
 
             if self.spinned_wheel and self.wheel.has_stopped():
                 self.spinned_wheel = False
@@ -971,8 +974,8 @@ class Game:
                                 if ACTIONS[FIELDS[current_player.current_field]["action"][0]]["income if 0"] == 0 \
                                         or current_player.income == 0:  # Einzelfallbehandlung! Sinnvoll?
 
-                                    for action in self.field[current_player.current_field].actions:
-                                        action.act(current_player)
+                                    """for action in self.field[current_player.current_field].actions:
+                                        action.act(current_player)"""
 
                                     current_player.act(
                                         ACTIONS[
@@ -1008,11 +1011,15 @@ class Game:
                         else:
                             self.state = 'next_player'
 
-            self.draw_player_infos(current_player)
-            self.draw_current_player(current_player)
+            self.game_view.draw(self.screen, FIELDS[self.current_field], self.players, current_player)
+
+
+            #self.draw_field_info()
+            #self.draw_player_infos()
+            #self.draw_current_player(current_player)
             self.wheel_fields = self.draw_wheel_fields(self.active_fields)
-            self.screen.blit(self.board_image, (300, 0))
-            self.draw_circle_with_i()
+            #self.screen.blit(self.board_image, (300, 0))
+            #self.draw_circle_with_i()
             self.wheel.draw(self.screen)
 
             for entity in self.players:
