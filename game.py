@@ -889,6 +889,11 @@ class Game:
                 return idx
         return -1
 
+    def choice(self, action_dict):
+        dicta = {"type": ["wheel", "player", "bool"],
+                 ""}
+        pass
+
     def run(self):
         running = True
         while running:
@@ -972,7 +977,11 @@ class Game:
                                         or current_player.income == 0:  # Einzelfallbehandlung! Sinnvoll?
 
                                     for action in self.field[current_player.current_field].actions:
-                                        action.act(current_player)
+                                        action_dict = action.act(current_player)
+                                        if "choice" in action_dict:
+                                            self.state = "wait"  # TODO nicht so sondern irgendwie
+                                            self.field[current_player.current_field].choice()
+                                            self.choice(self, action_dict)
 
                                     current_player.act(
                                         ACTIONS[
@@ -983,7 +992,6 @@ class Game:
                         if current_player.steps_to_go > 0:
                             # following_field = current_player.current_field.get_following_field()
                             # current_player.update_position(self.fields(following_field))
-
                             current_player.update_position(
                                 FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
                                 FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],

@@ -37,6 +37,25 @@ class YellowField(Field):
             # TODO do something
             pass
 
+    def choice(self):
+        pass
+
+
+class YellowChoiceField(Field):
+    def __init__(self, following_fields, x, y, rotation, action, title="", text="") -> None:
+        super().__init__(following_fields, x, y, rotation, action, title, text)
+
+    def act(self, left_moves):
+        left_moves = super().act(left_moves)
+        if left_moves > 0:
+            return left_moves
+        else:
+            # TODO do something
+            pass
+
+    def choice(self):
+        return following_field
+
 
 class OrangeField(Field):
     def __init__(self, following_fields, x, y, rotation, action, amount_of_money=0, title="", text="") -> None:
