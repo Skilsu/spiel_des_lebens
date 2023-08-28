@@ -1,23 +1,5 @@
 from abc import ABC, abstractmethod
 
-ACTIONS_Vorlage = [{"act with more steps": False,
-                    "add_money": 0,
-                    "pause": False,
-                    "set_income": 0,
-                    "more_steps": 0,  # -1 = planned, 0 = stay, number = go directed
-                    "add_insurance": None,  # "car", "fire", "life"
-                    "lose_insurance": None,
-                    "payday": False,
-                    "marriage": False,
-                    "buy_statussymbol": False,
-                    "income_if_0": 0,
-                    "job": None,
-                    "aktie": False
-                    }]
-
-actions = \
-    [[False, 3000, False, 0, -1, "car", None, False, False, False, 0, None, False]]  # + 3.000 und Autoversicherung   #0
-
 
 class Action(ABC):
 
@@ -97,35 +79,58 @@ class GetStatussymbolAction(Action):
 
     def act(self, player):
         if len(player.status_symbols) < 3:
-            player.wefnjpi  # TODO add statussymbol
+            pass  # TODO add statussymbol
 
 
-def create_action(self, add_money=0, pause=False, set_income=0, more_steps=-1, add_insurance=None, lose_insurance=None,
-                  payday=False, marriage=False, buy_statussymbol=False, income_if_0=0, job=None, aktie=False):
+class Income0Action(Action):
+    def __init__(self, income):
+        self.income = income
+
+    def act(self, player):
+        if player.income == 0:
+            player.income = self.income
+
+
+class JobAction(Action):
+    def __init__(self, job):
+        self.job = job
+
+    def act(self, player):
+        player.job = self.job
+
+
+class AktieAction(Action):
+    def act(self, player):
+        player.aktie = True  # TODO right implemented???
+
+
+def create_action(action_dict):
     actions = []
-    if add_money is not 0:
-        actions.append(MoneyAction(money=add_money))
-    if pause:
-        actions.append(PauseAction())
-    if set_income is not 0:
-        actions.append(IncomeAction(set_income))
-    if more_steps is not -1:
-        actions.append(MoreStepsAction(more_steps))
-    if add_insurance is not None:
-        actions.append(AddInsuranceAction(add_insurance))
-    if lose_insurance is not None:
-        actions.append(LoseInsuranceAction(lose_insurance))
-    if payday:
-        actions.append(PaydayAction())
 
-    self.set_income = set_income
-    self.more_steps = more_steps
-    self.add_insurance = add_insurance
-    self.lose_insurance = lose_insurance
-    self.payday = payday
-    self.marriage = marriage
-    self.buy_statussymbol = buy_statussymbol
-    self.income_if_0 = income_if_0
-    self.job = job
-    self.aktie = aktie
+    if "add_money" in action_dict:
+        actions.append(MoneyAction(action_dict["add_money"]))
+    if "pause" in action_dict:
+        actions.append(PauseAction())
+    if "set_income" in action_dict:
+        actions.append(IncomeAction(action_dict["set_income"]))
+    if "more_steps" in action_dict:
+        actions.append(MoreStepsAction(action_dict["more_steps"]))
+    if "add_insurance" in action_dict:
+        actions.append(AddInsuranceAction(action_dict["add_insurance"]))
+    if "lose_insurance" in action_dict:
+        actions.append(LoseInsuranceAction(action_dict["lose_insurance"]))
+    if "payday" in action_dict:
+        actions.append(PaydayAction())
+    if "marriage" in action_dict:
+        pass  # TODO implement logic
+    if "buy_statussymbol" in action_dict:
+        pass  # TODO implement logic
+    if "income_if_0" in action_dict:
+        actions.append(Income0Action(action_dict["income_if_0"]))
+    if "job" in action_dict:
+        actions.append(JobAction(action_dict["job"]))
+    if "aktie" in action_dict:
+        actions.append(AktieAction())
+
     return actions
+

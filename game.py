@@ -536,6 +536,7 @@ class Game:
         self.spinned_wheel = False
         self.selected_number = 0
         self.current_field = 0
+        self.choice = None
 
         self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 1.png').convert()
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
@@ -563,6 +564,16 @@ class Game:
             self.players.add(player)
 
         self.game_view = GameView()
+
+    def get_choice(self, choice_dict):
+        dicta = {"type": "bool",
+                "choice_text": self.choice_text}
+
+        if choice_dict["type"] == "bool":
+            draw_window(text=choice_dict["choice_text"], option1="Ja", option2="Nein")
+            self.state = "player_chooses"
+
+        pass
 
     def run(self):
         running = True
@@ -649,6 +660,26 @@ class Game:
                                 if ACTIONS[FIELDS[current_player.current_field]["action"][0]]["income if 0"] == 0 \
                                         or current_player.income == 0:  # Einzelfallbehandlung! Sinnvoll?
 
+                                    # TODO current_player.steps_to_go muss warscheinlich noch abgezogen werden (-1)
+                                    choices = self.field[current_player.current_field].choice_options()
+                                    if choices is not None:
+                                        self.get_choice(choices)
+                                        continue  # TODO testen
+                                    self.field[current_player.current_field].return_choice(self.choice)
+
+                                    actions = self.field[current_player.current_field].get_actions()
+                                    for action in actions:
+                                        action.act(current_player)
+                                    self.choice = None
+
+
+
+                                    for action in self.field[current_player.current_field].actions:
+                                        action_dict = action.act(current_player)
+                                        if "choice" in action_dict:
+                                            self.state = "wait"  # TODO nicht so sondern irgendwie
+                                            self.field[current_player.current_field].choice()
+                                            self.choice(self, action_dict)
 
                                     current_player.act(
                                         ACTIONS[
@@ -659,7 +690,6 @@ class Game:
                         if current_player.steps_to_go > 0:
                             # following_field = current_player.current_field.get_following_field()
                             # current_player.update_position(self.fields(following_field))
-
                             current_player.update_position(
                                 FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
                                 FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
@@ -683,6 +713,11 @@ class Game:
                             self.state = 'player returning'
                         else:
                             self.state = 'next_player'
+            if self.state == 'player_chooses':
+                # TODO get answer
+                if self.choice is not None:
+                    self.state = 'player_moving'
+
 
             self.game_view.draw(self.screen, FIELDS[self.current_field], self.players, current_player, self.wheel)
 
