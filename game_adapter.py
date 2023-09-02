@@ -16,17 +16,19 @@ def load_fields():
     fields = []
 
     for info in json_dict["fields"]:
+        actions = create_action(info["action"])
         if info["color"] == list(RED):
 
-            actions = create_action(info["action"])
+
 
             fields.append(RedField(following_fields=info["following_fields"],
                                    x=info["x"],
                                    y=info["y"],
                                    rotation=info["rotation"],
-                                   action=actions,
+                                   actions=actions,
                                    title=info["title"],
-                                   text=info["text"]
+                                   text=info["text"],
+                                   color=info["color"]
                                    ))
 
         elif info["color"] == list(YELLOW):
@@ -34,9 +36,10 @@ def load_fields():
                                       x=info["x"],
                                       y=info["y"],
                                       rotation=info["rotation"],
-                                      action=info["action"],
+                                      actions=actions,
                                       title=info["title"],
-                                      text=info["text"]
+                                      text=info["text"],
+                                      color=info["color"]
                                       ))
 
         elif info["color"] == list(WHITE):
@@ -44,9 +47,10 @@ def load_fields():
                                      x=info["x"],
                                      y=info["y"],
                                      rotation=info["rotation"],
-                                     action=info["action"],
+                                     actions=actions,
                                      title=info["title"],
-                                     text=info["text"]
+                                     text=info["text"],
+                                     color=info["color"]
                                      ))
 
         elif info["color"] == list(ORANGE):
@@ -54,8 +58,9 @@ def load_fields():
                                       x=info["x"],
                                       y=info["y"],
                                       rotation=info["rotation"],
-                                      action=info["action"],
+                                      actions=actions,
                                       title=info["title"],
-                                      text=info["text"]
+                                      text=info["text"],
+                                      color=info["color"]
                                       ))
     return fields

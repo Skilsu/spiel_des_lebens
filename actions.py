@@ -34,7 +34,7 @@ class MoreStepsAction(Action):
         self.steps = steps
 
     def act(self, player):
-        player.steps_to_go = self.steps
+        player.steps_to_go += self.steps
 
 
 class AddInsuranceAction(Action):

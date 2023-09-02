@@ -3,6 +3,8 @@ import pygame
 PLAYER_SIZE_ACTIVE = (25, 40)
 PLAYER_SIZE_INACTIVE = (15, 15)
 
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
 class Player(pygame.sprite.Sprite):
 
@@ -37,6 +39,11 @@ class Player(pygame.sprite.Sprite):
         self.rotation_new = rotation
         self.rate = 30
         self.has_moved = False
+
+        self.choosed_path = False
+        self.following_field_number = 0
+        self.player_returned = False
+        self.has_steps_to_go = False
 
         # game logic
         self.money = 0
@@ -79,15 +86,6 @@ class Player(pygame.sprite.Sprite):
               f"{self.job=} \n"
               f"{self.aktie=} \n")
 
-    def move(self):
-        if self.rate > 1:
-            self.rate -= 1
-            self.x += (self.x_new - self.x) / self.rate
-            self.y += (self.y_new - self.y) / self.rate
-            self.rotation += (self.rotation_new - self.rotation) / self.rate
-        else:
-            self.rate = 30
-            self.moving = False
 
     def draw(self):
         if self.active:
@@ -111,7 +109,7 @@ class Player(pygame.sprite.Sprite):
             elif self.player_number == 5:
                 self.rect = self.image.get_rect(midbottom=(self.x, self.y))
 
-    def act(self, action):
+    def act(self, fields, field): # field = self.fields[current_player.current_field]
         """
         [{"act with more steps": False,
         "add_money": 0,
@@ -128,7 +126,7 @@ class Player(pygame.sprite.Sprite):
         "aktie": False
         }]
         """
-        if action["add_money"] != 0:
+        """if action["add_money"] != 0:
             self.money += action["add_money"]
         if action["pause"]:
             self.pause = not self.pause
@@ -158,19 +156,87 @@ class Player(pygame.sprite.Sprite):
         if action["job"] is not None:
             self.job = action["job"]
         if action["aktie"]:
-            self.aktie = True
+            self.aktie = True"""
 
-    def update_position(self, field_x, field_y, field_rotation, following_field):  # TODO
+
+
+        if self.moving:
+            self.move()
+            return 'player_turn'
+        else:
+            if self.steps_to_go > 0:
+
+                if self.current_field == 0:
+                    if not self.player_returned:
+                        self.acting(field)
+                        self.player_returned = True
+                        return 'player_turn'
+
+                if (tuple(field.color) == RED or tuple(field.color) == WHITE) and not self.current_field == 0:
+
+                    if (not self.player_returned) and self.has_moved and not self.has_steps_to_go:
+                        self.acting(field)
+
+                        return 'player returning'
+
+
+
+
+                # choice for which path the player will go
+                if len(field.following_fields) > 1:
+                    if not self.choosed_path:
+                        return 'choose_path'
+                self.choosed_path = False
+
+                self.player_returned = False
+
+                self.update_position(fields, field)
+                print(fields[self.current_field])
+
+
+
+                return 'player_turn'
+            else:
+                if not self.has_steps_to_go:
+                    self.acting(field)
+
+
+                # for more steps to go action # not perfectly tested for later on
+                if self.steps_to_go > 0:
+                    self.has_steps_to_go = True
+                    return 'player returning'
+        return 'next_player'
+    def acting(self, field):
+        actions = field.get_actions()
+        for action in actions:
+            action.act(self)
+
+    def move(self):
+        if self.rate > 1:
+            self.rate -= 1
+            self.x += (self.x_new - self.x) / self.rate
+            self.y += (self.y_new - self.y) / self.rate
+            self.rotation += (self.rotation_new - self.rotation) / self.rate
+        else:
+            self.rate = 30
+            self.moving = False
+
+
+
+    def update_position(self, fields, field):
+        self.has_moved = True
         self.steps_to_go -= 1
         self.moving = True
 
-        # TODO aufruf field.get_following_field()  -> in dieser methode wird entschieden
+        following_field_number = field.get_following_field(self.following_field_number)
+        self.following_field_number = 0
+        following_field = fields[following_field_number]
 
-        self.x_new = field_x
-        self.y_new = field_y
 
-        rotation_new = field_rotation
+        self.x_new = following_field.x
+        self.y_new = following_field.y
 
+        rotation_new = following_field.rotation
         if self.rotation > 180:
             rotation_modified = rotation_new + 360
             diff = abs(self.rotation - rotation_modified)
@@ -181,4 +247,19 @@ class Player(pygame.sprite.Sprite):
         if diff < abs(rotation_new - self.rotation):
             rotation_new = rotation_modified
         self.rotation_new = rotation_new
-        self.current_field = following_field
+
+        self.current_field = following_field_number
+
+
+    def check_choose_path(self, clicked_object):
+        if clicked_object == 'Links':
+            print('Links')
+            self.choosed_path = True
+            self.following_field_number = 0
+            return True
+        elif clicked_object == 'Rechts':
+            print('Rechts')
+            self.choosed_path = True
+            self.following_field_number = 1
+            return True
+        return False

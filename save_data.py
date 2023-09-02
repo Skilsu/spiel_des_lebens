@@ -42,17 +42,17 @@ WAYPOINTS = [(1160, 372, 270),  # I divide
              (1170, 675, 60), (1167, 615, 0)  # last field
              ]
 
-fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", RED, [4], [0]],
+fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", RED, [1, 4], {"add_money": 3000, "add_insurance": "car"}],
              # TODO implementieren von 2 Wegen
-             ["", "Du hast dein Bankkonto überzogen. Zahle 1.000.", YELLOW, [2], [1]],
-             ["", "Du gewinnst ein Preisausschreiben und erhältst 5.000.", YELLOW, [3], [11]],
-             ["", "Du wirst angestellt. Gehalt 5.000. Du rückst 1 Feld vor.", RED, [15], [12]],
-             ["", "Du machst die Aufnahmeprüfung. Einmal aussetzen.", YELLOW, [5], [3]],
-             ["", "Studiengebühren sind fällig. Zahle 2.000.", RED, [6], [4]],
-             ["", "Du fällst durch eine Prüfung. Einmal aussetzen.", YELLOW, [7], [3]],
-             ["", "Du bekommst 1.000 für deine Dissertation.", YELLOW, [8], [2]],
-             ["", "Du gewinnst beim Pferderennen und erhältst 1.000.", YELLOW, [9], [2]],
-             ["", "Artzt! Einkommen 10.000. Du rückst 6 Felder vor.", YELLOW, [10], [5]],
+             ["", "Du hast dein Bankkonto überzogen. Zahle 1.000.", YELLOW, [2], {"add_money": -1000}],
+             ["", "Du gewinnst ein Preisausschreiben und erhältst 5.000.", YELLOW, [3], {"add_money": 5000}],
+             ["", "Du wirst angestellt. Gehalt 5.000. Du rückst 1 Feld vor.", RED, [15], {"set_income": 5000, "more_steps": 1}],
+             ["", "Du machst die Aufnahmeprüfung. Einmal aussetzen.", YELLOW, [5], {"pause": "value"}], # value not important?
+             ["", "Studiengebühren sind fällig. Zahle 2.000.", RED, [6], {"add_money": -2000}], # TODO ab hier
+             ["", "Du fällst durch eine Prüfung. Einmal aussetzen.", YELLOW, [7], {"pause": "value"}],
+             ["", "Du bekommst 1.000 für deine Dissertation.", YELLOW, [8], {"add_money": 1000}],
+             ["", "Du gewinnst beim Pferderennen und erhältst 1.000.", YELLOW, [9], {"add_money": 1000}],
+             ["", "Arzt! Einkommen 10.000. Du rückst 6 Felder vor.", YELLOW, [10], {"set_income": 10000, "job": "Arzt", "more_steps": 6}],
              ["", "Journalist! Einkommen 20.000. Du rückst 5 Felder vor.", YELLOW, [11], [6]],
              ["", "Anwalt! Einkommen 15.000. Du rückst 4 Felder vor.", YELLOW, [12], [7]],
              ["", "Lehrer! Einkommen 8.000. Du rückst 3 Felder vor.", YELLOW, [13], [8]],
@@ -103,7 +103,7 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              # TODO statussymbole zählen
              ["", "Wenn du eine Aktie kaufen willst, zahle 25.000.", WHITE, [48], [25]],
              # TODO Choice in White field + change font of text to another color because white on white
-             ["", "Ein Sohn! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [49], [1]],
+             ["", "Ein Sohn! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [56, 49], [1]],
              # TODO adding children and becoming money from every player
              # TODO implementieren von 2 Wegen
              ["", "Wenn du ein Aktionär bist, kannst du an der Börse spekulieren.", WHITE, [50], [1]],
@@ -115,7 +115,7 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["", "Zinsen auf deine Ersparnisse. Du bekommst 40.000", YELLOW, [54], [27]],
              ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [55], [1]],
              # TODO adding children and becoming money from every player
-             ["", "Autounfall! Zahle 6000, wenn du nicht versichert bist.", YELLOW, [56], [28]],
+             ["", "Autounfall! Zahle 6000, wenn du nicht versichert bist.", YELLOW, [62], [28]],
              ["", "Drehe das Glücksrad. Du erhältst 1.000 mal Deine Zahl.", YELLOW, [57], [1]],
              # TODO Glücksrad drehen und geld bekommen
              ["", "Eine Tochter! Du erhältst 1.000 von jedem Mitspieler.", YELLOW, [58], [1]],
@@ -159,7 +159,7 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              # TODO choice spieler auswählen und geld von ihm nehmen
              ["", "Du erfindest einen automatischen Cocktail-Shaker und erhältst dafür 20.000", YELLOW, [83], [37]],
              ["", "Du gewinnst ein Tennis-Turnier und bekommst 40.000", YELLOW, [84], [27]],
-             ["", "Option auf den Kauf eines Status Symbols für 20.000", YELLOW, [85], [38]],
+             ["", "Option auf den Kauf eines Status Symbols für 20.000", YELLOW, [85, 92], [38]],
              # TODO choice buy statussymbol
              ["", "Du finanziert eine erfolglose Expedition zum Südpol. Zahle 30.000", YELLOW, [86], [39]],
              ["Zahltag", "", RED, [87], [16]],
@@ -167,7 +167,7 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["", "Autounfall! Zahle 18.000, wenn du nicht versichert bist.", YELLOW, [89], [41]],
              ["", "Dein Haus ist renovierungsbedürftig. Gib deine Feuerversicherung zurück.", YELLOW, [90], [42]],
              ["", "Wenn du Aktionär bist, bekommst du 7.000", YELLOW, [91], [43]],
-             ["", "Du gewinnst einen Prozess und erhältst 100.000 ", YELLOW, [92], [44]],
+             ["", "Du gewinnst einen Prozess und erhältst 100.000 ", YELLOW, [96], [44]],
              ["", "Allgemeine Wahlen. Zahle 16.000 in die Parteikasse", YELLOW, [93], [45]],
              ["Zahltag", "", RED, [94], [16]],
              ["", "Wenn du Aktionär bist, bekommst du 5.000", YELLOW, [95], [46]],
@@ -244,7 +244,7 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", R
              ["TAG DER ABRECHNUNG", "", RED, [147], [62]],  # TODO Tag der Abrechnung Spielregel
              ]
 
-"""
+
 def save_json(filename):
     fields = []
     for idx, info in enumerate(fieldinfo):
@@ -263,4 +263,4 @@ def save_json(filename):
 
 
 save_json("fields")
-"""
+

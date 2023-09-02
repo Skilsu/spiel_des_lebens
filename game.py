@@ -6,12 +6,12 @@ import sys
 from player import Player, PLAYER_SIZE_INACTIVE
 from wheel import Wheel
 from game_view import GameView
+from game_adapter import load_fields
 
 # Spiel-Parameter
 BACKGROUND_COLOR = (0, 0, 0)
 WHEEL_RADIUS = 110  # Größe des Rades
 WHEEL_POSITION = (1030, 380)
-
 
 # Colors
 WHITE = (255, 255, 255)
@@ -37,8 +37,6 @@ colors = [
     (255, 255, 0),  # gelb
     (200, 255, 0)  # gelb-grün
 ]
-
-
 
 # TEST_POSITION = (801, 195, 180)
 START_POSITION_PLAYER1 = (1160, 354, 270)
@@ -524,7 +522,7 @@ class Game:
 
     def __init__(self, screen, player_number=1):
         self.player_number = player_number
-        self.player_number = 4  # DEBUG Zwecke
+        self.player_number = 2  # DEBUG Zwecke
 
         pygame.init()
         self.screen = screen
@@ -537,37 +535,41 @@ class Game:
         self.selected_number = 0
         self.current_field = 0
         self.choice = None
+        self.clicked_object = None
 
+        self.fields = load_fields()
+        """for field in self.fields:
+            print(field)"""
         self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 1.png').convert()
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
         # Für player
         self.colors = colors
 
-        #self.wheel_fields = self.draw_wheel_fields()
-        self.active_fields = []
+        # self.wheel_fields = self.draw_wheel_fields()
+        # self.active_fields = []
         self.wheel = Wheel(WHEEL_POSITION, WHEEL_RADIUS)
 
         self.players = pygame.sprite.Group()
         spacing = 1
 
-        """self.clickable_objects = []
-        for field in self.wheel_fields:
-            self.clickable_objects.append(field)
-        self.motion_action = -1"""
-
-
         for i in range(self.player_number):
-            player = Player(START_POSITION_PLAYER1[0],
-                            START_POSITION_PLAYER1[1] + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)),
-                            START_POSITION_PLAYER1[2], self.colors[i], name="Player " + str(i + 1), number=i)
+            player = Player(self.fields[0].x,
+                            self.fields[0].y + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)),
+                            self.fields[0].rotation, self.colors[i], name="Spieler " + str(i + 1), number=i)
             self.players.add(player)
 
+        """self.clickable_objects = []
+                for field in self.wheel_fields:
+                    self.clickable_objects.append(field)
+                self.motion_action = -1"""
+
         self.game_view = GameView()
+        self.is_game_started = False
 
     def get_choice(self, choice_dict):
         dicta = {"type": "bool",
-                "choice_text": self.choice_text}
+                 "choice_text": self.choice_text}
 
         if choice_dict["type"] == "bool":
             draw_window(text=choice_dict["choice_text"], option1="Ja", option2="Nein")
@@ -596,7 +598,8 @@ class Game:
 
                     if event.key == pygame.K_SPACE:
                         if self.state == 'player returning':
-                            self.state = 'player_moving'
+                            current_player.player_returned = True
+                            self.state = 'player_turn'
                         elif self.state == 'next_player':
                             self.state = ''
                             current_player.active = False
@@ -608,11 +611,12 @@ class Game:
                         elif self.state == 'player_moving':
                             pass
                         else:
+                            self.is_game_started = True
                             current_player.active = True
                             self.wheel.spin()
                             # self.player_turn_index = (self.player_turn_index + 1) % self.player_number
-                            if not current_player.moving:
-                                current_player.update()
+                            """if not current_player.moving:
+                                current_player.update()"""
 
                             self.spinned_wheel = True
 
@@ -634,22 +638,21 @@ class Game:
                     self.motion_action = -1"""
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.game_view.get_clickable_object(pos)
+                    self.clicked_object = self.game_view.get_clickable_object(pos)
 
             self.wheel.update()
             self.screen.fill(BACKGROUND_COLOR)
 
-
             if self.spinned_wheel and self.wheel.has_stopped():
                 self.spinned_wheel = False
-                self.state = 'player_moving'
+                self.state = 'player_turn'
                 self.selected_number = self.wheel.get_selected_number()
-                #self.active_fields = [self.selected_number - 1]
+                # self.active_fields = [self.selected_number - 1]
 
                 current_player.steps_to_go = self.selected_number
                 current_player.moving = False
 
-            if self.state == 'player_moving':
+            """if self.state == 'player_moving':
                 if current_player.moving:
                     current_player.move()
                 else:
@@ -660,26 +663,7 @@ class Game:
                                 if ACTIONS[FIELDS[current_player.current_field]["action"][0]]["income if 0"] == 0 \
                                         or current_player.income == 0:  # Einzelfallbehandlung! Sinnvoll?
 
-                                    # TODO current_player.steps_to_go muss warscheinlich noch abgezogen werden (-1)
-                                    choices = self.field[current_player.current_field].choice_options()
-                                    if choices is not None:
-                                        self.get_choice(choices)
-                                        continue  # TODO testen
-                                    self.field[current_player.current_field].return_choice(self.choice)
-
-                                    actions = self.field[current_player.current_field].get_actions()
-                                    for action in actions:
-                                        action.act(current_player)
-                                    self.choice = None
-
-
-
-                                    for action in self.field[current_player.current_field].actions:
-                                        action_dict = action.act(current_player)
-                                        if "choice" in action_dict:
-                                            self.state = "wait"  # TODO nicht so sondern irgendwie
-                                            self.field[current_player.current_field].choice()
-                                            self.choice(self, action_dict)
+                                   
 
                                     current_player.act(
                                         ACTIONS[
@@ -716,16 +700,29 @@ class Game:
             if self.state == 'player_chooses':
                 # TODO get answer
                 if self.choice is not None:
-                    self.state = 'player_moving'
+                    self.state = 'player_moving'"""
+
+            if self.state == 'player_turn':
+
+                self.state = current_player.act(self.fields, self.fields[current_player.current_field])
+                self.current_field = current_player.current_field
+
+            self.game_view.draw(self.screen, self.fields[self.current_field], self.players, current_player, self.wheel, self.is_game_started)
+
+            if self.state == 'choose_path':
+                self.game_view.draw_choose_path(self.screen)
+                if current_player.check_choose_path(self.clicked_object):
+                    self.clicked_object = ''
+                    self.state = 'player_turn'
 
 
-            self.game_view.draw(self.screen, FIELDS[self.current_field], self.players, current_player, self.wheel)
 
 
-            #self.wheel_fields = self.draw_wheel_fields(self.active_fields) # TODO nur wenn glückstag action vorhanden ist und die choice auf spielen gesetzt wurde, zeige die felder
+
+            # self.wheel_fields = self.draw_wheel_fields(self.active_fields) # TODO nur wenn glückstag action vorhanden ist und die choice auf spielen gesetzt wurde, zeige die felder
 
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(120)
 
 
 if __name__ == "__main__":

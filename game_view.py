@@ -11,6 +11,7 @@ MAGENTA = (255, 0, 255)
 CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 ORANGE = (255, 165, 0)
+GREY = (128, 128, 128)
 
 # Colors for Wheel
 colors = [
@@ -53,8 +54,8 @@ class GameView:
         self.register_clickable_objects()
 
     # this method draw all the screen elements
-    def draw(self, screen, current_field, players, current_player, wheel):
-        self.draw_field_info(screen, current_field)
+    def draw(self, screen, current_field, players, current_player, wheel, is_game_started=False):
+        self.draw_field_info(screen, current_field, is_game_started)
         self.draw_player_infos(screen, players)
         screen.blit(self.board_image, (300, 0))
         self.draw_current_player(screen, current_player)
@@ -67,14 +68,14 @@ class GameView:
 
     def register_clickable_objects(self):
         self.clickable_circle_with_i()
-
+        self.clickable_choose_path()
 
     def clickable_circle_with_i(self):
         circle_center = (335, 40)
         circle_radius = 30
 
-        image = pygame.Surface((2 * circle_radius, 2 * circle_radius), pygame.SRCALPHA)
-        rect = image.get_rect(center=circle_center)
+        rect = pygame.Rect(0, 0, 2 * circle_radius, 2 * circle_radius)
+        rect.center = circle_center
         self.clickable_objects.append((rect, "Blue Circle"))
 
     def draw_circle_with_i(self, screen):
@@ -82,15 +83,13 @@ class GameView:
         circle_radius = 30
 
         pygame.draw.circle(screen, BLUE, circle_center, circle_radius)
-        image = pygame.Surface((2 * circle_radius, 2 * circle_radius), pygame.SRCALPHA)
-        rect = image.get_rect(center=circle_center)
-
-        screen.blit(image, rect)
 
         # Draw the "i" symbol in white
         text = self.font_large_bolt.render("i", True, WHITE)
         text_rect = text.get_rect(center=circle_center)
         screen.blit(text, text_rect)
+
+
 
     def draw_current_player(self, screen, current_player):
         y = 5
@@ -328,40 +327,43 @@ class GameView:
             screen.blit(num_surface, num_rect)
         return rects"""
 
-    def draw_field_info(self, screen, current_field): # current_field = FIELDS[self.current_field]
-
-        pygame.draw.rect(screen, current_field["color"], (0, 800, 300, 130))
-
-        # Render the text
-        if current_field["color"] == YELLOW or current_field["color"] == WHITE:
-            text_color = BLACK
+    def draw_field_info(self, screen, current_field, is_game_started): # current_field = FIELDS[self.current_field]
+        if not is_game_started:
+            pygame.draw.rect(screen, BLACK, (0, 800, 300, 130))
         else:
-            text_color = WHITE
+            pygame.draw.rect(screen, current_field.color, (0, 800, 300, 130))
 
-        title_surface = self.font.render(current_field["title"], True, text_color)
-        screen.blit(title_surface, (10, 810))
-
-        text_lines = []
-        text = current_field["text"]
-        max_line_width = 270  # Leave some padding on each side
-
-        # Split the text into lines based on the width of the box
-        words = text.split()
-        current_line = ""
-        for word in words:
-            test_line = current_line + word + " "
-            if self.font_text.size(test_line)[0] <= max_line_width:
-                current_line = test_line
+            # Render the text
+            if tuple(current_field.color) == YELLOW or tuple(current_field.color) == WHITE:
+                text_color = BLACK
             else:
-                text_lines.append(current_line)
-                current_line = word + " "
-        if current_line:
-            text_lines.append(current_line)
+                text_color = WHITE
 
-        line_height = self.font_text.get_linesize()
-        for i, line in enumerate(text_lines):
-            text_surface = self.font_text.render(line, True, text_color)
-            screen.blit(text_surface, (10, 840 + i * line_height))
+
+            title_surface = self.font.render(current_field.title, True, text_color)
+            screen.blit(title_surface, (10, 810))
+
+            text_lines = []
+            text = current_field.text
+            max_line_width = 270  # Leave some padding on each side
+
+            # Split the text into lines based on the width of the box
+            words = text.split()
+            current_line = ""
+            for word in words:
+                test_line = current_line + word + " "
+                if self.font_text.size(test_line)[0] <= max_line_width:
+                    current_line = test_line
+                else:
+                    text_lines.append(current_line)
+                    current_line = word + " "
+            if current_line:
+                text_lines.append(current_line)
+
+            line_height = self.font_text.get_linesize()
+            for i, line in enumerate(text_lines):
+                text_surface = self.font_text.render(line, True, text_color)
+                screen.blit(text_surface, (10, 840 + i * line_height))
 
     def draw_player_infos(self, screen, players):
         for i, player in enumerate(players):
@@ -384,4 +386,22 @@ class GameView:
         for rect, obj_name in self.clickable_objects:
             if rect.collidepoint(pos):
                 # TODO info logic
-                print(f"You clicked on the {obj_name}")
+                return obj_name
+
+    def clickable_choose_path(self):
+
+        for i, text in enumerate(["Links", "Rechts"]):
+            # Berechne die Position und Größe des Rechtecks für den aktuellen Button
+            rect = pygame.Rect(1400 + i * 155, 800, 140, 130)
+            self.clickable_objects.append((rect, text))
+
+    def draw_choose_path(self, screen):
+        for i, text in enumerate(["Links", "Rechts"]):
+            pygame.draw.rect(screen, GREY, (1400 + i * 155, 800, 140, 130))
+
+            # Render den Text für den aktuellen Button
+            text = self.font.render(text, True, (0, 0, 0))  # Schwarz als Textfarbe
+            text_rect = text.get_rect(center=(1400 + i * 155 + 70, 800 + 65))  # Zentriert im Button
+
+            # Blit (zeichne) den Text auf den Bildschirm
+            screen.blit(text, text_rect)

@@ -80,7 +80,7 @@ class Wheel:
             self.selected_number = 1 + ((-self.angle // 36) % 10)
 
     def get_selected_number(self):
-        return self.selected_number
+        return self.selected_number  # TODO hier ändern self.selected_number
 
     def has_stopped(self):
         return not self.is_spinning and self.has_spun
