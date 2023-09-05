@@ -55,12 +55,14 @@ class GameView:
 
     # this method draw all the screen elements
     def draw(self, screen, current_field, players, current_player, wheel, is_game_started=False):
+        screen.fill(BLACK)
         self.draw_field_info(screen, current_field, is_game_started)
         self.draw_player_infos(screen, players)
         screen.blit(self.board_image, (300, 0))
         self.draw_current_player(screen, current_player)
         self.draw_circle_with_i(screen)
         wheel.draw(screen)
+        wheel.update()
 
         for player in players:
             player.draw()

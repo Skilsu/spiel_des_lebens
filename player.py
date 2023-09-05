@@ -64,6 +64,7 @@ class Player(pygame.sprite.Sprite):
         self.pause = False
         self.job = None
         self.aktie = False
+        self.married = False
 
     """def update(self, pressed_keys):
             if pressed_keys[pygame.K_SPACE]:
@@ -89,7 +90,7 @@ class Player(pygame.sprite.Sprite):
               f"{self.debt=} \n"
               f"{self.income=} \n"
               f"{self.pause=} \n"
-              f"{self.job=} \n"
+              
               f"{self.aktie=} \n")
 
 
@@ -170,6 +171,11 @@ class Player(pygame.sprite.Sprite):
             self.move()
             return 'player_turn'
         else:
+            # Marriage field
+            if self.current_field == 25:
+                if not self.married:
+                    return 'marriage_action'
+
             if self.steps_to_go > 0:
 
                 if self.current_field == 0:
@@ -198,8 +204,6 @@ class Player(pygame.sprite.Sprite):
                         return 'player returning'
 
 
-
-
                 # choice for which path the player will go
                 if len(field.following_fields) > 1:
                     if not self.choosed_path:
@@ -225,7 +229,7 @@ class Player(pygame.sprite.Sprite):
 
 
 
-                # for more steps to go action # not perfectly tested for later on
+                # for more steps to go action
                 if self.steps_to_go > 0:
                     self.has_steps_to_go = True
                     return 'player returning'

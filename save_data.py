@@ -43,7 +43,6 @@ WAYPOINTS = [(1160, 372, 270),  # I divide
              ]
 
 fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung. W채hle 'Links' oder 'Rechts'", RED, [1, 4], {"add_money": 3000, "add_insurance": "car"}],
-             # TODO implementieren von 2 Wegen
              ["", "Du hast dein Bankkonto 체berzogen. Zahle 1.000.", YELLOW, [2], {"add_money": -1000}],
              ["", "Du gewinnst ein Preisausschreiben und erh채ltst 5.000.", YELLOW, [3], {"add_money": 5000}],
              ["", "Du wirst angestellt. Gehalt 5.000. Du r체ckst 1 Feld vor.", RED, [15], {"set_income": 5000, "more_steps": 1}],
@@ -68,7 +67,7 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung. W�
              ["", "Du gewinnst bei einem Fernsehquiz und erh채ltst 5000.", YELLOW, [23], {"add_money": 5000}],
              ["Zahltag", "", RED, [24], {"payday": "value"}],
              ["", "Geschwindigkeits체bertretung. Zahle 1000.", YELLOW, [25], {"add_money": -1000}],
-             ["", "Du heiratest. Sammle Geschenke ein.", RED, [26], [17]], # TODO ab hier
+             ["", "Du heiratest. Sammle Geschenke ein.", RED, [26], []], # TODO ab hier value
              ["", "Du gehst auf Hochzeitsreise. Zahle 1000.", YELLOW, [27], [1]],
              ["", "Du hast einen Termin als Geschworener. Einmal aussetzen.", YELLOW, [28], [3]],
              ["", "Du verlierst deine Autoversicherung wegen Raserei.", YELLOW, [29], [18]],

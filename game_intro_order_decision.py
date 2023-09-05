@@ -30,21 +30,16 @@ car_colors = {
 }
 
 
-
-
 class GameIntro:
     def __init__(self, screen):
         pygame.init()
         self.screen = screen
 
         self.font = pygame.font.Font(None, 35)
-        font_large = pygame.font.Font(None, 70)
         self.wheel = Wheel((self.screen.get_width()/2, self.screen.get_height()/2), WHEEL_RADIUS)
         self.clock = pygame.time.Clock()
         self.players_data = None
         self.image_directory = 'graphics/other_cars/'
-
-
 
     def append_players_data(self, players_data):
         self.players_data = [{'player_number': num, 'car_color': color} for num, color in players_data]

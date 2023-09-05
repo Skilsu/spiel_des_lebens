@@ -567,15 +567,8 @@ class Game:
         self.game_view = GameView()
         self.is_game_started = False
 
-    def get_choice(self, choice_dict):
-        dicta = {"type": "bool",
-                 "choice_text": self.choice_text}
 
-        if choice_dict["type"] == "bool":
-            draw_window(text=choice_dict["choice_text"], option1="Ja", option2="Nein")
-            self.state = "player_chooses"
 
-        pass
 
     def run(self):
         running = True
@@ -619,6 +612,8 @@ class Game:
                                 current_player.update()"""
 
                             self.spinned_wheel = True
+                        elif self.state == 'marriage_action':
+                            self.state = 'marriage'
 
                 """if event.type == pygame.MOUSEMOTION:
                     if self.motion_action >= 0 and self.motion_action in self.active_fields:
@@ -640,9 +635,6 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.clicked_object = self.game_view.get_clickable_object(pos)
 
-            self.wheel.update()
-            self.screen.fill(BACKGROUND_COLOR)
-
             if self.spinned_wheel and self.wheel.has_stopped():
                 self.spinned_wheel = False
                 self.state = 'player_turn'
@@ -652,58 +644,8 @@ class Game:
                 current_player.steps_to_go = self.selected_number
                 current_player.moving = False
 
-            """if self.state == 'player_moving':
-                if current_player.moving:
-                    current_player.move()
-                else:
-                    if current_player.steps_to_go > 0:
-                        if current_player.has_moved or current_player.current_field == 0:
-                            if FIELDS[current_player.current_field]["color"] == RED or \
-                                    FIELDS[current_player.current_field]["color"] == WHITE:
-                                if ACTIONS[FIELDS[current_player.current_field]["action"][0]]["income if 0"] == 0 \
-                                        or current_player.income == 0:  # Einzelfallbehandlung! Sinnvoll?
-
-                                   
-
-                                    current_player.act(
-                                        ACTIONS[
-                                            FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
-                                    self.state = 'player returning'
-                                    self.current_field = current_player.current_field
-                        current_player.has_moved = True
-                        if current_player.steps_to_go > 0:
-                            # following_field = current_player.current_field.get_following_field()
-                            # current_player.update_position(self.fields(following_field))
-                            current_player.update_position(
-                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
-                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
-                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"],
-                                FIELDS[current_player.current_field]["following_field"][0])
-                    else:
-                        current_player.act(
-                            ACTIONS[FIELDS[current_player.current_field]["action"][0]])  # TODO What if more???
-                        self.current_field = current_player.current_field
-
-                        if current_player.steps_to_go > 0:
-                            # following_field = current_player.current_field.get_following_field()
-                            # current_player.update_position(self.fields(following_field))
-
-                            current_player.update_position(
-                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["x"],
-                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["y"],
-                                FIELDS[FIELDS[current_player.current_field]["following_field"][0]]["rotation"],
-                                FIELDS[current_player.current_field]["following_field"][0])
-
-                            self.state = 'player returning'
-                        else:
-                            self.state = 'next_player'
-            if self.state == 'player_chooses':
-                # TODO get answer
-                if self.choice is not None:
-                    self.state = 'player_moving'"""
 
             if self.state == 'player_turn':
-
                 self.state = current_player.act(self.fields, self.fields[current_player.current_field])
                 self.current_field = current_player.current_field
 
@@ -721,13 +663,21 @@ class Game:
                     self.clicked_object = ''
                     self.state = 'player_turn'
 
+            if self.state == 'marriage':
+                # for debug
+                from marriage_action import MarriageAction
+
+                marriage_action = MarriageAction(self.screen, self.players.sprites(), current_player)
+
+                self.state = marriage_action.run()
+
 
 
 
             # self.wheel_fields = self.draw_wheel_fields(self.active_fields) # TODO nur wenn glückstag action vorhanden ist und die choice auf spielen gesetzt wurde, zeige die felder
 
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(120)
 
 
 if __name__ == "__main__":
