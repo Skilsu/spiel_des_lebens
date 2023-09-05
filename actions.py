@@ -68,11 +68,6 @@ class PaydayAction(Action):
         player.money += player.income
 
 
-class MarriageAction(Action):
-    def act(self, player):
-        player.marriage = True
-
-
 class GetStatussymbolAction(Action):
     def __init__(self, statussymbol):
         self.statussymbol = statussymbol
@@ -126,8 +121,6 @@ def create_action(action_dict):
         actions.append(LoseInsuranceAction(action_dict["lose_insurance"]))
     if "payday" in action_dict:
         actions.append(PaydayAction())
-    if "marriage" in action_dict:
-        actions.append(MarriageAction())
     if "buy_statussymbol" in action_dict:
         pass  # TODO implement logic
     if "income_if_0" in action_dict:
