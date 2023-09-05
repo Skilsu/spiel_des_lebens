@@ -1,36 +1,13 @@
 import pygame
 import sys
 
+from Button import Button
 
-# Button Klasse
-class Button:
-    def __init__(self, color, x, y, width, height, text=''):
-        self.color = color
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.text = text
-        self.previous_state = None
+# Farbdefinitionen
+BLACK = (0, 0, 0)
+GREY = (105, 105, 105)
 
-    def draw(self, win, outline=None):
-        # Call this method to draw the button on the screen
-        if outline:
-            pygame.draw.rect(win, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
-        pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
-
-        if self.text != '':
-            font = pygame.font.SysFont('comicsans', 60)
-            text = font.render(self.text, 1, (0,0,0))
-            win.blit(text, (
-            self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
-
-    def is_over(self, pos):
-        # Pos is the mouse position or a tuple of (x,y) coordinates
-        if self.x < pos[0] < self.x + self.width:
-            if self.y < pos[1] < self.y + self.height:
-                return True
-        return False
+BUTTON_SIZE_WIDTH = 600
 
 
 class PauseMenu:
@@ -39,28 +16,21 @@ class PauseMenu:
 
         self.screen = screen
 
-        # Farbdefinitionen
-        self.WHITE = (255, 255, 255)
-        self.BLACK = (0, 0, 0)
-        self.GREY = (105, 105, 105)
-
-        self.BUTTON_SIZE_WIDTH = 600
-
         # Buttons erstellen
-        self.start_button = Button(self.GREY, 550, 150, self.BUTTON_SIZE_WIDTH, 100, 'Weiter Spielen')
-        self.restart_button = Button(self.GREY, 550, 300, self.BUTTON_SIZE_WIDTH, 100, 'Neues Spiel starten')
-        self.instructions_button = Button(self.GREY, 550, 450, self.BUTTON_SIZE_WIDTH, 100, 'Anleitung')
-        self.quit_button = Button(self.GREY, 550, 600, self.BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
+        self.start_button = Button(GREY, 550, 200, BUTTON_SIZE_WIDTH, 100, 'Weiter Spielen')
+        self.restart_button = Button(GREY, 550, 350, BUTTON_SIZE_WIDTH, 100, 'Neues Spiel starten')
+        self.instructions_button = Button(GREY, 550, 500, BUTTON_SIZE_WIDTH, 100, 'Anleitung')
+        self.quit_button = Button(GREY, 550, 650, BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
 
     def redraw_window(self):
         # Hintergrundfarbe
-        self.screen.fill((self.BLACK))
+        self.screen.fill(BLACK)
 
         # Zeichne die Buttons
-        self.start_button.draw(self.screen, self.BLACK)
-        self.instructions_button.draw(self.screen, self.BLACK)
-        self.quit_button.draw(self.screen, self.BLACK)
-        self.restart_button.draw(self.screen, self.BLACK)
+        self.start_button.draw(self.screen, BLACK)
+        self.instructions_button.draw(self.screen, BLACK)
+        self.quit_button.draw(self.screen, BLACK)
+        self.restart_button.draw(self.screen, BLACK)
 
     def run(self):
         run = True
@@ -82,7 +52,7 @@ class PauseMenu:
                         return 'resume'
                     if self.instructions_button.is_over(pos):
                         print('Anleitung geklickt')
-                        # Hier können Sie die Logik zum Anzeigen der Anleitung hinzufügen
+                        return 'instruction'
                     if self.restart_button.is_over(pos):
                         print("Spiel neustarten geklickt")
                         return "restart_game"
@@ -96,19 +66,20 @@ class PauseMenu:
                     if self.start_button.is_over(pos):
                         self.start_button.color = (0, 255, 0)
                     else:
-                        self.start_button.color = self.GREY
+                        self.start_button.color = GREY
                     if self.restart_button.is_over(pos):
                         self.restart_button.color = (0, 255, 0)
                     else:
-                        self.restart_button.color = self.GREY
+                        self.restart_button.color = GREY
                     if self.instructions_button.is_over(pos):
                         self.instructions_button.color = (255, 255, 0)
                     else:
-                        self.instructions_button.color = self.GREY
+                        self.instructions_button.color = GREY
                     if self.quit_button.is_over(pos):
                         self.quit_button.color = (255, 0, 0)
                     else:
-                        self.quit_button.color = self.GREY
+                        self.quit_button.color = GREY
+
 
 if __name__ == "__main__":
     PauseMenu(pygame.display.set_mode((1700, 930))).run()

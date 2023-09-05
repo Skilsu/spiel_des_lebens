@@ -405,3 +405,14 @@ class GameView:
 
             # Blit (zeichne) den Text auf den Bildschirm
             screen.blit(text, text_rect)
+
+    def draw_choose_in_field(self, screen):
+        for i, text in enumerate(["Ja", "Nein"]):
+            pygame.draw.rect(screen, GREY, (1400 + i * 155, 800, 140, 130))
+
+            # Render den Text für den aktuellen Button
+            text = self.font.render(text, True, (0, 0, 0))  # Schwarz als Textfarbe
+            text_rect = text.get_rect(center=(1400 + i * 155 + 70, 800 + 65))  # Zentriert im Button
+
+            # Blit (zeichne) den Text auf den Bildschirm
+            screen.blit(text, text_rect)

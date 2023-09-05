@@ -103,10 +103,15 @@ class AktieAction(Action):
     def act(self, player):
         player.aktie = True  # TODO right implemented???
 
+class ChoiceInFieldAction(Action):
+    def act(self, player):
+        player.choosing_in_field = True
 
 def create_action(action_dict):
     actions = []
 
+    if "choice_in_field" in action_dict:
+        actions.append(ChoiceInFieldAction())
     if "add_money" in action_dict:
         actions.append(MoneyAction(action_dict["add_money"]))
     if "pause" in action_dict:

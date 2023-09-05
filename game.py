@@ -608,9 +608,9 @@ class Game:
                             current_player.active = True
                             self.current_field = current_player.current_field
                             current_player.has_moved = False
-                        elif self.state == 'player_moving':
+                        elif self.state == 'player_turn':
                             pass
-                        else:
+                        elif self.state == '':
                             self.is_game_started = True
                             current_player.active = True
                             self.wheel.spin()
@@ -715,6 +715,11 @@ class Game:
                     self.clicked_object = ''
                     self.state = 'player_turn'
 
+            if self.state == 'choose_in_field':
+                self.game_view.draw_choose_in_field(self.screen)
+                if current_player.check_choose_path(self.clicked_object):
+                    self.clicked_object = ''
+                    self.state = 'player_turn'
 
 
 
@@ -722,7 +727,7 @@ class Game:
             # self.wheel_fields = self.draw_wheel_fields(self.active_fields) # TODO nur wenn glückstag action vorhanden ist und die choice auf spielen gesetzt wurde, zeige die felder
 
             pygame.display.update()
-            self.clock.tick(120)
+            self.clock.tick(60)
 
 
 if __name__ == "__main__":

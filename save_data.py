@@ -42,34 +42,33 @@ WAYPOINTS = [(1160, 372, 270),  # I divide
              (1170, 675, 60), (1167, 615, 0)  # last field
              ]
 
-fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung", RED, [1, 4], {"add_money": 3000, "add_insurance": "car"}],
+fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung. Wähle 'Links' oder 'Rechts'", RED, [1, 4], {"add_money": 3000, "add_insurance": "car"}],
              # TODO implementieren von 2 Wegen
              ["", "Du hast dein Bankkonto überzogen. Zahle 1.000.", YELLOW, [2], {"add_money": -1000}],
              ["", "Du gewinnst ein Preisausschreiben und erhältst 5.000.", YELLOW, [3], {"add_money": 5000}],
              ["", "Du wirst angestellt. Gehalt 5.000. Du rückst 1 Feld vor.", RED, [15], {"set_income": 5000, "more_steps": 1}],
-             ["", "Du machst die Aufnahmeprüfung. Einmal aussetzen.", YELLOW, [5], {"pause": "value"}], # value not important?
-             ["", "Studiengebühren sind fällig. Zahle 2.000.", RED, [6], {"add_money": -2000}], # TODO ab hier
+             ["", "Du machst die Aufnahmeprüfung. Einmal aussetzen.", YELLOW, [5], {"pause": "value"}], # value not important, what to do?
+             ["", "Studiengebühren sind fällig. Zahle 2.000.", RED, [6], {"add_money": -2000}],
              ["", "Du fällst durch eine Prüfung. Einmal aussetzen.", YELLOW, [7], {"pause": "value"}],
              ["", "Du bekommst 1.000 für deine Dissertation.", YELLOW, [8], {"add_money": 1000}],
              ["", "Du gewinnst beim Pferderennen und erhältst 1.000.", YELLOW, [9], {"add_money": 1000}],
              ["", "Arzt! Einkommen 10.000. Du rückst 6 Felder vor.", YELLOW, [10], {"set_income": 10000, "job": "Arzt", "more_steps": 6}],
-             ["", "Journalist! Einkommen 20.000. Du rückst 5 Felder vor.", YELLOW, [11], [6]],
-             ["", "Anwalt! Einkommen 15.000. Du rückst 4 Felder vor.", YELLOW, [12], [7]],
-             ["", "Lehrer! Einkommen 8.000. Du rückst 3 Felder vor.", YELLOW, [13], [8]],
-             ["", "Physiker! Einkommen 10.000. Du rückst 2 Felder vor.", YELLOW, [14], [9]],
-             ["", "Bachelor! Wenn du noch kein Einkommen hast beträgt dein Einkommen jetzt 6.000.", RED, [15], [10]],
-             ["Zahltag", "", RED, [16], [16]],
-             ["", "Du hast Geburtstag und erhältst 1.000.", YELLOW, [17], [2]],
-             ["", "Du gewinnst in der Lotterie und erhältst 50.000.", YELLOW, [18], [13]],
-             ["", "Du fichtst ein Testament an. Zahle 10.000 Gerichtsgebühren.", YELLOW, [19], [14]],
-             ["", "Deine Tante stirbt. Du erbst 50.000.", YELLOW, [20], [13]],
-             ["", "Wenn du eine Lebensversicherung abschließen willst, zahle 5000.", WHITE, [21], [15]],
-             # TODO Choice in White field + change font of text to another color because white on white
-             ["", "Du verlobst Dich. Zahle 1000 für den Verlobungsring.", YELLOW, [22], [1]],
-             ["", "Du gewinnst bei einem Fernsehquiz und erhältst 5000.", YELLOW, [23], [11]],
-             ["Zahltag", "", RED, [24], [16]],
-             ["", "Geschwindigkeitsübertretung. Zahle 1000.", YELLOW, [25], [1]],
-             ["", "Du heiratest. Sammle Geschenke ein.", RED, [26], [17]],
+             ["", "Journalist! Einkommen 20.000. Du rückst 5 Felder vor.", YELLOW, [11], {"set_income": 20000, "job": "Journalist", "more_steps": 5}],
+             ["", "Anwalt! Einkommen 15.000. Du rückst 4 Felder vor.", YELLOW, [12], {"set_income": 15000, "job": "Anwalt", "more_steps": 4}],
+             ["", "Lehrer! Einkommen 8.000. Du rückst 3 Felder vor.", YELLOW, [13], {"set_income": 8000, "job": "Lehrer", "more_steps": 3}],
+             ["", "Physiker! Einkommen 10.000. Du rückst 2 Felder vor.", YELLOW, [14], {"set_income": 10000, "job": "Physiker", "more_steps": 2}],
+             ["", "Bachelor! Wenn du noch kein Einkommen hast beträgt dein Einkommen jetzt 6.000.", RED, [15], {"set_income": 6000, "more_steps": 1}],
+             ["Zahltag", "", RED, [16], {"payday": "value"}], # value not important, what to do?
+             ["", "Du hast Geburtstag und erhältst 1.000.", YELLOW, [17], {"add_money": 1000}],
+             ["", "Du gewinnst in der Lotterie und erhältst 50.000.", YELLOW, [18], {"add_money": 50000}],
+             ["", "Du fichtst ein Testament an. Zahle 10.000 Gerichtsgebühren.", YELLOW, [19], {"add_money": -10000}],
+             ["", "Deine Tante stirbt. Du erbst 50.000.", YELLOW, [20], {"add_money": 50000}],
+             ["", "Wenn du eine Lebensversicherung abschließen willst, zahle 5000.", WHITE, [21], {"choice_in_field": "value", "add_money": -5000, "add_insurance": 'life'}], # value not important, what to do?
+             ["", "Du verlobst Dich. Zahle 1000 für den Verlobungsring.", YELLOW, [22], {"add_money": -1000}],
+             ["", "Du gewinnst bei einem Fernsehquiz und erhältst 5000.", YELLOW, [23], {"add_money": 5000}],
+             ["Zahltag", "", RED, [24], {"payday": "value"}],
+             ["", "Geschwindigkeitsübertretung. Zahle 1000.", YELLOW, [25], {"add_money": -1000}],
+             ["", "Du heiratest. Sammle Geschenke ein.", RED, [26], [17]], # TODO ab hier
              ["", "Du gehst auf Hochzeitsreise. Zahle 1000.", YELLOW, [27], [1]],
              ["", "Du hast einen Termin als Geschworener. Einmal aussetzen.", YELLOW, [28], [3]],
              ["", "Du verlierst deine Autoversicherung wegen Raserei.", YELLOW, [29], [18]],

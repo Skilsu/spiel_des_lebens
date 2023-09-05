@@ -18,6 +18,9 @@ class Field:
     def get_following_field(self, following_field_number=0):
         return self.following_fields[following_field_number]
 
+    def get_actions(self):
+        return self.actions
+
 
     def choice_options(self):
         return None
@@ -25,14 +28,9 @@ class Field:
     def return_choice(self, choice):
         pass
 
-    def get_actions(self):
-        return self.actions
 
-    """def get_actions(self, player):
-        if player.steps_to_go == 0:
-            return self.action
-        else:
-            return []"""
+
+
 
 
 class YellowField(Field):

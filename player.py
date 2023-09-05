@@ -1,5 +1,7 @@
 import pygame
 
+from actions import ChoiceInFieldAction
+
 PLAYER_SIZE_ACTIVE = (25, 40)
 PLAYER_SIZE_INACTIVE = (15, 15)
 
@@ -44,6 +46,10 @@ class Player(pygame.sprite.Sprite):
         self.following_field_number = 0
         self.player_returned = False
         self.has_steps_to_go = False
+
+        self.choosing_in_field = False
+        self.choice_in_field_checked = False
+        self.choice_in_field_checked_goon = False
 
         # game logic
         self.money = 0
@@ -174,8 +180,20 @@ class Player(pygame.sprite.Sprite):
 
                 if (tuple(field.color) == RED or tuple(field.color) == WHITE) and not self.current_field == 0:
 
-                    if (not self.player_returned) and self.has_moved and not self.has_steps_to_go:
+                    if self.current_field == 15:
+                        self.has_steps_to_go = False
+
+                    if ((not self.player_returned) and self.has_moved and not self.has_steps_to_go):
+
+
                         self.acting(field)
+
+                        # choice in field
+                        if not self.choice_in_field_checked and not self.choice_in_field_checked_goon:
+                            if self.choosing_in_field:
+                                return 'choose_in_field'
+
+
 
                         return 'player returning'
 
@@ -197,19 +215,33 @@ class Player(pygame.sprite.Sprite):
 
                 return 'player_turn'
             else:
-                if not self.has_steps_to_go:
+                if not self.has_steps_to_go or self.current_field == 15: # Zahltag
                     self.acting(field)
+
+                    # choice in field
+                    if not self.choice_in_field_checked and not self.choice_in_field_checked_goon:
+                        if self.choosing_in_field:
+                            return 'choose_in_field'
+
 
 
                 # for more steps to go action # not perfectly tested for later on
                 if self.steps_to_go > 0:
                     self.has_steps_to_go = True
                     return 'player returning'
+        self.choosing_in_field = False
         return 'next_player'
+
+
     def acting(self, field):
         actions = field.get_actions()
         for action in actions:
             action.act(self)
+            if isinstance(action, ChoiceInFieldAction):
+                if not self.choice_in_field_checked_goon:
+                    break
+
+
 
     def move(self):
         if self.rate > 1:
@@ -252,14 +284,29 @@ class Player(pygame.sprite.Sprite):
 
 
     def check_choose_path(self, clicked_object):
-        if clicked_object == 'Links':
-            print('Links')
-            self.choosed_path = True
-            self.following_field_number = 0
-            return True
-        elif clicked_object == 'Rechts':
-            print('Rechts')
-            self.choosed_path = True
-            self.following_field_number = 1
-            return True
+        # no other option to check path and choice in field
+        if self.choosing_in_field:
+            if clicked_object == 'Links':
+                print('Ja')
+                self.choosing_in_field = False
+                self.choice_in_field_checked_goon = True
+                return True
+            elif clicked_object == 'Rechts':
+                print('Nein')
+                self.choosing_in_field = False
+                self.choice_in_field_checked = True
+                return True
+        else:
+            if clicked_object == 'Links':
+                print('Links')
+                self.choosed_path = True
+                self.following_field_number = 0
+                return True
+            elif clicked_object == 'Rechts':
+                print('Rechts')
+                self.choosed_path = True
+                self.following_field_number = 1
+                return True
         return False
+
+

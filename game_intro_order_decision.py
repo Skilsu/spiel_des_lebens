@@ -41,33 +41,36 @@ class GameIntro:
         font_large = pygame.font.Font(None, 70)
         self.wheel = Wheel((self.screen.get_width()/2, self.screen.get_height()/2), WHEEL_RADIUS)
         self.clock = pygame.time.Clock()
-        self.players_data = []
-        self.players_data = [(1, (173, 216, 230)), (2, (0, 255, 0)), (3, (255, 165, 0)), (4, (128, 0, 128)), (5, (255, 0, 0)),
-                             (6, (255, 219, 0))] # debug zwecke
-        self.players_data = [{'player_number': num, 'car_color': color} for num, color in self.players_data]
-        image_directory = 'graphics/other_cars/'
+        self.players_data = None
+        self.image_directory = 'graphics/other_cars/'
 
+
+
+    def append_players_data(self, players_data):
+        self.players_data = [{'player_number': num, 'car_color': color} for num, color in players_data]
         for player in self.players_data:
             color_name = [name for name, rgb in car_colors.items() if rgb == player["car_color"]][0]
-            car_image_path = image_directory + "car_" + color_name + ".png"
+            car_image_path = self.image_directory + "car_" + color_name + ".png"
             player["car_image"] = pygame.image.load(car_image_path).convert_alpha()
             player["car_image"] = pygame.transform.scale(player["car_image"], (80, 80))
         print(self.players_data)
 
-
     def draw_player_infos(self):
 
+        spacing = 130  # Dieser Wert kann angepasst werden, je nachdem wie groß der gewünschte Abstand sein soll
+
         for i, player in enumerate(self.players_data):
-            # Draw the rectangle
-            pygame.draw.rect(self.screen, player['car_color'], (5, 5 + 800 * i / len(self.players_data), 290, 120))
+            y_position = 5 + i * spacing
 
-            # Render the text
+            # Zeichnen des Rechtecks
+            pygame.draw.rect(self.screen, player['car_color'], (5, y_position, 290, 120))
+
+            # Darstellung des Texts
             name_surface = self.font.render(f"Spieler: {player['player_number']}", True, WHITE)
-            self.screen.blit(name_surface, (10, 10 + 800 * i / len(self.players_data)))
+            self.screen.blit(name_surface, (10, y_position + 5))
 
-
-            self.screen.blit(player["car_image"], (200, 10 + 800 * i / len(self.players_data)))
-
+            # Darstellung des Spieler-Autos
+            self.screen.blit(player["car_image"], (200, y_position + 5))
 
     def run(self):
         running = True
