@@ -13,7 +13,8 @@ class MoneyAction(Action):
         self.money = money
 
     def act(self, player):
-        player.money += self.money
+        player.add_money(self.money)
+
 
 
 class PauseAction(Action):
@@ -65,7 +66,7 @@ class LoseInsuranceAction(Action):
 
 class PaydayAction(Action):
     def act(self, player):
-        player.money += player.income
+        player.add_money(player.income)
 
 
 class GetStatussymbolAction(Action):

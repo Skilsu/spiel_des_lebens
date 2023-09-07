@@ -19,8 +19,6 @@ def load_fields():
         actions = create_action(info["action"])
         if info["color"] == list(RED):
 
-
-
             fields.append(RedField(following_fields=info["following_fields"],
                                    x=info["x"],
                                    y=info["y"],

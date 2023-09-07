@@ -67,11 +67,11 @@ fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung. W�
              ["", "Du gewinnst bei einem Fernsehquiz und erh채ltst 5000.", YELLOW, [23], {"add_money": 5000}],
              ["Zahltag", "", RED, [24], {"payday": "value"}],
              ["", "Geschwindigkeits체bertretung. Zahle 1000.", YELLOW, [25], {"add_money": -1000}],
-             ["", "Du heiratest. Sammle Geschenke ein.", RED, [26], []], # TODO ab hier value
-             ["", "Du gehst auf Hochzeitsreise. Zahle 1000.", YELLOW, [27], [1]],
-             ["", "Du hast einen Termin als Geschworener. Einmal aussetzen.", YELLOW, [28], [3]],
-             ["", "Du verlierst deine Autoversicherung wegen Raserei.", YELLOW, [29], [18]],
-             ["", "Autounfall! Zahle 4000, wenn du nicht versichert bist.", YELLOW, [30], [19]],
+             ["", "Du heiratest. Sammle Geschenke ein.", RED, [26], []],
+             ["", "Du gehst auf Hochzeitsreise. Zahle 1000.", YELLOW, [27], {"add_money": -1000}],
+             ["", "Du hast einen Termin als Geschworener. Einmal aussetzen.", YELLOW, [28], {"pause": "value"}],
+             ["", "Du verlierst deine Autoversicherung wegen Raserei.", YELLOW, [29], {"lose_insurance": "car"}],
+             ["", "Autounfall! Zahle 4000, wenn du nicht versichert bist.", YELLOW, [30], [19]], # TODO ab hier
              ["", "Die Flitterwochen sind vor체ber. Zahle 10.000 f체r f채llige Rechnungen.", YELLOW, [31], [1]],
              # TODO Schuldscheine 체berpr체fen
              ["", "Option auf den Kauf eines Status Symbols f체r 10.000", YELLOW, [32], [20]],

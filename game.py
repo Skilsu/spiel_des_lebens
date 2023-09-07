@@ -522,7 +522,7 @@ class Game:
 
     def __init__(self, screen, player_number=1):
         self.player_number = player_number
-        self.player_number = 2  # DEBUG Zwecke
+        self.player_number = 3  # DEBUG Zwecke
 
         pygame.init()
         self.screen = screen
@@ -534,14 +534,10 @@ class Game:
         self.spinned_wheel = False
         self.selected_number = 0
         self.current_field = 0
-        self.choice = None
+
         self.clicked_object = None
 
         self.fields = load_fields()
-        """for field in self.fields:
-            print(field)"""
-        self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 1.png').convert()
-        self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
         # Für player
         self.colors = colors
@@ -578,9 +574,11 @@ class Game:
             if current_player.pause and not self.state == 'next_player':
                 self.state = 'player returning'
 
-            pos = pygame.mouse.get_pos()
+
 
             for event in pygame.event.get():
+                pos = pygame.mouse.get_pos()
+
                 if event.type == pygame.QUIT:
                     running = False
                     pygame.quit()
@@ -607,9 +605,7 @@ class Game:
                             self.is_game_started = True
                             current_player.active = True
                             self.wheel.spin()
-                            # self.player_turn_index = (self.player_turn_index + 1) % self.player_number
-                            """if not current_player.moving:
-                                current_player.update()"""
+
 
                             self.spinned_wheel = True
                         elif self.state == 'marriage_action':
@@ -667,7 +663,7 @@ class Game:
                 # for debug
                 from marriage_action import MarriageAction
 
-                marriage_action = MarriageAction(self.screen, self.players.sprites(), current_player)
+                marriage_action = MarriageAction(self.screen, self.players.sprites(), current_player, self.wheel)
 
                 self.state = marriage_action.run()
 

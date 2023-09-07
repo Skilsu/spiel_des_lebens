@@ -174,6 +174,7 @@ class Player(pygame.sprite.Sprite):
             # Marriage field
             if self.current_field == 25:
                 if not self.married:
+                    self.married = True
                     return 'marriage_action'
 
             if self.steps_to_go > 0:
@@ -245,8 +246,19 @@ class Player(pygame.sprite.Sprite):
                 if not self.choice_in_field_checked_goon:
                     break
 
+    def add_money(self, money):
+        self.money += money
+        # check money here as well, because MoneyAction can subtract money too
+        self.check_money()
 
+    def subtract_money(self, money):
+        self.money -= money
+        self.check_money()
 
+    def check_money(self):
+        if self.money < 0:
+            self.money += 20000
+            self.debt += 1
     def move(self):
         if self.rate > 1:
             self.rate -= 1
