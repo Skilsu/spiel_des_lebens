@@ -42,7 +42,7 @@ WAYPOINTS = [(1160, 372, 270),  # I divide
              (1170, 675, 60), (1167, 615, 0)  # last field
              ]
 
-fieldinfo = [["Start", "Du bekommst 3000, ein Auto und eine Autoversicherung. Wähle 'Links' oder 'Rechts'", RED, [1, 4], {"add_money": 3000, "add_insurance": "car"}],
+fieldinfo = [["Start", "Du bekommst 3000 und eine Autoversicherung. Wähle 'Links' (Geschäftsleben) oder 'Rechts' (Studium)", RED, [1, 4], {"add_money": 3000, "add_insurance": "car"}],
              ["", "Du hast dein Bankkonto überzogen. Zahle 1.000.", YELLOW, [2], {"add_money": -1000}],
              ["", "Du gewinnst ein Preisausschreiben und erhältst 5.000.", YELLOW, [3], {"add_money": 5000}],
              ["", "Du wirst angestellt. Gehalt 5.000. Du rückst 1 Feld vor.", RED, [15], {"set_income": 5000, "more_steps": 1}],

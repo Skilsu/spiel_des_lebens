@@ -156,12 +156,15 @@ class MarriageAction:
         run = True
         while run:
             for event in pygame.event.get():
-
                 if event.type == pygame.QUIT:
                     run = False
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYUP:
+
+                    # TODO what to do when pausing the game?
+                    if event.key == pygame.K_ESCAPE:
+                        return 'game_pausing'
 
                     if event.key == pygame.K_SPACE:
                         if self.state == 'wait':

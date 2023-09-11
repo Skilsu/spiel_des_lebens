@@ -133,39 +133,6 @@ class Player(pygame.sprite.Sprite):
         "aktie": False
         }]
         """
-        """if action["add_money"] != 0:
-            self.money += action["add_money"]
-        if action["pause"]:
-            self.pause = not self.pause
-        if action["set income"] != 0:
-            self.income = action["set income"]
-        if action["go more steps"] != -1:
-            self.steps_to_go = action["go more steps"]
-        if action.get("add insurance") == "car":
-            self.car = True
-        if action.get("add insurance") == "fire":
-            self.fire = True
-        if action.get("add insurance") == "life":
-            self.life = True
-        if action.get("lose insurance") == "car":
-            self.car = False
-        if action.get("lose insurance") == "fire":
-            self.fire = False
-        if action.get("lose insurance") == "life":
-            self.life = False
-        if action["payday"]:
-            self.money += self.income
-        if action["income if 0"] != 0 and self.income == 0:
-            self.income = action["income if 0"]
-        if self.money < 0:
-            self.money += 20000
-            self.debt += 1
-        if action["job"] is not None:
-            self.job = action["job"]
-        if action["aktie"]:
-            self.aktie = True"""
-
-
 
         if self.moving:
             self.move()
@@ -219,6 +186,7 @@ class Player(pygame.sprite.Sprite):
 
 
                 return 'player_turn'
+
             else:
                 if not self.has_steps_to_go or self.current_field == 15: # Zahltag
                     self.acting(field)
@@ -234,6 +202,7 @@ class Player(pygame.sprite.Sprite):
                 if self.steps_to_go > 0:
                     self.has_steps_to_go = True
                     return 'player returning'
+
         self.choosing_in_field = False
         return 'next_player'
 

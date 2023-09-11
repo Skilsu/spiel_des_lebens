@@ -121,7 +121,7 @@ class GameIntro:
         self.car_images = ["graphics/other_cars/car_baby_blue.png", "graphics/other_cars/car_green.png", "graphics/other_cars/car_orange.png", "graphics/other_cars/car_purple.png", "graphics/other_cars/car_red.png",
                       "graphics/other_cars/car_yellow.png"]
 
-        button_width_cars, button_height_cars = 250, 250  # Beispielgröße
+        button_width_cars, button_height_cars = 250, 250
         button_gap_cars = 20
 
         start_x_cars = 50  # Anfangs-x-Koordinate
@@ -137,6 +137,7 @@ class GameIntro:
         self.selection_display_font = pygame.font.SysFont("comicsans", 40)
 
         self.selected_cars = []
+        self.all_cars_selected = False
 
 
 
@@ -161,6 +162,10 @@ class GameIntro:
         position = (20, 200)
         self.screen.blit(rendered_text, position)
 
+    def draw_not_all_cars_selected_text(self):
+        text = 'Nicht alle Autos ausgewählt'
+        text_surface = self.font.render(text, True, (250, 0, 0))
+        self.screen.blit(text_surface, (615, 250))
     def run(self):
         running = True
         while running:
@@ -227,16 +232,18 @@ class GameIntro:
                                 self.selected_cars.sort(key=lambda x: x[0])
                                 print(self.selected_cars)
                                 return 'game_intro_order_decision'
-                            else: # TODO als Warnung im Bildschirm anzeigen
-                                print("Nicht alle Autos ausgewählt")
+                            else:
+                                self.all_cars_selected = True
                         if self.state == 'player_number':
-                            print(f"Sie haben {self.selected} Spieler ausgewählt.")
+
                             self.state = 'choose_color'
 
 
                 self.ok_button.handle_event(event)
                 self.back_button.handle_event(event)
 
+            if self.current_selection == self.selected:
+                self.all_cars_selected = False
             # Draw buttons based on the state
             if self.state == 'player_number':
                 for button in self.buttons:
@@ -244,6 +251,9 @@ class GameIntro:
             elif self.state == 'choose_color':
                 self.back_button.draw(self.screen)
                 self.draw_player_selection_display()
+
+                if self.all_cars_selected:
+                    self.draw_not_all_cars_selected_text()
                 for button in self.color_buttons:
                     button.draw(self.screen)
 

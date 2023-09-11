@@ -46,7 +46,6 @@ class GameState:
             if self.state == "restart_game":
                 self.__init__()
         elif self.state == 'instruction':
-            print(self.previous_state)
             self.state = self.game_instruction.run()
             if self.state == 'back':
                 self.state = self.previous_state
