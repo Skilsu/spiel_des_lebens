@@ -52,10 +52,7 @@ class GameIntro:
         self.additional_turn_players = []
 
         self.is_round_over = False
-
         self.duplicates = False
-
-
 
         # for debug
         players_data = [(1, (173, 216, 230)), (2, (0, 255, 0)), (3, (255, 165, 0)), (4, (128, 0, 128)), (5, (255, 0, 0)), (6, (255, 219, 0))]
@@ -66,10 +63,6 @@ class GameIntro:
             player["car_image"] = pygame.image.load(car_image_path).convert_alpha()
             player["car_image"] = pygame.transform.scale(player["car_image"], (80, 80))
             player["wheeled_number"] = 0
-
-
-
-
 
     def append_players_data(self, players_data):
         self.players_data = [{'player_number': num, 'car_color': color} for num, color in players_data]
@@ -95,9 +88,13 @@ class GameIntro:
             name_surface = self.font.render(f"Spieler: {player['player_number']}", True, WHITE)
             self.screen.blit(name_surface, (10, y_position + 5))
 
+            # Darstellung des Platzes
+            order_number = self.font.render(f"Platz: {i + 1}", True, WHITE)
+            self.screen.blit(order_number, (10, y_position + 35))
+
             # Darstellung der gedrehten Zahl
             number_surface = self.font.render(f"Zahl: {player['wheeled_number']}", True, WHITE)
-            self.screen.blit(number_surface, (10, y_position + 35))
+            self.screen.blit(number_surface, (10, y_position + 90))
 
             # Darstellung des Spieler-Autos
             self.screen.blit(player["car_image"], (200, y_position + 5))
@@ -131,8 +128,6 @@ class GameIntro:
                 x_pos_centered = (self.screen.get_width() - text_surface.get_width()) // 2
                 self.screen.blit(text_surface, (x_pos_centered, y_pos))
                 y_pos += text_surface.get_height()
-
-
         else:
             self.text = f"Spieler: {self.current_player['player_number']} drehe das Rad um deine Reihenfolge zu bestimmen"
         text_surface = self.font.render(self.text, True, WHITE)
@@ -141,13 +136,13 @@ class GameIntro:
         x_pos_centered = (self.screen.get_width() - text_surface.get_width()) // 2
 
         self.screen.blit(text_surface, (x_pos_centered, 150))
+
     def redraw_window(self):
         self.wheel.update()
         self.screen.fill((0, 0, 0))
         self.draw_player_infos()
         self.wheel.draw(self.screen)
         self.draw_player_turn_text()
-
 
     def act(self, players):
         if self.spinned_wheel and self.wheel.has_stopped():
@@ -183,14 +178,11 @@ class GameIntro:
         for i, index in enumerate(indices_to_update):
             self.players_data[index] = updated_players[i]
 
-
     def check_duplicate(self, players):
         # Überprüfe, ob es Duplikate gibt
         numbers = [player['wheeled_number'] for player in players]
-        #print(numbers)
         duplicates = [item for item, count in collections.Counter(numbers).items() if count > 1]
 
-        # es gibt Duplikate
         if duplicates:
             self.duplicates = True
             # Wenn es Duplikate gibt, führe eine zusätzliche Runde für die betroffenen Spieler durch
@@ -198,7 +190,6 @@ class GameIntro:
                 # Spieler, die erneut drehen müssen
                 self.additional_turn_players.append([player for player in players if
                                            player['wheeled_number'] == duplicate_number])
-
 
     def run(self):
         running = True
@@ -208,7 +199,6 @@ class GameIntro:
                 players_data = self.players_data
             self.current_player = players_data[self.player_turn_index]
 
-
             for event in pygame.event.get():
                 if event.type == QUIT:
                     running = False
@@ -217,9 +207,6 @@ class GameIntro:
                 if event.type == KEYUP:
                     if event.key == K_ESCAPE:
                         return 'game_pausing'
-
-
-
                     if event.key == K_SPACE:
                         if self.state == '':
                             self.wheel.spin()
@@ -233,28 +220,20 @@ class GameIntro:
                         if self.state == 'order':
 
                             if self.duplicates and self.additional_turn_players:
-                                print('again act')
-
-
                                 players_data = self.additional_turn_players.pop(0)
-                                #print(self.additional_turn_players)
                                 self.is_round_over = False
                                 self.player_turn_index = (self.player_turn_index + 1) % len(players_data)
-                                #print(self.player_turn_index)
                                 self.state = ''
 
                             else:
                                 print("game start")
 
-
-
-
             self.act(players_data)
-
 
             self.redraw_window()
             pygame.display.update()
             self.clock.tick(120)
+
 
 if __name__ == "__main__":
     GameIntro(pygame.display.set_mode((1700, 930))).run()
