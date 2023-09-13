@@ -64,8 +64,6 @@ class MarriageAction:
             self.screen.blit(text_surface, (x_position + 10, y_position))
             y_position += spacing
 
-
-
     def draw_player_infos(self):
         spacing = 130
 
@@ -99,7 +97,6 @@ class MarriageAction:
         x_pos_centered = (self.screen.get_width() - text_surface.get_width()) // 2
 
         self.screen.blit(text_surface, (x_pos_centered, 800))
-
 
     def act(self):
 
@@ -144,10 +141,8 @@ class MarriageAction:
 
                 self.state = 'return'
 
-
     def sum_and_subtract_player_money(self):
         self.current_player.add_money(self.sum_money)
-
 
         for player in self.players:
             player.subtract_money(self.subtract_money)

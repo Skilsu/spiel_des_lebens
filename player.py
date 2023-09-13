@@ -8,6 +8,7 @@ PLAYER_SIZE_INACTIVE = (15, 15)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, x, y, rotation, color, car_image, name="", number=-1, active=False):
@@ -22,13 +23,8 @@ class Player(pygame.sprite.Sprite):
         self.steps_to_go = 0
         self.player_number = number
 
-        """self.surface = car_image
-        image = pygame.image.load("graphics/other_cars/car_baby_blue.png").convert_alpha()
-        self.image_without_rotation = pygame.transform.scale(self.surface, PLAYER_SIZE_ACTIVE).convert_alpha()"""
         self.image_without_rotation = pygame.transform.scale(car_image, PLAYER_SIZE_ACTIVE).convert_alpha()
-        """if self.active:
-            self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
-        else:"""
+
         self.image = pygame.Surface(PLAYER_SIZE_INACTIVE, pygame.SRCALPHA)
         pygame.draw.circle(self.image, self.color, (7.5, 7.5), 5)
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
@@ -67,12 +63,6 @@ class Player(pygame.sprite.Sprite):
         self.aktie = False
         self.married = False
 
-    """def update(self, pressed_keys):
-            if pressed_keys[pygame.K_SPACE]:
-                self.active = True
-                self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
-                print("pressd")"""
-
     def __str__(self):  # Not complete
         print(f"{self.name=} \n"
               f"{self.active=} \n"
@@ -93,7 +83,6 @@ class Player(pygame.sprite.Sprite):
               f"{self.pause=} \n"
               
               f"{self.aktie=} \n")
-
 
     def draw(self):
         if self.active:
@@ -207,7 +196,6 @@ class Player(pygame.sprite.Sprite):
         self.choosing_in_field = False
         return 'next_player'
 
-
     def acting(self, field):
         actions = field.get_actions()
         for action in actions:
@@ -229,6 +217,7 @@ class Player(pygame.sprite.Sprite):
         if self.money < 0:
             self.money += 20000
             self.debt += 1
+
     def move(self):
         if self.rate > 1:
             self.rate -= 1
@@ -238,8 +227,6 @@ class Player(pygame.sprite.Sprite):
         else:
             self.rate = 30
             self.moving = False
-
-
 
     def update_position(self, fields, field):
         self.has_moved = True
@@ -267,7 +254,6 @@ class Player(pygame.sprite.Sprite):
         self.rotation_new = rotation_new
 
         self.current_field = following_field_number
-
 
     def check_choose_path(self, clicked_object):
         # no other option to check path and choice in field
