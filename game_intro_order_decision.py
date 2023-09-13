@@ -232,7 +232,7 @@ class GameIntro:
 
             self.redraw_window()
             pygame.display.update()
-            self.clock.tick(120)
+            self.clock.tick(60)
 
 
 if __name__ == "__main__":
