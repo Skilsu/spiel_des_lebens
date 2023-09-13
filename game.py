@@ -21,23 +21,6 @@ CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 ORANGE = (255, 165, 0)
 
-# TODO when game_state class implement player logic with colors is this depricated
-colors = [
-    (168, 0, 185),  # Lila
-    (255, 0, 255),  # pink
-    (255, 0, 0),  # rot
-    (255, 73, 0),  # rot-orange
-    (255, 109, 0),  # orange-rot
-    (255, 146, 0),  # orange
-    (255, 182, 0),  # orange-gelb
-    (255, 219, 0),  # gelb-orange
-    (255, 255, 0),  # gelb
-    (200, 255, 0)  # gelb-grün
-]
-
-
-
-
 statussymbols = [["Rolls Royce", "Millionärs-Einkommen aus Vermietung ", 1000],
                  ["Villa in Südfrankreich", "Millionärs-Einkommen aus Vermietung ", 2000],
                  ["Kunstsammlung", "Millionärs-Einkommen aus Ausstellungen ", 3000],
@@ -63,16 +46,11 @@ for card in actioncards:
     ACTIONCARDS.append({"name": card[0], "description": card[1], "limit": card[2]})
 
 
-
 class Game:
 
-    def __init__(self, screen, player_number=1):
-        self.player_number = player_number
-        self.player_number = 3  # DEBUG Zwecke
-
+    def __init__(self, screen):
         pygame.init()
         self.screen = screen
-        # self.screen = pygame.display.set_mode(SCREEN_SIZE)
         self.clock = pygame.time.Clock()
         self.state = ''
         self.player_turn_index = 0
@@ -85,30 +63,22 @@ class Game:
 
         self.fields = load_fields()
 
-        # Für player
-        self.colors = colors
-
         # self.wheel_fields = self.draw_wheel_fields()
-        # self.active_fields = []
         self.wheel = Wheel(WHEEL_POSITION, WHEEL_RADIUS)
 
         self.players = pygame.sprite.Group()
-        spacing = 1
-
-        for i in range(self.player_number):
-            player = Player(self.fields[0].x,
-                            self.fields[0].y + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)),
-                            self.fields[0].rotation, self.colors[i], name="Spieler " + str(i + 1), number=i)
-            self.players.add(player)
-
-        """self.clickable_objects = []
-                for field in self.wheel_fields:
-                    self.clickable_objects.append(field)
-                self.motion_action = -1"""
 
         self.game_view = GameView()
         self.is_game_started = False
 
+    def create_players(self, players_data):
+        spacing = 1
+        for i, player_data in enumerate(players_data):
+            player = Player(self.fields[0].x,
+                            self.fields[0].y + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)),
+                            self.fields[0].rotation, player_data['car_color'], player_data['car_image'],
+                            f"Spieler {player_data['player_number']}", player_data['player_number'])
+            self.players.add(player)
 
     def check_spinned_wheel(self, current_player):
         if self.spinned_wheel and self.wheel.has_stopped():
@@ -128,8 +98,6 @@ class Game:
             if current_player.pause and not self.state == 'next_player':
                 self.state = 'player returning'
 
-
-
             for event in pygame.event.get():
                 pos = pygame.mouse.get_pos()
 
@@ -148,7 +116,7 @@ class Game:
                         elif self.state == 'next_player':
                             self.state = ''
                             current_player.active = False
-                            self.player_turn_index = (self.player_turn_index + 1) % self.player_number
+                            self.player_turn_index = (self.player_turn_index + 1) % len(self.players)
                             current_player = self.players.sprites()[self.player_turn_index]
                             current_player.active = True
                             self.current_field = current_player.current_field

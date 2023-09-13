@@ -36,6 +36,7 @@ class GameState:
         elif self.state == 'game_intro_order_decision':
             self.previous_state = self.state
             self.state = self.game_intro_order_decision.run()
+            self.game.create_players(self.game_intro_order_decision.players_data)
         elif self.state == 'game_playing':
             self.previous_state = self.state
             self.state = self.game.run()

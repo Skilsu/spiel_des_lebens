@@ -10,7 +10,7 @@ RED = (255, 0, 0)
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, rotation, color, name="", number=-1, active=False):
+    def __init__(self, x, y, rotation, color, car_image, name="", number=-1, active=False):
         super(Player, self).__init__()
 
         self.name = name
@@ -22,9 +22,10 @@ class Player(pygame.sprite.Sprite):
         self.steps_to_go = 0
         self.player_number = number
 
+        """self.surface = car_image
         image = pygame.image.load("graphics/other_cars/car_baby_blue.png").convert_alpha()
-        self.image_without_rotation = pygame.transform.scale(image, PLAYER_SIZE_ACTIVE).convert_alpha()
-
+        self.image_without_rotation = pygame.transform.scale(self.surface, PLAYER_SIZE_ACTIVE).convert_alpha()"""
+        self.image_without_rotation = pygame.transform.scale(car_image, PLAYER_SIZE_ACTIVE).convert_alpha()
         """if self.active:
             self.image = pygame.transform.rotate(self.image_without_rotation, self.rotation)
         else:"""

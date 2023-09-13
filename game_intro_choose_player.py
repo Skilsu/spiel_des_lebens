@@ -214,7 +214,7 @@ class GameIntro:
                                     if other_btn.player_number and other_btn.player_number > deselected_number:
                                         other_btn.player_number -= 1
                             else:
-                                print("Maximale Anzahl an Spielern erreicht!")
+                                print("Maximale Anzahl an Spielern erreicht!") # TODO maybe show this line on screen
 
 
                 if event.type == MOUSEBUTTONDOWN:
@@ -230,7 +230,6 @@ class GameIntro:
                             if self.current_selection == self.selected:
                                 self.selected_cars = [(btn.player_number, btn.bg_color) for btn in self.color_buttons if btn.player_number is not None]
                                 self.selected_cars.sort(key=lambda x: x[0])
-                                print(self.selected_cars)
                                 return 'game_intro_order_decision'
                             else:
                                 self.all_cars_selected = True

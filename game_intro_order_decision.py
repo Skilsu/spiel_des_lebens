@@ -4,6 +4,8 @@ import pygame
 from pygame.locals import *
 from wheel import Wheel
 
+# TODO Bug when starting from game_state => stichwahl isnt correct
+# TODO Bug when pausing the game on stichwahl
 
 WHEEL_RADIUS = 250  # Größe des Rades
 WHITE = (255, 255, 255)
@@ -53,16 +55,16 @@ class GameIntro:
 
         self.is_round_over = False
         self.duplicates = False
-
+        self.players_data = None
         # for debug
-        players_data = [(1, (173, 216, 230)), (2, (0, 255, 0)), (3, (255, 165, 0)), (4, (128, 0, 128)), (5, (255, 0, 0)), (6, (255, 219, 0))]
+        """players_data = [(1, (173, 216, 230)), (2, (0, 255, 0)), (3, (255, 165, 0)), (4, (128, 0, 128)), (5, (255, 0, 0)), (6, (255, 219, 0))]
         self.players_data = [{'player_number': num, 'car_color': color} for num, color in players_data]
         for player in self.players_data:
             color_name = [name for name, rgb in car_colors.items() if rgb == player["car_color"]][0]
             car_image_path = self.image_directory + "car_" + color_name + ".png"
             player["car_image"] = pygame.image.load(car_image_path).convert_alpha()
             player["car_image"] = pygame.transform.scale(player["car_image"], (80, 80))
-            player["wheeled_number"] = 0
+            player["wheeled_number"] = 0"""
 
     def append_players_data(self, players_data):
         self.players_data = [{'player_number': num, 'car_color': color} for num, color in players_data]
@@ -72,7 +74,7 @@ class GameIntro:
             player["car_image"] = pygame.image.load(car_image_path).convert_alpha()
             player["car_image"] = pygame.transform.scale(player["car_image"], (80, 80))
             player["wheeled_number"] = 0
-        print(self.players_data)
+
 
     def draw_player_infos(self):
 
@@ -157,11 +159,8 @@ class GameIntro:
 
                 # Sortiere die Spieler nach der gedrehten Zahl
                 players.sort(key=lambda x: x['wheeled_number'], reverse=True)
-                print(self.players_data)
 
                 self.update_player_positions(players)
-                print(self.players_data)
-                print(players)
 
                 self.check_duplicate(players)
                 self.state = 'order'
@@ -226,13 +225,14 @@ class GameIntro:
                                 self.state = ''
 
                             else:
-                                print("game start")
+                                print(self.players_data)
+                                return 'game_playing'
 
             self.act(players_data)
 
             self.redraw_window()
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(120)
 
 
 if __name__ == "__main__":
