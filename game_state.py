@@ -49,7 +49,10 @@ class GameState:
         elif self.state == 'instruction':
             self.state = self.game_instruction.run()
             if self.state == 'back':
-                self.state = self.previous_state
+                if self.previous_state == 'main_menu':
+                    self.state = 'main_menu'
+                else:
+                    self.state = 'game_pausing'
 
 
 game_state = GameState()
