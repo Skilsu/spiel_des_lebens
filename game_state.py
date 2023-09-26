@@ -44,7 +44,7 @@ class GameState:
             self.state = self.pause_menu.run()
             if self.state == 'resume':
                 self.state = self.previous_state
-            if self.state == "restart_game":
+            if self.state == "restart":
                 self.__init__()
         elif self.state == 'instruction':
             self.state = self.game_instruction.run()

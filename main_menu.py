@@ -2,10 +2,14 @@ import pygame
 import sys
 
 from Button import Button
+from ButtonInterface import TextButton
 
 # Farbdefinitionen
 BLACK = (0, 0, 0)
 GREY = (105, 105, 105)
+RED = (250, 0, 0)
+GREEN = (0, 255, 0)
+YELLOW = (255, 255, 0)
 
 BUTTON_SIZE_WIDTH = 600
 
@@ -17,10 +21,15 @@ class MainMenu:
         self.screen = screen
 
         # Buttons erstellen
-        self.start_button = Button(GREY, 550, 400, BUTTON_SIZE_WIDTH, 100, 'Spiel starten')
-        self.instructions_button = Button(GREY, 550, 550, BUTTON_SIZE_WIDTH, 100, 'Anleitung')
-        self.quit_button = Button(GREY, 550, 700, BUTTON_SIZE_WIDTH, 100, 'Spiel beenden')
+        font = pygame.font.SysFont('comicsans', 60)
+        self.start_button_i = TextButton(550, 400, BUTTON_SIZE_WIDTH, 100, 'Spiel starten',
+                                              GREY, BLACK, RED, GREEN, font)
+        self.instructions_button_i = TextButton(550, 550, BUTTON_SIZE_WIDTH, 100, 'Anleitung',
+                                                GREY, BLACK, RED, YELLOW, font)
+        self.quit_button_i = TextButton(550, 700, BUTTON_SIZE_WIDTH, 100, 'Spiel beenden',
+                                                GREY, BLACK, RED, RED, font)
 
+        self.buttons = [self.start_button_i, self.instructions_button_i, self.quit_button_i]
         # Game Logo
         self.image_logo = pygame.image.load("graphics/game_logo.png").convert_alpha()
         self.image_logo = pygame.transform.scale(self.image_logo, (600, 300))
@@ -30,54 +39,44 @@ class MainMenu:
         self.screen.fill(BLACK)
 
         # Zeichne die Buttons
-        self.start_button.draw(self.screen, BLACK)
-        self.instructions_button.draw(self.screen, BLACK)
-        self.quit_button.draw(self.screen, BLACK)
+        for btn in self.buttons:
+            btn.draw(self.screen)
 
         self.screen.blit(self.image_logo, (550, 100))
+
+    def click_event(self, event_pos):
+        if self.start_button_i.rect.collidepoint(event_pos):
+            print('Spiel starten geklickt')
+            return 'game_intro_choose_player'
+        if self.instructions_button_i.rect.collidepoint(event_pos):
+            print('Anleitung geklickt')
+            return 'instruction'
+        if self.quit_button_i.rect.collidepoint(event_pos):
+            print('Spiel beenden geklickt')
+            pygame.quit()
+            sys.exit()
 
     def run(self):
         run = True
         while run:
             self.redraw_window()
             pygame.display.update()
-            pos = pygame.mouse.get_pos()
 
             for event in pygame.event.get():
-
-
                 if event.type == pygame.QUIT:
                     run = False
                     pygame.quit()
                     sys.exit()
 
+                # handle click-event
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.start_button.is_over(pos):
-                        print('Spiel starten geklickt')
-                        return 'game_intro_choose_player'
-                    if self.instructions_button.is_over(pos):
-                        print('Anleitung geklickt')
-                        # Hier können Sie die Logik zum Anzeigen der Anleitung hinzufügen
-                        return 'instruction'
-                    if self.quit_button.is_over(pos):
-                        print('Spiel beenden geklickt')
-                        run = False
-                        pygame.quit()
-                        sys.exit()
+                    result = self.click_event(event.pos)
+                    if result is not None:
+                        return result
 
-                if event.type == pygame.MOUSEMOTION:
-                    if self.start_button.is_over(pos):
-                        self.start_button.color = (0, 255, 0)
-                    else:
-                        self.start_button.color = GREY
-                    if self.instructions_button.is_over(pos):
-                        self.instructions_button.color = (255, 255, 0)
-                    else:
-                        self.instructions_button.color = GREY
-                    if self.quit_button.is_over(pos):
-                        self.quit_button.color = (255, 0, 0)
-                    else:
-                        self.quit_button.color = GREY
+                # hover over
+                for btn in self.buttons:
+                    btn.handle_event(event)
 
 
 if __name__ == "__main__":
