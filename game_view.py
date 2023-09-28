@@ -196,6 +196,7 @@ class GameView:
             dy = 0
             for i in range(int(len(current_player.children) / 11) + 1):
                 dx = 0
+                # TODO children is an integer
                 for child in current_player.children[11 * i: 11 * (i + 1)]:
                     image = pygame.Surface((20, 20), pygame.SRCALPHA)
                     if child == "boy":

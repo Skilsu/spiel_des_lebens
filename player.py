@@ -34,7 +34,7 @@ class Player:
         self.x_following_field = x
         self.y_following_field = y
         self.rotation_following_field = rotation
-        self.rate = 30
+        self.moving_rate = 30
         self.has_moved = False
 
         self.choosed_path = False
@@ -48,7 +48,7 @@ class Player:
 
         # game logic
         self.money = 0
-        self.children = []
+        self.children = 0
         self.status_symbols = []
         self.action_cards = []
         self.car = False
@@ -217,13 +217,13 @@ class Player:
             self.debt += 1
 
     def move(self):
-        if self.rate > 1:
-            self.rate -= 1
-            self.x += (self.x_following_field - self.x) / self.rate
-            self.y += (self.y_following_field - self.y) / self.rate
-            self.rotation += (self.rotation_following_field - self.rotation) / self.rate
+        if self.moving_rate > 1:
+            self.moving_rate -= 1
+            self.x += (self.x_following_field - self.x) / self.moving_rate
+            self.y += (self.y_following_field - self.y) / self.moving_rate
+            self.rotation += (self.rotation_following_field - self.rotation) / self.moving_rate
         else:
-            self.rate = 30
+            self.moving_rate = 30
             self.is_moving = False
 
     def update_position(self, fields, field):
