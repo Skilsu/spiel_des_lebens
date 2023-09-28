@@ -4,12 +4,23 @@ import math
 
 
 class Wheel:
-    def __init__(self, center, radius, colors, font, font_large):
+    def __init__(self, center, radius):
         self.center = center
         self.radius = radius
-        self.colors = colors
-        self.font = font
-        self.font_large = font_large
+        self.colors = [
+            (168, 0, 185),  # Lila
+            (255, 0, 255),  # pink
+            (255, 0, 0),  # rot
+            (255, 73, 0),  # rot-orange
+            (255, 109, 0),  # orange-rot
+            (255, 146, 0),  # orange
+            (255, 182, 0),  # orange-gelb
+            (255, 219, 0),  # gelb-orange
+            (255, 255, 0),  # gelb
+            (200, 255, 0)  # gelb-grün
+        ]
+        self.font = pygame.font.Font(None, 35)
+        self.font_large = pygame.font.Font(None, 70)
         self.angle = 0
         self.target_angle = 0
         self.is_spinning = False
