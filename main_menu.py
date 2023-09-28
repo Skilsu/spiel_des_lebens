@@ -1,7 +1,6 @@
 import pygame
 import sys
 
-from Button import Button
 from ButtonInterface import TextButton
 
 # Farbdefinitionen
@@ -22,14 +21,14 @@ class MainMenu:
 
         # Buttons erstellen
         font = pygame.font.SysFont('comicsans', 60)
-        self.start_button_i = TextButton(550, 400, BUTTON_SIZE_WIDTH, 100, 'Spiel starten',
-                                              GREY, BLACK, RED, GREEN, font)
-        self.instructions_button_i = TextButton(550, 550, BUTTON_SIZE_WIDTH, 100, 'Anleitung',
-                                                GREY, BLACK, RED, YELLOW, font)
-        self.quit_button_i = TextButton(550, 700, BUTTON_SIZE_WIDTH, 100, 'Spiel beenden',
-                                                GREY, BLACK, RED, RED, font)
+        self.start_button = TextButton(550, 400, BUTTON_SIZE_WIDTH, 100, 'Spiel starten',
+                                       GREY, BLACK, RED, GREEN, font)
+        self.instructions_button = TextButton(550, 550, BUTTON_SIZE_WIDTH, 100, 'Anleitung',
+                                              GREY, BLACK, RED, YELLOW, font)
+        self.quit_button = TextButton(550, 700, BUTTON_SIZE_WIDTH, 100, 'Spiel beenden',
+                                      GREY, BLACK, RED, RED, font)
 
-        self.buttons = [self.start_button_i, self.instructions_button_i, self.quit_button_i]
+        self.buttons = [self.start_button, self.instructions_button, self.quit_button]
         # Game Logo
         self.image_logo = pygame.image.load("graphics/game_logo.png").convert_alpha()
         self.image_logo = pygame.transform.scale(self.image_logo, (600, 300))
@@ -45,13 +44,13 @@ class MainMenu:
         self.screen.blit(self.image_logo, (550, 100))
 
     def click_event(self, event_pos):
-        if self.start_button_i.rect.collidepoint(event_pos):
+        if self.start_button.rect.collidepoint(event_pos):
             print('Spiel starten geklickt')
             return 'game_intro_choose_player'
-        if self.instructions_button_i.rect.collidepoint(event_pos):
+        if self.instructions_button.rect.collidepoint(event_pos):
             print('Anleitung geklickt')
             return 'instruction'
-        if self.quit_button_i.rect.collidepoint(event_pos):
+        if self.quit_button.rect.collidepoint(event_pos):
             print('Spiel beenden geklickt')
             pygame.quit()
             sys.exit()

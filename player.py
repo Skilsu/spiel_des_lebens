@@ -9,11 +9,9 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
 
-class Player(pygame.sprite.Sprite):
+class Player:
 
     def __init__(self, x, y, rotation, color, car_image, name="", number=-1, active=False):
-        super(Player, self).__init__()
-
         self.name = name
         self.x = x
         self.y = y
@@ -26,16 +24,16 @@ class Player(pygame.sprite.Sprite):
         self.image_without_rotation = pygame.transform.scale(car_image, PLAYER_SIZE_ACTIVE).convert_alpha()
 
         self.image = pygame.Surface(PLAYER_SIZE_INACTIVE, pygame.SRCALPHA)
-        pygame.draw.circle(self.image, self.color, (7.5, 7.5), 5)
+        #pygame.draw.circle(self.image, self.color, (7.5, 7.5), 5) doesnt need it?
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
 
-        self.moving = False
+        self.is_moving = False
 
-        self.current_field = 0
+        self.current_field_number = 0
 
-        self.x_new = x
-        self.y_new = y
-        self.rotation_new = rotation
+        self.x_following_field = x
+        self.y_following_field = y
+        self.rotation_following_field = rotation
         self.rate = 30
         self.has_moved = False
 
@@ -68,8 +66,8 @@ class Player(pygame.sprite.Sprite):
               f"{self.active=} \n"
               f"{self.steps_to_go=} \n"
               f"{self.player_number=} \n\n"
-              f"{self.moving=} \n\n"
-              f"{self.current_field=} \n\n"
+              f"{self.is_moving=} \n\n"
+              f"{self.current_field_number=} \n\n"
               f"game logic"
               f"{self.money=} \n"
               f"{self.children=} \n"
@@ -91,7 +89,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = pygame.Surface(PLAYER_SIZE_INACTIVE, pygame.SRCALPHA)
             pygame.draw.circle(self.image, self.color, (7.5, 7.5), 5)
-            if self.current_field == 0:
+            if self.current_field_number == 0:
                 self.rect = self.image.get_rect(topleft=(self.x, self.y))
             elif self.player_number <= 0:
                 self.rect = self.image.get_rect(topleft=(self.x, self.y))
@@ -124,27 +122,27 @@ class Player(pygame.sprite.Sprite):
         }]
         """
 
-        if self.moving:
+        if self.is_moving:
             self.move()
             return 'player_turn'
         else:
             # Marriage field
-            if self.current_field == 25:
+            if self.current_field_number == 25:
                 if not self.married:
                     self.married = True
                     return 'marriage_action'
 
             if self.steps_to_go > 0:
 
-                if self.current_field == 0:
+                if self.current_field_number == 0:
                     if not self.player_returned:
                         self.acting(field)
                         self.player_returned = True
                         return 'player_turn'
 
-                if (tuple(field.color) == RED or tuple(field.color) == WHITE) and not self.current_field == 0:
+                if (tuple(field.color) == RED or tuple(field.color) == WHITE) and not self.current_field_number == 0:
 
-                    if self.current_field == 15:
+                    if self.current_field_number == 15:
                         self.has_steps_to_go = False
 
                     if ((not self.player_returned) and self.has_moved and not self.has_steps_to_go):
@@ -171,14 +169,14 @@ class Player(pygame.sprite.Sprite):
                 self.player_returned = False
 
                 self.update_position(fields, field)
-                print(fields[self.current_field])
+                print(fields[self.current_field_number])
 
 
 
                 return 'player_turn'
 
             else:
-                if not self.has_steps_to_go or self.current_field == 15: # Zahltag
+                if not self.has_steps_to_go or self.current_field_number == 15: # Zahltag
                     self.acting(field)
 
                     # choice in field
@@ -221,25 +219,25 @@ class Player(pygame.sprite.Sprite):
     def move(self):
         if self.rate > 1:
             self.rate -= 1
-            self.x += (self.x_new - self.x) / self.rate
-            self.y += (self.y_new - self.y) / self.rate
-            self.rotation += (self.rotation_new - self.rotation) / self.rate
+            self.x += (self.x_following_field - self.x) / self.rate
+            self.y += (self.y_following_field - self.y) / self.rate
+            self.rotation += (self.rotation_following_field - self.rotation) / self.rate
         else:
             self.rate = 30
-            self.moving = False
+            self.is_moving = False
 
     def update_position(self, fields, field):
         self.has_moved = True
         self.steps_to_go -= 1
-        self.moving = True
+        self.is_moving = True
 
         following_field_number = field.get_following_field(self.following_field_number)
         self.following_field_number = 0
         following_field = fields[following_field_number]
 
 
-        self.x_new = following_field.x
-        self.y_new = following_field.y
+        self.x_following_field = following_field.x
+        self.y_following_field = following_field.y
 
         rotation_new = following_field.rotation
         if self.rotation > 180:
@@ -251,9 +249,9 @@ class Player(pygame.sprite.Sprite):
 
         if diff < abs(rotation_new - self.rotation):
             rotation_new = rotation_modified
-        self.rotation_new = rotation_new
+        self.rotation_following_field = rotation_new
 
-        self.current_field = following_field_number
+        self.current_field_number = following_field_number
 
     def check_choose_path(self, clicked_object):
         # no other option to check path and choice in field

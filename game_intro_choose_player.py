@@ -22,7 +22,7 @@ class GameIntro:
     def __init__(self, screen):
         pygame.init()
         self.screen = screen
-        self.title_font = pygame.font.SysFont("comicsans", 48)
+
         self.font = pygame.font.SysFont("comicsans", 36)
 
         # Creating Buttons
@@ -35,7 +35,7 @@ class GameIntro:
 
         self.image_buttons = self.create_image_buttons()
 
-        self.selected = None
+        self.number_of_selected_cars = None
 
         self.state = 'player_number'
 
@@ -43,7 +43,7 @@ class GameIntro:
         self.current_selection = 0
 
         self.selected_cars = []
-        self.all_cars_selected = False
+        self.are_all_cars_selected = False
 
     def create_image_buttons(self):
         colors = [BABY_BLUE, GREEN, (255, 165, 0), (128, 0, 128), RED,
@@ -62,7 +62,7 @@ class GameIntro:
         for i, (color, car_image) in enumerate(zip(colors, car_images)):
             btn_x = start_x_cars + i * (button_width_cars + button_gap_cars)
             btn = ImageButton(btn_x, start_y_cars, button_width_cars, button_height_cars, car_image, color,
-                              SELECTED_BROWN, color, border_size=20)
+                              SELECTED_BROWN, color)
             image_buttons.append(btn)
 
         return image_buttons
@@ -83,9 +83,10 @@ class GameIntro:
         return number_buttons
 
     def draw_title(self, text):
+        title_font = pygame.font.SysFont("comicsans", 48)
         pygame.draw.rect(self.screen, BABY_BLUE,
                          (0, 0, self.screen.get_width(), int(0.2 * self.screen.get_height())))
-        title_text = self.title_font.render(text, True, WHITE)
+        title_text = title_font.render(text, True, WHITE)
         title_text_rect = title_text.get_rect(
             center=(self.screen.get_width() // 2, int(0.15 * self.screen.get_height())))
         margin = 10
@@ -98,7 +99,7 @@ class GameIntro:
                          (self.screen.get_width(), title_frame_rect.bottom), 2)
 
     def draw_player_selection_display(self):
-        text = f"Ausgewählt: {self.current_selection}/{self.selected}"
+        text = f"Ausgewählt: {self.current_selection}/{self.number_of_selected_cars}"
         selection_display_font = pygame.font.SysFont("comicsans", 40)
         rendered_text = selection_display_font.render(text, True, WHITE)
         position = (20, 200)
@@ -135,7 +136,7 @@ class GameIntro:
                 if self.state == 'player_number':
                     for index, button in enumerate(self.number_buttons):
                         if button.handle_event(event) and event.type == MOUSEBUTTONDOWN:
-                            self.selected = index+2
+                            self.number_of_selected_cars = index + 2
                             for btn in self.number_buttons:
                                 btn.active = False
                             button.active = True
@@ -145,7 +146,7 @@ class GameIntro:
                 elif self.state == 'choose_color':
                     for btn in self.image_buttons:
                         if btn.handle_event(event) and event.type == MOUSEBUTTONDOWN:
-                            if btn.player_number is None and self.current_selection < self.selected:  # Auto wurde noch nicht ausgewählt
+                            if btn.player_number is None and self.current_selection < self.number_of_selected_cars:  # Auto wurde noch nicht ausgewählt
                                 self.current_selection += 1
                                 btn.player_number = self.current_selection
                             elif btn.player_number is not None:  # Auto wurde bereits ausgewählt
@@ -167,15 +168,15 @@ class GameIntro:
                         if self.state == 'choose_color':  # Return to previous state
                             self.state = 'player_number'
 
-                    if self.ok_button.rect.collidepoint(event.pos) and self.selected is not None:
+                    if self.ok_button.rect.collidepoint(event.pos) and self.number_of_selected_cars is not None:
                         if self.state == 'choose_color':
 
-                            if self.current_selection == self.selected:
+                            if self.current_selection == self.number_of_selected_cars:
                                 self.selected_cars = [(btn.player_number, btn.bg_color) for btn in self.image_buttons if btn.player_number is not None]
                                 self.selected_cars.sort(key=lambda x: x[0])
                                 return 'game_intro_order_decision'
                             else:
-                                self.all_cars_selected = True
+                                self.are_all_cars_selected = True
                         if self.state == 'player_number':
 
                             self.state = 'choose_color'
@@ -184,8 +185,8 @@ class GameIntro:
                 self.ok_button.handle_event(event)
                 self.back_button.handle_event(event)
 
-            if self.current_selection == self.selected:
-                self.all_cars_selected = False
+            if self.current_selection == self.number_of_selected_cars:
+                self.are_all_cars_selected = False
             # Draw buttons based on the state
             if self.state == 'player_number':
                 for button in self.number_buttons:
@@ -194,12 +195,12 @@ class GameIntro:
                 self.back_button.draw(self.screen)
                 self.draw_player_selection_display()
 
-                if self.all_cars_selected:
+                if self.are_all_cars_selected:
                     self.draw_not_all_cars_selected_text()
                 for button in self.image_buttons:
                     button.draw(self.screen)
 
-            if self.selected is not None:
+            if self.number_of_selected_cars is not None:
                 self.ok_button.draw(self.screen)
 
             pygame.display.update()

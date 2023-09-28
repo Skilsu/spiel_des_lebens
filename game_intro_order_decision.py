@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 from wheel import Wheel
 
-# TODO Bug when starting from game_state => stichwahl isnt correct
+# TODO Bug when starting from game_state => stichwahl isnt correct ==>  it takes the old order
 # TODO Bug when pausing the game on stichwahl
 
 WHEEL_RADIUS = 250  # Größe des Rades
@@ -25,12 +25,12 @@ colors = [
 ]
 
 car_colors = {
-    'baby_blue':  (173, 216, 230),
-    'green':  (0, 255, 0),
-    'orange':  (255, 165, 0),
-    'purple':  (128, 0, 128),
-    'red':  (255, 0, 0),
-    'yellow':  (255, 219, 0)
+    'baby_blue': (173, 216, 230),
+    'green': (0, 255, 0),
+    'orange': (255, 165, 0),
+    'purple': (128, 0, 128),
+    'red': (255, 0, 0),
+    'yellow': (255, 219, 0)
 }
 
 
@@ -41,40 +41,41 @@ class GameIntro:
         self.screen = screen
 
         self.font = pygame.font.Font(None, 35)
-        self.wheel = Wheel((self.screen.get_width()/2, self.screen.get_height()/2), WHEEL_RADIUS)
+        self.wheel = Wheel((self.screen.get_width() / 2, self.screen.get_height() / 2), WHEEL_RADIUS)
         self.clock = pygame.time.Clock()
         self.players_data = None
-        self.image_directory = 'graphics/other_cars/'
 
-        self.spinned_wheel = False
+        self.is_wheel_spinned = False
         self.player_turn_index = 0
         self.current_player = None
         self.state = ''
-        self.text = ''
+        self.instruction_text = ''
         self.additional_turn_players = []
 
         self.is_round_over = False
-        self.duplicates = False
-        self.players_data = None
-        # for debug
-        """players_data = [(1, (173, 216, 230)), (2, (0, 255, 0)), (3, (255, 165, 0)), (4, (128, 0, 128)), (5, (255, 0, 0)), (6, (255, 219, 0))]
-        self.players_data = [{'player_number': num, 'car_color': color} for num, color in players_data]
-        for player in self.players_data:
-            color_name = [name for name, rgb in car_colors.items() if rgb == player["car_color"]][0]
-            car_image_path = self.image_directory + "car_" + color_name + ".png"
-            player["car_image"] = pygame.image.load(car_image_path).convert_alpha()
-            player["car_image"] = pygame.transform.scale(player["car_image"], (80, 80))
-            player["wheeled_number"] = 0"""
+        self.are_there_duplicate_wheeled_number = False
 
-    def append_players_data(self, players_data):
+        # for debug
+        image_directory = 'graphics/other_cars/'
+        players_data = [(1, (173, 216, 230)), (2, (0, 255, 0)), (3, (255, 165, 0)), (4, (128, 0, 128)),
+                        (5, (255, 0, 0)), (6, (255, 219, 0))]
         self.players_data = [{'player_number': num, 'car_color': color} for num, color in players_data]
         for player in self.players_data:
             color_name = [name for name, rgb in car_colors.items() if rgb == player["car_color"]][0]
-            car_image_path = self.image_directory + "car_" + color_name + ".png"
+            car_image_path = image_directory + "car_" + color_name + ".png"
             player["car_image"] = pygame.image.load(car_image_path).convert_alpha()
             player["car_image"] = pygame.transform.scale(player["car_image"], (80, 80))
             player["wheeled_number"] = 0
 
+    def append_players_data(self, players_data):
+        image_directory = 'graphics/other_cars/'
+        self.players_data = [{'player_number': num, 'car_color': color} for num, color in players_data]
+        for player in self.players_data:
+            color_name = [name for name, rgb in car_colors.items() if rgb == player["car_color"]][0]
+            car_image_path = image_directory + "car_" + color_name + ".png"
+            player["car_image"] = pygame.image.load(car_image_path).convert_alpha()
+            player["car_image"] = pygame.transform.scale(player["car_image"], (80, 80))
+            player["wheeled_number"] = 0
 
     def draw_player_infos(self):
 
@@ -103,10 +104,10 @@ class GameIntro:
 
     def draw_player_turn_text(self):
         if self.is_round_over:
-            self.text = "Aktuelle Reihenfolge"
+            self.instruction_text = "Aktuelle Reihenfolge"
 
             # Es gibt Stichwahl
-            if self.duplicates and self.additional_turn_players:
+            if self.are_there_duplicate_wheeled_number and self.additional_turn_players:
 
                 result_str = 'Stichwahl zwischen:\n'
 
@@ -131,8 +132,9 @@ class GameIntro:
                 self.screen.blit(text_surface, (x_pos_centered, y_pos))
                 y_pos += text_surface.get_height()
         else:
-            self.text = f"Spieler: {self.current_player['player_number']} drehe das Rad um deine Reihenfolge zu bestimmen"
-        text_surface = self.font.render(self.text, True, WHITE)
+            self.instruction_text = f"Spieler: {self.current_player['player_number']} drehe das Rad um deine " \
+                                    f"Reihenfolge zu bestimmen "
+        text_surface = self.font.render(self.instruction_text, True, WHITE)
 
         # Zentriere den Text
         x_pos_centered = (self.screen.get_width() - text_surface.get_width()) // 2
@@ -147,14 +149,13 @@ class GameIntro:
         self.draw_player_turn_text()
 
     def act(self, players):
-        if self.spinned_wheel and self.wheel.has_stopped():
-            self.spinned_wheel = False
+        if self.is_wheel_spinned and self.wheel.has_stopped():
+            self.is_wheel_spinned = False
             self.current_player['wheeled_number'] = self.wheel.get_selected_number()
             self.state = 'next_player'
 
             # ein kompletter durchgang
             if self.player_turn_index == (len(players) - 1):
-
                 self.is_round_over = True
 
                 # Sortiere die Spieler nach der gedrehten Zahl
@@ -183,18 +184,18 @@ class GameIntro:
         duplicates = [item for item, count in collections.Counter(numbers).items() if count > 1]
 
         if duplicates:
-            self.duplicates = True
+            self.are_there_duplicate_wheeled_number = True
             # Wenn es Duplikate gibt, führe eine zusätzliche Runde für die betroffenen Spieler durch
             for duplicate_number in duplicates:
                 # Spieler, die erneut drehen müssen
                 self.additional_turn_players.append([player for player in players if
-                                           player['wheeled_number'] == duplicate_number])
+                                                     player['wheeled_number'] == duplicate_number])
 
     def run(self):
         running = True
         while running:
 
-            if not self.duplicates:
+            if not self.are_there_duplicate_wheeled_number:
                 players_data = self.players_data
             self.current_player = players_data[self.player_turn_index]
 
@@ -209,7 +210,7 @@ class GameIntro:
                     if event.key == K_SPACE:
                         if self.state == '':
                             self.wheel.spin()
-                            self.spinned_wheel = True
+                            self.is_wheel_spinned = True
 
                         if self.state == 'next_player':
                             self.state = ''
@@ -218,7 +219,7 @@ class GameIntro:
 
                         if self.state == 'order':
 
-                            if self.duplicates and self.additional_turn_players:
+                            if self.are_there_duplicate_wheeled_number and self.additional_turn_players:
                                 players_data = self.additional_turn_players.pop(0)
                                 self.is_round_over = False
                                 self.player_turn_index = (self.player_turn_index + 1) % len(players_data)
@@ -232,11 +233,8 @@ class GameIntro:
 
             self.redraw_window()
             pygame.display.update()
-            self.clock.tick(120)
+            self.clock.tick(60)
 
 
 if __name__ == "__main__":
     GameIntro(pygame.display.set_mode((1700, 930))).run()
-
-
-

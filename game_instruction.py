@@ -1,7 +1,6 @@
 import sys
 import pygame
 
-from Button import Button
 from ButtonInterface import TextButton
 
 BLACK = (0, 0, 0)

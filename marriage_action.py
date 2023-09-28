@@ -9,7 +9,7 @@ WHITE = (255, 255, 255)
 
 
 class MarriageAction:
-    def __init__(self, screen, players, current_player, wheel_from_game):
+    def __init__(self, screen, players, current_player):
         pygame.init()
         self.screen = screen
         self.wheel = Wheel((self.screen.get_width() / 2, self.screen.get_height() / 2), WHEEL_RADIUS)
@@ -34,9 +34,6 @@ class MarriageAction:
             "- 1.000, wenn eine 4, 5 oder 6 gedreht wurde",
             "- nichts, wenn eine 7, 8, 9 oder 10 gedreht wurde"
         ]
-
-        self.wheel_from_game = wheel_from_game
-
 
     def redraw_window(self):
         self.screen.fill((0, 0, 0))

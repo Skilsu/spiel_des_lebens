@@ -55,18 +55,18 @@ class Game:
         self.state = ''
         self.player_turn_index = 0
 
-        self.spinned_wheel = False
+        self.is_wheel_spinned = False
         self.selected_number = 0
-        self.current_field = 0
+        self.current_field_number = 0
 
-        self.clicked_object = None
+        self.clicked_object_name = None
 
         self.fields = load_fields()
 
         # self.wheel_fields = self.draw_wheel_fields()
         self.wheel = Wheel(WHEEL_POSITION, WHEEL_RADIUS)
 
-        self.players = pygame.sprite.Group()
+        self.players = []
 
         self.game_view = GameView()
         self.is_game_started = False
@@ -78,23 +78,23 @@ class Game:
                             self.fields[0].y + (i * (PLAYER_SIZE_INACTIVE[1] + spacing)),
                             self.fields[0].rotation, player_data['car_color'], player_data['car_image'],
                             f"Spieler {player_data['player_number']}", player_data['player_number'])
-            self.players.add(player)
+            self.players.append(player)
 
     def check_spinned_wheel(self, current_player):
-        if self.spinned_wheel and self.wheel.has_stopped():
-            self.spinned_wheel = False
+        if self.is_wheel_spinned and self.wheel.has_stopped():
+            self.is_wheel_spinned = False
             self.state = 'player_turn'
             self.selected_number = self.wheel.get_selected_number()
             # self.active_fields = [self.selected_number - 1]
 
             current_player.steps_to_go = self.selected_number
-            current_player.moving = False
+            current_player.is_moving = False
 
     def run(self):
         running = True
         while running:
 
-            current_player = self.players.sprites()[self.player_turn_index]
+            current_player = self.players[self.player_turn_index]
             if current_player.pause and not self.state == 'next_player':
                 self.state = 'player returning'
 
@@ -117,9 +117,9 @@ class Game:
                             self.state = ''
                             current_player.active = False
                             self.player_turn_index = (self.player_turn_index + 1) % len(self.players)
-                            current_player = self.players.sprites()[self.player_turn_index]
+                            current_player = self.players[self.player_turn_index]
                             current_player.active = True
-                            self.current_field = current_player.current_field
+                            self.current_field_number = current_player.current_field_number
                             current_player.has_moved = False
                         elif self.state == 'player_turn':
                             pass
@@ -127,7 +127,7 @@ class Game:
                             self.is_game_started = True
                             current_player.active = True
                             self.wheel.spin()
-                            self.spinned_wheel = True
+                            self.is_wheel_spinned = True
                         elif self.state == 'marriage_action':
                             self.state = 'marriage'
 
@@ -149,33 +149,34 @@ class Game:
                     self.motion_action = -1"""
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.clicked_object = self.game_view.get_clickable_object(pos)
+                    self.clicked_object_name = self.game_view.get_clickable_object(pos)
+                    print(type(self.clicked_object_name))
 
             self.check_spinned_wheel(current_player)
 
             if self.state == 'player_turn':
-                self.state = current_player.act(self.fields, self.fields[current_player.current_field])
-                self.current_field = current_player.current_field
+                self.state = current_player.act(self.fields, self.fields[current_player.current_field_number])
+                self.current_field_number = current_player.current_field_number
 
-            self.game_view.draw(self.screen, self.fields[self.current_field], self.players, current_player, self.wheel, self.is_game_started)
+            self.game_view.draw(self.screen, self.fields[self.current_field_number], self.players, current_player, self.wheel, self.is_game_started)
 
             if self.state == 'choose_path':
                 self.game_view.draw_choose_path(self.screen)
-                if current_player.check_choose_path(self.clicked_object):
-                    self.clicked_object = ''
+                if current_player.check_choose_path(self.clicked_object_name):
+                    self.clicked_object_name = ''
                     self.state = 'player_turn'
 
             if self.state == 'choose_in_field':
                 self.game_view.draw_choose_in_field(self.screen)
-                if current_player.check_choose_path(self.clicked_object):
-                    self.clicked_object = ''
+                if current_player.check_choose_path(self.clicked_object_name):
+                    self.clicked_object_name = ''
                     self.state = 'player_turn'
 
             if self.state == 'marriage':
                 # for debug
                 from marriage_action import MarriageAction
 
-                marriage_action = MarriageAction(self.screen, self.players.sprites(), current_player, self.wheel)
+                marriage_action = MarriageAction(self.screen, self.players, current_player)
 
                 self.state = marriage_action.run()
 
