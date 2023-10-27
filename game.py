@@ -187,7 +187,7 @@ class Game:
             # self.wheel_fields = self.draw_wheel_fields(self.active_fields) # TODO nur wenn glückstag action vorhanden ist und die choice auf spielen gesetzt wurde, zeige die felder
 
             pygame.display.update()
-            self.clock.tick(120)
+            self.clock.tick(60)
 
 
 if __name__ == "__main__":

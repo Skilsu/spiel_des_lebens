@@ -16,7 +16,6 @@ class MoneyAction(Action):
         player.add_money(self.money)
 
 
-
 class PauseAction(Action):
     def act(self, player):
         player.pause = not player.pause

@@ -17,7 +17,6 @@ class MarriageAction:
         self.players = [player for player in players if player != current_player]
         self.current_player = current_player
         self.font = pygame.font.Font(None, 35)
-        self.font_text = pygame.font.Font(None, 25)
         self.spinned_wheel = False
 
         self.text = ""
@@ -63,7 +62,7 @@ class MarriageAction:
 
     def draw_player_infos(self):
         spacing = 130
-
+        font_text = pygame.font.Font(None, 25)
         for i, player in enumerate(self.players):
             y_position = 5 + i * spacing
 
@@ -73,7 +72,7 @@ class MarriageAction:
             name_surface = self.font.render(player.name, True, WHITE)
             self.screen.blit(name_surface, (10, y_position + 5))
 
-            money_surface = self.font_text.render("Money: " + str(player.money), True, WHITE)
+            money_surface = font_text.render("Geld: " + str(player.money), True, WHITE)
             self.screen.blit(money_surface, (10, y_position + 35))
 
         # current player
@@ -84,7 +83,7 @@ class MarriageAction:
         name_surface = self.font.render(f"Aktueller Spieler: ({self.current_player.name})", True, WHITE)
         self.screen.blit(name_surface, (rect_position[0] + 5, rect_position[1] + 5))
 
-        money_surface = self.font_text.render("Money: " + str(self.current_player.money), True, WHITE)
+        money_surface = font_text.render("Geld: " + str(self.current_player.money), True, WHITE)
         self.screen.blit(money_surface, (rect_position[0] + 5, rect_position[1] + 35))
 
     def draw_get_money_text(self):

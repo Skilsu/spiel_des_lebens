@@ -41,13 +41,10 @@ class GameView:
 
     def __init__(self):
         # Fonts
-        self.font_large_bolt = pygame.font.Font(None, 70)
-        self.font_large_bolt.set_bold(True)
         self.font = pygame.font.Font(None, 35)
         self.font_text = pygame.font.Font(None, 25)
-        self.font_big = pygame.font.Font(None, 50)
 
-        self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 1.png').convert()
+        self.board_image = pygame.image.load('graphics/spiel des lebens spielbrett_gimp 2.png').convert()
         self.board_image = pygame.transform.scale(self.board_image, (1100, 800))
 
         self.clickable_objects = []
@@ -86,12 +83,12 @@ class GameView:
 
         pygame.draw.circle(screen, BLUE, circle_center, circle_radius)
 
+        font_large_bolt = pygame.font.Font(None, 70)
+        font_large_bolt.set_bold(True)
         # Draw the "i" symbol in white
-        text = self.font_large_bolt.render("i", True, WHITE)
+        text = font_large_bolt.render("i", True, WHITE)
         text_rect = text.get_rect(center=circle_center)
         screen.blit(text, text_rect)
-
-
 
     def draw_current_player(self, screen, current_player):
         y = 5
@@ -180,11 +177,11 @@ class GameView:
             screen.blit(job_title, (x, y))
             y += 20
 
-        money_surface = self.font_text.render("Money: " + str(current_player.money), True, BLACK)
+        money_surface = self.font_text.render("Geld: " + str(current_player.money), True, BLACK)
         screen.blit(money_surface, (x, y))
         y += 20
 
-        income_surface = self.font_text.render("Income: " + str(current_player.income), True, BLACK)
+        income_surface = self.font_text.render("Gehalt: " + str(current_player.income), True, BLACK)
         screen.blit(income_surface, (x, y))
         y += 20
 
@@ -277,7 +274,7 @@ class GameView:
             return y + 40
         return y
 
-    def descriptions(self, screen, x, y):
+    """def descriptions(self, screen, x, y):
 
         debt_description_str = "Ein Schuldschein entspricht 20.000 Schulden. Du kannst einen Schuldschein zu " \
                                "jederzeit im Spiel für 22.000 abbezahlen oder du musst deine Schulden am Ende des" \
@@ -301,7 +298,7 @@ class GameView:
             text_surface = self.font_text.render(line, True, BLACK)
             screen.blit(text_surface, (1415, 705 + i * line_height))
 
-    """def draw_wheel_fields(self, screen):
+    def draw_wheel_fields(self, screen):
        rects = []
         if active_fields is None:
             active_fields = []
@@ -377,9 +374,9 @@ class GameView:
             name_surface = self.font.render(player.name, True, WHITE)
             screen.blit(name_surface, (10, 10 + 800 * i / len(rectangles)))
 
-            money_surface = self.font_text.render("Money: " + str(player.money), True, WHITE)
+            money_surface = self.font_text.render("Geld: " + str(player.money), True, WHITE)
             screen.blit(money_surface, (10, 35 + 800 * i / len(rectangles)))
-            income_surface = self.font_text.render("Income: " + str(player.income), True, WHITE)
+            income_surface = self.font_text.render("Gehalt: " + str(player.income), True, WHITE)
             screen.blit(income_surface, (10, 55 + 800 * i / len(rectangles)))
             if player.pause:
                 pause_surface = self.font_text.render("Aussetzen!", True, WHITE)
