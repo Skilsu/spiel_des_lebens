@@ -1,4 +1,5 @@
 # Spiel des Lebens
+Uni Projekt mit Teilimplementation
 ![Symbolbold Spiel des Lebens](/graphics/Logo-bild.jpeg)
 
 ### Infos zum Spiel:
